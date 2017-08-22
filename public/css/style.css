@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,600,600i,700,700i');
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
+    padding-top: 70px;
+}
+.zro {
+    margin: 0;
+    padding: 0;
+}
+
+.containervc {
+    display: table;
+    position: relative;
+    width: 150px;
+    max-width: 150px;
+    height: 100%;
+    margin: auto;
+}
+.vcenter {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+.center-cont {
+    display: block;
+    margin: 0 0 10px;
+    width: auto;
+}
+
+.print {
+    border: solid 1px red;
+}
+
+.tsk-btn {
+    display: table-cell;
+    vertical-align: middle;
+    width: 150px;
+    max-width: 150px;
+    height: 150px;
+    font-size: 1.5em;
+    font-weight: 700;
+}
+
+.navbar-task {
+    color: #fff;
+    background-color: #19A5E6;
+}
+.navbar-task .navbar-brand {
+    color: #fff;
+    font-weight: 600;
+}
+.navbar-task .navbar-brand:hover {
+    color: #fff;
+}
+
+.navbar-task .navbar-nav>li>a,
+.navbar-task .navbar-nav>li>a:link,
+.navbar-task .navbar-nav>li>a:visited,
+.navbar-task .navbar-nav>li>a:hover,
+.navbar-task .navbar-nav>li>a:active {
+    color: #fff;
+}
+
+.navbar-toggle {
+    display:none;
+}
+
+.panel.with-nav-tabs .panel-heading{
+    padding: 5px 5px 0 5px;
+}
+.panel.with-nav-tabs .nav-tabs{
+	border-bottom: none;
+}
+.panel.with-nav-tabs .nav-justified{
+	margin-bottom: -1px;
+}
+
+.task-list h4{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.5em;
+    margin: 5px 0;
+    font-weight: 600;
+}
+.task-list .btn{
+    margin: 5px;
+}
+
+.task-list p:last-child {
+    margin-bottom: 5px;
+}
+
+@media only screen and (max-width:767px){
+    .dropdown-menu{
+        display: block;
+        position: static;
+        border:0 none;
+        box-shadow:none;
+        margin-top:0;
+        width:100%;
+    }
+    .navbar-nav .dropdown-menu > li > a, 
+    .navbar-nav .dropdown-menu .dropdown-header {
+        padding:5px 15px 5px 25px;
+    }
+    .navbar-nav .dropdown-menu > li > a{
+        line-height:20px;
+    }
+    .navbar-default .navbar-nav .dropdown-menu > li > a{    
+        color:#777;
+    }
+    .navbar-toggle {
+        display:block;
+    }
+}
