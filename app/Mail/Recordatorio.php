@@ -7,8 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Encargo_concluido extends Mailable
-{
+class Recordatorio extends Mailable {
     use Queueable, SerializesModels;
 
     /**
@@ -18,8 +17,7 @@ class Encargo_concluido extends Mailable
      */
      public $data;
 
-    public function __construct(Array $data)
-    {
+    public function __construct(Array $data) {
         $this->data = $data;
     }
 
@@ -28,9 +26,8 @@ class Encargo_concluido extends Mailable
      *
      * @return $this
      */
-    public function build()
-    {
-        return $this->view('mails.encargo_concluido')
-                    ->subject($this->data['nombre_responsable'].'ha concluido un encargo que le has asignado');
+    public function build() {
+        return $this->view('mails.recordatorio')
+                    ->subject('Te recordamos que tienes un encargo pendiente por concluir');
     }
 }

@@ -5,23 +5,26 @@ namespace App\Http\Controllers;
 setlocale(LC_TIME, 'es_MX.utf8');
 
 use Validator;
+use DB;
 use Mail;
 use DateTime;
 use DateInterval;
 use App\Usuario;
 use App\Relacionusuario;
+use App\Comentario;
 use App\Encargo;
 use App\Http\Requests;
 use App\Mail\Invitacion;
 use App\Mail\Encargo_asignado;
 use App\Mail\Encargo_concluido;
+use App\Mail\Recordatorio;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 class EncargoController extends Controller {
 
-    public function nuevo() {
+    public function nuevo () {
         $relaciones = Relacionusuario::all()->where('id_usuario1', Auth::user()->id)->where('status', 1);
         $contactos = [];
         foreach ($relaciones as $relacion) {
@@ -30,10 +33,10 @@ class EncargoController extends Controller {
         return view('tarea.crear', ['contactos' => $contactos]);
     }
 
-    public function crear(Request $request) {
+    public function crear (Request $request) {
         $this->validate($request, [
             'encargo' => 'required',
-            'fecha_limite' => 'required|date|not_past',
+            'fecha_limite' => 'required|date|after_or_equal:today',
             'responsable' => 'required|numeric|exists:Usuarios,id',
         ]);
         
@@ -62,39 +65,37 @@ class EncargoController extends Controller {
     
     public function concluir ($id) {
         $now = new DateTime();
-        $encargo =Encargo::find($id); 
+        $encargo = Encargo::find($id); 
         if (!$encargo->fecha_conclusion) {
             $encargo->update(['fecha_conclusion' => $now]);
-            if ($encargo->id_responsable != Auth::user()->id) {
+            if ($encargo->id_asignador != Auth::user()->id) {
+                $fecha_conclucion = date_timestamp_get($encargo->fecha_conclusion);
+                $fecha_plazo = strtotime($encargo->fecha_plazo);
+                if ($fecha_conclucion > $fecha_plazo) {
+                    $estado = 'Concluido a destiempo';
+                } else {
+                    $estado = 'Concluido a tiempo';
+                }
                 $info = [
                     'id' => $encargo->id,
-                    'nombre_asignador' => $encargo->asignador->nombre.' '.$encargo->asignador->apellido,
                     'nombre_responsable' => $encargo->responsable->nombre.' '.$encargo->responsable->apellido,
                     'encargo' => $encargo->encargo,
-                    'fecha_limite' => strftime('%A %d de %B %Y', $encargo->fecha_plazo->getTimestamp()),
+                    'estado' => $estado
                 ];
-                Mail::to($encargo->responsable->email)->queue(new Encargo_concluido($info));   
+                Mail::to($encargo->asignador->email)->queue(new Encargo_concluido($info));   
             }
             return back()->with('success','Se a concluido el encargo con exito');
         }
         return back()->withErrors('El encargo ya esta concluido');
     }
 
-    public function listarTareas() {
+    public function listarTareas () {
         if (Route::currentRouteName() == 'mis_tareas') {
             $encargos = Encargo::all()->where('id_responsable', Auth::user()->id)->where('fecha_conclusion', null);
         } else {
             $encargos = Encargo::all()->where('id_asignador', Auth::user()->id)->where('id_responsable', '!=', Auth::user()->id)->where('fecha_conclusion', null);
         }
         return view('lista', ['encargos' => $encargos]);
-    }
-
-    public function edit(Encargo $encargo) {
-        //
-    }
-
-    public function update(Request $request, Encargo $encargo) {
-        //
     }
 
     public function ver($id) {
@@ -104,5 +105,69 @@ class EncargoController extends Controller {
         }
         return view('tarea.tarea', ['encargo' => $data]);
     }
+    
+    public function notificar () {
+        #se obtienen los encargos que necesitan ser notificados, la consulta es la siguiente
+        //select * from `Encargos` where `fecha_conclusion` is null
+        //and (
+        //	(timediff(fecha_plazo, created_at) >= '24:00:00'
+        //    and `ultima_notificacion` < DATE_SUB(NOW(),INTERVAL 8 HOUR))
+        //or (timediff(fecha_plazo, created_at) < '24:00:00'
+        //    and timediff(NOW(), ultima_notificacion) > sec_to_time(TIME_TO_SEC(timediff(fecha_plazo, created_at))/3))
+        //or `ultima_notificacion` is null
+        //)
+        $encargos = Encargo::whereNull('fecha_conclusion')
+                    ->where(function ($query) {
+                        $query->Where(function ($query) {
+                            $query->where(DB::raw('timediff(fecha_plazo, created_at)'), '>=', DB::raw('"24:00:00"'))
+                                ->where('ultima_notificacion','<',DB::raw('DATE_SUB(NOW(),INTERVAL 8 HOUR)'));
+                        })->orWhere(function ($query) {
+                            $query->where(DB::raw('timediff(fecha_plazo, created_at)'), '<', DB::raw('"24:00:00"'))
+                                ->where(DB::raw('timediff(NOW(), ultima_notificacion)'), '>', DB::raw('sec_to_time(TIME_TO_SEC(timediff(fecha_plazo, created_at))/3)'));
+                        })->orWhereNull('ultima_notificacion');
+                    })
+                    ->get();
+        
+        #se va recorriendo encargo pro encargo para enviar su notificacion
+        foreach ($encargos as $encargo) {
+            // se obtiene el estado actual de la tarea
+            $fecha_limite = strtotime($encargo->fecha_plazo);
+            $fecha_creacion = strtotime($encargo->created_at);
+            $hoy = Time();
+            $porcentaje = ($hoy - $fecha_creacion) / ($fecha_limite - $fecha_creacion) * 100;
+            $estado = '';
+            if ($porcentaje < 50 && $porcentaje > 0 ) {
+                $estado = 'en progreso';
+            } else if ($porcentaje > 50 && $porcentaje <= 100) {
+                $estado = 'cerca de vencer';
+            } else if ($porcentaje > 100 || $porcentaje < 0) {
+                $estado = 'Vencido';                      
+            }
+            $info = [
+                'id' => $encargo->id,
+                'encargo' => $encargo->encargo,
+                'asignador' => $encargo->asignador->nombre.' '.$encargo->asignador->apellido,
+                'fecha_limite' => strftime('%A %d de %B %Y', $fecha_limite),
+                'estado' => $estado
+            ];
+            $now = new DateTime();
+            $now->setTimestamp($hoy);
+            $encargo->update(['ultima_notificacion' => $now]);
+            Mail::to($encargo->responsable->email)->queue(new recordatorio($info));  
+        }
+    }
+    
+    public function comentar (Request $request, $id) {
+        $this->validate($request, [
+            'comentario' => 'required',
+        ]);
+        $data = [
+            'comentario' => $request->comentario,
+            'id_usuario' => Auth::user()->id,
+            'id_encargo' => $id
+        ];
+//        dd($data);
+        Comentario::create($data);
+        return back()->with('success','Se a comentado el encargo con exito');
+    }
 }
-//            'fecha_limite' => $encargo->fecha_plazo,//            'fecha_limite' => $encargo->fecha_plazo,

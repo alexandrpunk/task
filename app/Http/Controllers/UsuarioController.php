@@ -11,6 +11,8 @@ use App\Mail\Invitacion;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Input;
 
 
 class UsuarioController extends Controller {  
@@ -141,8 +143,16 @@ class UsuarioController extends Controller {
         }
         return view('lista', ['contactos' => $contactos]);
     }
-    
-    public function eliminar_relacion () {
-        
+         
+    public function login() {
+        $email = Input::get('email');
+		$password = Input::get('password');
+		$remember = (Input::has('remember')) ? true : false;
+
+        if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
+             return redirect('/');
+        } else {
+            return back()->withErrors();
+        }
     }
 }

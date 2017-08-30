@@ -97,6 +97,20 @@ body {
     margin-bottom: 5px;
 }
 
+.comentario{
+    border-bottom: solid 1px #eee;
+}
+.comentario label{
+    margin-top: 5px;
+}
+.comentario label:first-child{
+    margin-top: initial;
+}
+
+.comentario:last-child {
+    border-bottom: initial;
+}
+
 @media only screen and (max-width:767px){
     .dropdown-menu{
         display: block;

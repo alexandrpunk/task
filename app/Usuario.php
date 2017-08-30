@@ -15,6 +15,7 @@ class Usuario extends Model implements AuthenticatableContract {
     protected $hidden = [
         'password', 'remember_token',
     ];
+    protected $dates = ['deleted_at'];
     
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);

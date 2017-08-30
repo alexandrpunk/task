@@ -3,6 +3,7 @@
             <div class="navbar-header">
                  <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name') }}
+                    <span class="badge">{{ config('app.version') }}</span>
                 </a>
                 @if (Auth::check())
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#user-menu" aria-expanded="false">
@@ -28,3 +29,4 @@
             @endif
         </div>
     </nav>
+    

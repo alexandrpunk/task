@@ -19,6 +19,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/encargos/tareas', 'EncargoController@listarTareas')->name('mis_tareas');
     Route::get('/encargos/concluir/{id}', 'EncargoController@concluir');    
     Route::get('/encargos/ver/{id}', 'EncargoController@ver');
+    Route::post('/encargos/comentar/{id}', 'EncargoController@comentar');
     
 //    Route::get('/encargos/borrar/{id}', function () { return view('inicio'); });
 //    Route::get('/encargos/editar/{id}', function () { return view('inicio'); });
@@ -27,6 +28,9 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/contactos/agregar', function () { return view('usuario.agregar'); });
     Route::post('/contactos/agregar', 'UsuarioController@agregar')->name('agregar');
     Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
+    
+    
+    Route::get('/test', 'EncargoController@notificar');
     
 //    Route::get('/contactos/ver/{id}', function () { return view('inicio'); });
     
@@ -44,6 +48,6 @@ Route::group(['middleware' => 'guest'], function() {
     //Route::get('/relaciones', 'UsuarioController@verRelaciones');
 
     Route::get('/login', function () { return view('auth.login'); });
-    Route::post('/login', 'Auth\LoginController@postLogin')->name('login');
+    Route::post('/login', 'UsuarioController@login')->name('login');
     
 });

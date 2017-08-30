@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Encargo extends Model {
     protected $table = 'Encargos';
     protected $fillable = [
-        'encargo', 'fecha_plazo', 'fecha_conclusion', 'visto', 'id_asignador', 'id_responsable'
+        'encargo', 'fecha_plazo', 'fecha_conclusion', 'ultima_notificacion', 'visto', 'id_asignador', 'id_responsable'
     ];
+    protected $dates = ['deleted_at'];
     
     public function asignador() {
         return $this->belongsTo('App\Usuario', 'id_asignador');

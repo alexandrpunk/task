@@ -6,14 +6,14 @@
     $color_label = '';
     $estado = '';
     if ($porcentaje < 50 && $porcentaje > 0 ) {
-    $color_label = '#e6c94c';
-    $estado = 'en progreso';
+        $color_label = '#e6c94c';
+        $estado = 'en progreso';
     } else if ($porcentaje > 50 && $porcentaje <= 100) {
-    $color_label = '#dd7f21';
-    $estado = 'cerca de vencer';
+        $color_label = '#dd7f21';
+        $estado = 'cerca de vencer';
     } else if ($porcentaje > 100 || $porcentaje < 0) {
-    $color_label = '#f00';
-    $estado = 'Vencido';                      
+        $color_label = '#f00';
+        $estado = 'Vencido';                      
     }
 @endphp
 <span style="background-color:{{$color_label}};" class="label label-primary">
