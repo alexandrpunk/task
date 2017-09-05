@@ -17,11 +17,32 @@
                     <li class="dropdown">
                         <a href="#" class=" hidden-xs dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{Auth::user()->nombre}} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{url('/contactos/agregar')}}">Añadir contacto</a></li>
-                            <li><a href="{{route('mis_encargos')}}">Ver tareas</a></li>
-                            <li><a href="{{route('nuevo_encargo')}}">Crear tarea</a></li>
+                            <li>
+                                <a href="{{route('nuevo_encargo')}}">
+                                    <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> Crear encargo
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{url('/contactos/agregar')}}">
+                                    <i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> Añadir contacto
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('mis_encargos')}}">
+                                    <i class="fa fa-share-square fa-fw" aria-hidden="true"></i> Mis Encargos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{route('mis_pendientes')}}">
+                                     <i class="fa fa-list-alt fa-fw" aria-hidden="true"></i> Mis Pendientes
+                                </a>
+                            </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{route('logout')}}">Cerrar Sesion</a></li>
+                            <li>
+                                <a href="{{route('logout')}}">
+                                    <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Cerrar Sesion
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

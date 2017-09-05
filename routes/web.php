@@ -15,11 +15,16 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/encargos/crear', 'EncargoController@nuevo')->name('nuevo_encargo');
     Route::post('/encargos/crear', 'EncargoController@crear')->name('crear_encargo');
-    Route::get('/encargos/lista', 'EncargoController@listarTareas')->name('mis_encargos');
-    Route::get('/encargos/tareas', 'EncargoController@listarTareas')->name('mis_tareas');
+        
+    #rutas apra ver y cambiar detalles de los encargos
     Route::get('/encargos/concluir/{id}', 'EncargoController@concluir');    
     Route::get('/encargos/ver/{id}', 'EncargoController@ver');
     Route::post('/encargos/comentar/{id}', 'EncargoController@comentar');
+    
+    #lista los encargos por usuario
+    Route::get('/encargos/lista/{estado?}', 'EncargoController@listarEncargos')->name('mis_encargos');
+    Route::get('/encargos/pendientes/{estado?}', 'EncargoController@listarEncargos')->name('mis_pendientes');
+    Route::get('/encargos/{id}/{estado?}', 'EncargoController@listarEncargos')->name('encargos_usuario');
     
 //    Route::get('/encargos/borrar/{id}', function () { return view('inicio'); });
 //    Route::get('/encargos/editar/{id}', function () { return view('inicio'); });
@@ -30,7 +35,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
     
-    Route::get('/test', 'EncargoController@notificar');
+    Route::get('/test', 'EncargoController@test');
     
 //    Route::get('/contactos/ver/{id}', function () { return view('inicio'); });
     

@@ -89,9 +89,6 @@ body {
     margin: 5px 0;
     font-weight: 600;
 }
-.task-list .btn{
-    margin: 5px;
-}
 
 .task-list p:last-child {
     margin-bottom: 5px;
@@ -111,6 +108,25 @@ body {
     border-bottom: initial;
 }
 
+.nav-tabs > li, .nav-pills > li {
+    float:none;
+    display:inline-block;
+    *display:inline; /* ie7 fix */
+    zoom:1; /* hasLayout ie7 trigger */
+}
+
+.nav-tabs, .nav-pills {
+    text-align:center;
+}
+.full-height {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+
+.navbar-default .navbar-toggle:focus,
+.navbar-default .navbar-toggle:hover {
+    background-color: #19A5E6;
+}
 @media only screen and (max-width:767px){
     .dropdown-menu{
         display: block;
@@ -132,5 +148,14 @@ body {
     }
     .navbar-toggle {
         display:block;
+    }
+    .task-list h4 {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    margin: 5px 0;
+    font-weight: 600;
     }
 }

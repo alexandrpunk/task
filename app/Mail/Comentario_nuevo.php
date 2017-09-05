@@ -7,7 +7,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class Encargo_concluido extends Mailable
+class Comentario_nuevo extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,7 @@ class Encargo_concluido extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.encargo_concluido')
-                    ->subject($this->data['nombre_responsable'].' ha concluido un encargo que le has asignado');
+        return $this->view('mails.comentario')
+                    ->subject($this->data['nombre_comentarista'].' ha comentado en uno de tus encargos');
     }
 }

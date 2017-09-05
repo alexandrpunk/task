@@ -17,7 +17,9 @@ use App\Http\Requests;
 use App\Mail\Invitacion;
 use App\Mail\Encargo_asignado;
 use App\Mail\Encargo_concluido;
+use App\Mail\Encargo_visto;
 use App\Mail\Recordatorio;
+use App\Mail\Comentario_nuevo;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
@@ -30,13 +32,13 @@ class EncargoController extends Controller {
         foreach ($relaciones as $relacion) {
             $contactos[]= $relacion->contacto[0];
         }
-        return view('tarea.crear', ['contactos' => $contactos]);
+        return view('encargo.crear', ['contactos' => $contactos]);
     }
 
     public function crear (Request $request) {
         $this->validate($request, [
             'encargo' => 'required',
-            'fecha_limite' => 'required|date|after_or_equal:today',
+            'fecha_limite' => 'required|date|not_past',
             'responsable' => 'required|numeric|exists:Usuarios,id',
         ]);
         
@@ -48,6 +50,7 @@ class EncargoController extends Controller {
             'visto' => 0,
             'id_asignador' => Auth::user()->id,
             'id_responsable' => $request->responsable,
+            'ultima_notificacion' =>  new DateTime()
         ];
         $encargo = Encargo::create($data);
         if ($encargo->id_responsable != Auth::user()->id) {
@@ -58,7 +61,7 @@ class EncargoController extends Controller {
                 'encargo' => $encargo->encargo,
                 'fecha_limite' => strftime('%A %d de %B %Y', $encargo->fecha_plazo->getTimestamp()),
             ];
-            Mail::to($encargo->responsable->email)->queue(new Encargo_asignado($info));   
+            Mail::to($encargo->responsable->email)->queue(new Encargo_asignado($info));
         }
         return redirect()->route('nuevo_encargo')->with('success','Se a registrado un nuevo encargo');
     }
@@ -89,21 +92,125 @@ class EncargoController extends Controller {
         return back()->withErrors('El encargo ya esta concluido');
     }
 
-    public function listarTareas () {
-        if (Route::currentRouteName() == 'mis_tareas') {
-            $encargos = Encargo::all()->where('id_responsable', Auth::user()->id)->where('fecha_conclusion', null);
+    public function listarEncargos (Request $request, $estado = null, $id = null) {
+        if($request->ajax()){
+            if (Route::currentRouteName() == 'mis_pendientes') {
+                switch ($estado) {
+                    case 0:#todos
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->get();
+                        break;
+                    case 1:#en progreso
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                            ->get();
+                        break;
+                    case 2:#cerca de vencer
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','>', DB::raw('NOW()'))
+                            ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                            ->get();
+                        break;
+                    case 3:#vencidos
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','<', DB::raw('NOW()'))
+                            ->get();
+                        break;
+                    case 4:#concluidos a tiempo
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->get();
+                        break;
+                    case 5:#concluidos a destiempo
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->get();
+                        break;
+                }
+            } else {
+                switch ($estado) {
+                    case 0:
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('id_responsable', '!=', Auth::user()->id)
+                            ->get();
+                        break;
+                    case 1:#en progreso
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', '!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                            ->get();
+                        break;
+                    case 2:#cerca de vencer
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', '!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','>', DB::raw('NOW()'))
+                            ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                            ->get();
+                        break;
+                    case 3:#vencidos
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', '!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','<', DB::raw('NOW()'))
+                            ->get();
+                        break;
+                    case 4:#concluidos a tiempo
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', '!=', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->get();
+                        break;
+                    case 5:#concluidos a destiempo
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', '!=', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->get();
+                        break;
+                }
+            }
+//            dd($encargos);
+            return view('inc.list_view_encargos', ['encargos' => $encargos]);
         } else {
-            $encargos = Encargo::all()->where('id_asignador', Auth::user()->id)->where('id_responsable', '!=', Auth::user()->id)->where('fecha_conclusion', null);
+            if (Route::currentRouteName() == 'mis_pendientes') {
+                $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                    ->WhereNull('fecha_conclusion')
+                    ->get();
+            } else {
+                $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                    ->where('id_responsable', '!=', Auth::user()->id)
+                    ->WhereNull('fecha_conclusion')
+                    ->get();
+            }
+            return view('lista', ['encargos' => $encargos]);
         }
-        return view('lista', ['encargos' => $encargos]);
     }
 
     public function ver($id) {
         $data = Encargo::find($id);
-        if ($data->id_responsable == Auth::user()->id) {
+        if ($data->id_responsable == Auth::user()->id && !$data->visto) {
             $data->update(['visto'=>1]);
+            
+            $info = [
+                'encargo' => $data->encargo,
+                'nombre_responsable' => $data->responsable->nombre.' '.$data->responsable->apellido,
+                'fecha_limite' => $data->fecha_plazo,
+                'id' => $id
+            ];        
+            
+            Mail::to($data->responsable->email)->queue(new Encargo_visto($info));
         }
-        return view('tarea.tarea', ['encargo' => $data]);
+        return view('encargo.encargo', ['encargo' => $data]);
     }
     
     public function notificar () {
@@ -161,13 +268,35 @@ class EncargoController extends Controller {
         $this->validate($request, [
             'comentario' => 'required',
         ]);
+        
         $data = [
             'comentario' => $request->comentario,
             'id_usuario' => Auth::user()->id,
             'id_encargo' => $id
         ];
-//        dd($data);
         Comentario::create($data);
+        $encargo = Encargo::find($id);
+        if (Auth::user()->id == $encargo->id_responsable) {
+            $correo = $encargo->asignador->email;
+            $nombre = $encargo->asignador->nombre.' '. $encargo->asignador->apellido;
+        } else {
+            $correo = $encargo->responsable->email;
+            $nombre = $encargo->responsable->nombre.' '. $encargo->responsable->apellido;
+        }
+        $info = [
+            'comentario' => $request->comentario,
+            'encargo' => $encargo->encargo,
+            'nombre_comentarista' => $nombre,
+            'id' => $id
+        ];
+        
+        Mail::to($correo)->queue(new Comentario_nuevo($info));
         return back()->with('success','Se a comentado el encargo con exito');
+    }
+    
+    public function test () {
+        print_r (new datetime());
+//        dd( $_SERVER);
+        phpinfo();
     }
 }

@@ -65,7 +65,8 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+//    'timezone' => 'America/Mazatlan',
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
