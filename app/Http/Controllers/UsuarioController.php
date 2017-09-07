@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Input;
 
 
@@ -144,15 +145,15 @@ class UsuarioController extends Controller {
         return view('lista', ['contactos' => $contactos]);
     }
          
-    public function login() {
-        $email = Input::get('email');
-		$password = Input::get('password');
-		$remember = (Input::has('remember')) ? true : false;
-
+    public function login(Request $request) {
+        $email = $request->email;
+		$password = $request->password;
+        $remember = ($request->remember) ? true : false;
         if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
              return redirect('/');
         } else {
-            return back()->withErrors();
+            return back()->withErrors('Usuario o contraseña incorrectos');
         }
     }
+    
 }

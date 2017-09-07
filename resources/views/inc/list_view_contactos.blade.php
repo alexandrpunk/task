@@ -9,14 +9,11 @@
         </div>
         <div class="col-sm-2 col-xs-5  text-center">
             <div class="btn-group-vertical" role="group" aria-label="...">
-                <a href="" class="btn btn-primary btn-block">
-                pendientes
-                </a>
-                <a href="" class="btn btn-success btn-block">
-                concluidos
+                <a href="{{url('/encargos')}}/{{$contacto->id}}" class="btn btn-primary btn-block">
+                    <i class="fa fa-address-card-o fa-fw" aria-hidden="true"></i> Encargos
                 </a>
                 <a href="" class="btn btn-danger btn-block">
-                    <i class="fa fa-ban" aria-hidden="true"></i> borrar
+                    <i class="fa fa-ban fa-fw" aria-hidden="true"></i> Borrar
                 </a>
             </div>
         </div>

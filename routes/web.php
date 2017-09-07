@@ -24,7 +24,7 @@ Route::group(['middleware' => 'auth'], function() {
     #lista los encargos por usuario
     Route::get('/encargos/lista/{estado?}', 'EncargoController@listarEncargos')->name('mis_encargos');
     Route::get('/encargos/pendientes/{estado?}', 'EncargoController@listarEncargos')->name('mis_pendientes');
-    Route::get('/encargos/{id}/{estado?}', 'EncargoController@listarEncargos')->name('encargos_usuario');
+    Route::get('/encargos/{id}/{estado?}', 'EncargoController@listarEncargos')->name('encargos_contacto');
     
 //    Route::get('/encargos/borrar/{id}', function () { return view('inicio'); });
 //    Route::get('/encargos/editar/{id}', function () { return view('inicio'); });

@@ -14,15 +14,14 @@ setlocale(LC_TIME, 'es_MX.utf8');
 ?>
 @section('content')
     <div class="container">
-       {{Route::currentRouteName()}}
         <div class="panel with-nav-tabs panel-default">
                 <div class="panel-heading">
                     <ul class="nav nav-tabs">
                         <li class="<?php if (Route::currentRouteName() == 'mis_encargos') {echo 'active';} ?>">
-                            <a href="{{route('mis_encargos')}}">Mis Encargos</a>
+                            <a href="{{route('mis_encargos')}}">Encargos</a>
                         </li>
                         <li class="<?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>">
-                            <a href="{{route('mis_pendientes')}}">Mis pendientes</a>
+                            <a href="{{route('mis_pendientes')}}">Pendientes</a>
                         </li>
                         <li class="<?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>">
                             <a href="{{route('listar_contactos')}}">Contactos</a>
@@ -34,16 +33,15 @@ setlocale(LC_TIME, 'es_MX.utf8');
                         <div class="tab-panel" id="tareas">
                             @if (Route::currentRouteName() == 'listar_contactos')
                                 @include('inc.list_view_contactos')
-                            @elseif (Route::currentRouteName() == 'mis_pendientes' || Route::currentRouteName() == 'mis_encargos')
+                            @elseif (Route::currentRouteName() == 'mis_pendientes' || Route::currentRouteName() == 'mis_encargos' || Route::currentRouteName() == 'encargos_contacto')
                                 @include('inc.list_view_encargos')
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="panel-footer text-center">
-                @if (Route::currentRouteName() == 'mis_encargos' || Route::currentRouteName() == 'mis_pendientes')
+                @if (Route::currentRouteName() == 'mis_encargos' || Route::currentRouteName() == 'mis_pendientes' || Route::currentRouteName() == 'encargos_contacto')
                 <div class="input-group col-md-6  col-md-offset-3">
-                    <span class="input-group-addon" title="seleccione la forma de filtrar los encargos">Ver por:</span>
                     <select class="form-control" id='estados_tareas'>
                         <option value="0">Todos</option>
                         <option value="1">En progreso</option>
