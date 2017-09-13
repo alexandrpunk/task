@@ -9,10 +9,10 @@
                 <dl class="dl-horizontal">
                     @if(Route::currentRouteName() == 'mis_pendientes')
                     <dt>Encargado por:</dt>
-                    <dd>{{$encargo->asignador->nombre}}</dd>
+                    <dd>{{$encargo->asignador->nombre}} {{$encargo->asignador->apellido}}</dd>
                     @else
                     <dt>Encargado a:</dt>
-                    <dd>{{$encargo->responsable->nombre}}</dd>
+                    <dd>{{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}</dd>
                     @endif
                     <dt>Asignada el:</dt>
                     <dd>{{$encargo->created_at->formatLocalized('%A %d de %B %Y')}}</dd>

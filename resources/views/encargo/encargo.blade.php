@@ -16,8 +16,10 @@ setlocale(LC_TIME, 'es_MX.utf8');
                 <dl class="dl-horizontal">
                     <dt>Detalles del encargo:</dt>
                     <dd>{{$encargo->encargo}}</dd>
-                    <dt>Encargado por:</dt>
+                    <dt>Encargado a:</dt>
                     <dd>{{$encargo->responsable->nombre}}</dd>
+                    <dt>Encargado por:</dt>
+                    <dd>{{$encargo->asignador->nombre}}</dd>
                     <dt>Asignada el:</dt>
                     <dd>{{$encargo->created_at->formatLocalized('%A %d de %B %Y')}}</dd>
                     <dt>Debe cumplirse para:</dt>

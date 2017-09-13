@@ -25,11 +25,16 @@
         </ul>
     </div>
     </div>
-    @endif
-    @if (session('success'))
+    @elseif (session('success'))
     <div class="container">
         <div class="alert alert-success">
             {{ session('success') }}
+        </div>
+    </div>
+    @elseif (session('info'))
+    <div class="container">
+        <div class="alert alert-info">
+            {{ session('info') }}
         </div>
     </div>
     @endif

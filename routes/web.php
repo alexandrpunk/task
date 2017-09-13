@@ -30,14 +30,12 @@ Route::group(['middleware' => 'auth'], function() {
 //    Route::get('/encargos/editar/{id}', function () { return view('inicio'); });
 
     Route::get('/contactos/lista', 'UsuarioController@contactos')->name('listar_contactos');
-    Route::get('/contactos/agregar', function () { return view('usuario.agregar'); });
-    Route::post('/contactos/agregar', 'UsuarioController@agregar')->name('agregar');
-    Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
+    Route::get('/contactos/agregar', function () { return view('usuario.agregar'); })->name('agregar');
+    Route::post('/contactos/agregar', 'UsuarioController@agregarContacto');
+    // Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
     
     Route::get('/test', 'EncargoController@test');
-    
-//    Route::get('/contactos/ver/{id}', function () { return view('inicio'); });
     
     Route::get('/logout',
         function () {
@@ -48,11 +46,20 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 Route::group(['middleware' => 'guest'], function() {
-    Route::get('/registro', function () { return view('usuario.registro'); });
-    Route::post('/registro', 'UsuarioController@registrar')->name('registrar');
-    //Route::get('/relaciones', 'UsuarioController@verRelaciones');
+    Route::get('/registro', function () { return view('usuario.registro'); })->name('registrar');
+    Route::post('/registro', 'UsuarioController@registrar');
+    Route::get('/registro/validar/{token}', 'UsuarioController@validarEmail')->name('validar_email');
 
-    Route::get('/login', function () { return view('auth.login'); });
+    Route::get('/login', function () { return view('auth.login'); })->name('get.login');
     Route::post('/login', 'UsuarioController@login')->name('login');
+
+    Route::get('/recuperar_password', function () { return view('auth.reset_pass'); })->name('recuperar_pass');
+    Route::post('/recuperar_password', 'UsuarioController@sendResetLinkEmail');
+
+    Route::get('/recuperar_password/reset/{token}', function ($token) {
+        return view('auth.reset_pass', ['token' => $token]);
+        })->name('reset_pass');
+    Route::post('/recuperar_password/reset/{token}', 'ResetPasswordController@reset');
+    // Route::post('/recuperar_password/{token}', 'UsuarioController@reset_pasword')->name('pos.recuperar_pass');
     
 });

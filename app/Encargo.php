@@ -3,8 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Encargo extends Model {
+    use SoftDeletes;
+    
     protected $table = 'Encargos';
     protected $fillable = [
         'encargo', 'fecha_plazo', 'fecha_conclusion', 'ultima_notificacion', 'visto', 'id_asignador', 'id_responsable'

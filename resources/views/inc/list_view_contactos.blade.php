@@ -12,9 +12,9 @@
                 <a href="{{url('/encargos')}}/{{$contacto->id}}" class="btn btn-primary btn-block">
                     <i class="fa fa-address-card-o fa-fw" aria-hidden="true"></i> Encargos
                 </a>
-                <a href="" class="btn btn-danger btn-block">
+                {{--  <a href="" class="btn btn-danger btn-block">
                     <i class="fa fa-ban fa-fw" aria-hidden="true"></i> Borrar
-                </a>
+                </a>  --}}
             </div>
         </div>
         </div>

@@ -8,18 +8,16 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">Iniciar Sesion</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('login') }}">
+                    <form class="form-horizontal" method="POST" action="{{route('login')}}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
-
+                                <input type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
                                 @if ($errors->has('email'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -27,18 +25,14 @@
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Contraseña</label>
-
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
+                                <input type="password" class="form-control" name="password" required autocomplete="off">
                                 @if ($errors->has('password'))
                                     <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">
@@ -59,6 +53,7 @@
                     </form>
                     <hr>
                     <p class="text-center"><a class="" href="{{url('registro')}}">Si no tienes cuenta haz click aqui</a></p>
+                    <p class="text-center"><a class="" href="{{route('recuperar_pass')}}">Olvide mi contraseña</a></p>
                 </div>
             </div>
         </div>

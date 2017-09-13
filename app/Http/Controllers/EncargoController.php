@@ -245,17 +245,19 @@ class EncargoController extends Controller {
 
     public function ver($id) {
         $data = Encargo::find($id);
-        if ($data->id_responsable == Auth::user()->id && $data->id_asignador != Auth::user()->id && !$data->visto) {
+        if ($data->id_responsable == Auth::user()->id && !$data->visto) {
             $data->update(['visto'=>1]);
             
-            $info = [
-                'encargo' => $data->encargo,
-                'nombre_responsable' => $data->responsable->nombre.' '.$data->responsable->apellido,
-                'fecha_limite' => $data->fecha_plazo,
-                'id' => $id
-            ];        
-            
-            Mail::to($data->responsable->email)->queue(new Encargo_visto($info));
+            if ($data->id_asignador != Auth::user()->id) {
+                $info = [
+                    'encargo' => $data->encargo,
+                    'nombre_responsable' => $data->responsable->nombre.' '.$data->responsable->apellido,
+                    'fecha_limite' =>  strftime('%A %d de %B %Y', strtotime($data->fecha_plazo)),
+                    'id' => $id
+                ];        
+                
+                Mail::to($data->asignador->email)->queue(new Encargo_visto($info));
+            }
         }
         return view('encargo.encargo', ['encargo' => $data]);
     }
