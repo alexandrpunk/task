@@ -9,41 +9,39 @@
 @endsection
 
 @section('content')
-    <div class="container">
-       <div class="panel panel-default">
-            <div class="panel-heading">Crear un nuevo encargo</div>
-            <div class="panel-body">
-                <form method="POST" action="{{ route('crear_encargo') }}" data-toggle="validator">
-                    {!! csrf_field() !!}
-                    <div class="form-group">
-                        <label for="encargo">Responsable</label>
-                        <select class="form-control" name="responsable" placeholder="Selecciona al responsable del encargo" required>
-                            @foreach ($contactos as $contacto)
-                                <option value="{{$contacto->id}}" <?php if($contacto->id == old('responsable') || $contacto->id == Auth::user()->id ){echo 'selected';} ?> >
-                                    {{ $contacto->nombre }} {{ $contacto->apellido }}
-                                </option>
-                            @endforeach                        
-                        </select>
-                        <div class="help-block with-errors"></div>
-                    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Crear un nuevo encargo</div>
+        <div class="panel-body">
+            <form method="POST" action="{{ route('crear_encargo') }}" data-toggle="validator">
+                {!! csrf_field() !!}
+                <div class="form-group">
+                    <label for="encargo">Responsable</label>
+                    <select class="form-control" name="responsable" placeholder="Selecciona al responsable del encargo" required>
+                        @foreach ($contactos as $contacto)
+                            <option value="{{$contacto->id}}" <?php if($contacto->id == old('responsable') || $contacto->id == Auth::user()->id ){echo 'selected';} ?> >
+                                {{ $contacto->nombre }} {{ $contacto->apellido }}
+                            </option>
+                        @endforeach                        
+                    </select>
+                    <div class="help-block with-errors"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="encargo">Encargo</label>
+                    <textarea class="form-control" name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required>{{old('encargo')}}</textarea>
+                    <div class="help-block with-errors"></div>
+                </div>
                     
-                    <div class="form-group">
-                       <label for="encargo">Encargo</label>
-                        <textarea class="form-control" name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required>{{old('encargo')}}</textarea>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                      
-                    <div class="form-group">
-                       <label for="fecha_limite">Fecha limite</label>
-                        <input type="date" class="form-control" name="fecha_limite" value="{{old('fecha_limite')}}" placeholder="Describe tu encargo aqui" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    
-                    
-                    <button type="reset" class="btn btn-danger">Limpiar</button>
-                    <button type="submit" class="btn btn-primary">Crear encargo</button>
-                </form>
-            </div>
+                <div class="form-group">
+                    <label for="fecha_limite">Fecha limite</label>
+                    <input type="date" class="form-control" name="fecha_limite" value="{{old('fecha_limite')}}" placeholder="Describe tu encargo aqui" required>
+                    <div class="help-block with-errors"></div>
+                </div>
+                
+                
+                <button type="reset" class="btn btn-danger">Limpiar</button>
+                <button type="submit" class="btn btn-primary">Crear encargo</button>
+            </form>
         </div>
-    </div><!-- /.container -->
+    </div>
 @endsection

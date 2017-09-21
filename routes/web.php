@@ -63,3 +63,5 @@ Route::group(['middleware' => 'guest'], function() {
     // Route::post('/recuperar_password/{token}', 'UsuarioController@reset_pasword')->name('pos.recuperar_pass');
     
 });
+
+Route::get('/contacto', function () { return view('usuario.contacto'); })->name('contacto');

@@ -1,4 +1,4 @@
-@section('title', 'Agregar contacto')
+@section('title', 'Contacto y reporte de errores')
 @extends('layouts.base')
 
 @section('content')

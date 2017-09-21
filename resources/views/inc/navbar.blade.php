@@ -1,6 +1,6 @@
     <nav class="navbar navbar-default navbar-task bg-info navbar-fixed-top">
         <div class="container">
-            <div class="navbar-header">
+            <div class="navbar-header" aria-level='2'>
                  <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name') }}
                     <span class="badge">{{ config('app.version') }}</span>
@@ -17,6 +17,11 @@
                     <li class="dropdown">
                         <a href="#" class=" hidden-xs dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{Auth::user()->nombre}} <span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            <li>
+                                <a href="{{route('inicio')}}">
+                                    <i class="fa fa-home" aria-hidden="true"></i> Inicio
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{route('nuevo_encargo')}}">
                                     <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> Crear encargo
@@ -38,6 +43,11 @@
                                 </a>
                             </li>
                             <li role="separator" class="divider"></li>
+                            <li>
+                                <a href="{{url('/contacto')}}">
+                                    <i class="fa fa-envelope fa-fw" aria-hidden="true"></i> Errores y contacto
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{route('logout')}}">
                                     <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Cerrar Sesion
