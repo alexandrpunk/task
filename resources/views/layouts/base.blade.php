@@ -15,22 +15,15 @@
 </head>
 <body>
     @include('inc.navbar')
-    <div class="container" style='height:100%'>
+    <div class="container" style='height:100%' role='main'>
         @if ($errors->any())
-            @php
-            $x = count($errors);
-            $ids = '';
-            for ($i = 1; $i <= $x; $i++){
-                $ids .= 'error'.$i.' ';
-            }
-            $i = 1;
-            @endphp
-        <div class="alert alert-danger" role="alert" aria-atomic="true" aria-live="assertive" aria-labelledby="error" aria-describedby="{{$ids}}" tabindex='1' aria-level="1">
-            <p class="sr-only" id="error">ha ocurrido un error</p>
+        <div class="alert alert-danger" role="alertdialog" aria-labelledby="error" aria-level="1">
+        <label class="sr-only" id="error">Alerta de error</label>
+            <ul role='list' aria-label='listado de errores'>
             @foreach ($errors->all() as $error)
-                <p id='error{{$i}}' role='listitem' aria-level="2"><strong>{{$error}}</strong></p>
-                @php $i++; @endphp
+                <li role='listitem' aria-level="2">{{$error}}</li>
             @endforeach
+            </ul>
         </div>
         @elseif (session('success'))
         <div class="alert alert-success" role='alertdialog' aria-labelledby="succes">

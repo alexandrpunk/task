@@ -13,23 +13,23 @@
 setlocale(LC_TIME, 'es_MX.utf8');
 ?>
 @section('content')
-    <div class="panel with-nav-tabs panel-default">
+    <div class="panel with-nav-tabs panel-default" role>
         <div class="panel-heading">
-            <ul class="nav nav-tabs" role="tablist" aria-label="pestañas">
-                <li class="<?php if (Route::currentRouteName() == 'mis_encargos') {echo 'active';} ?>"  role="tab">
-                    <a href="{{route('mis_encargos')}}" aria-label="Ver Encargos">Encargos</a>
+            <ul class="nav nav-tabs" role="tablist" aria-label="Opciones de vista">
+                <li class="<?php if (Route::currentRouteName() == 'mis_encargos') {echo 'active';} ?>"  role="tab" aria-label="Ver Encargos">
+                    <a href="{{route('mis_encargos')}}">Encargos</a>
                 </li>
-                <li class="<?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>"  role="tab">
-                    <a href="{{route('mis_pendientes')}}" aria-label="Ver Pendientes">Pendientes</a>
+                <li class="<?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>"  role="tab"  aria-label="Ver Pendientes">
+                    <a href="{{route('mis_pendientes')}}">Pendientes</a>
                 </li>
-                <li class="<?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>"  role="tab">
-                    <a href="{{route('listar_contactos')}}" aria-label="Ver contactos">Contactos</a>
+                <li class="<?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>"  role="tab" aria-label="Ver contactos">
+                    <a href="{{route('listar_contactos')}}">Contactos</a>
                 </li>
             </ul>
         </div>
         <div class="panel-body full-height">
             <div class="tab-content">
-                <div class="tab-panel" id="tareas" role="tabpanel" aria-label="Cuerpo del panel">
+                <div class="tab-panel" id="tareas" role="tabpanel" aria-label="Listado">
                     @if (Route::currentRouteName() == 'listar_contactos')
                         @include('inc.list_view_contactos')
                     @elseif (Route::currentRouteName() == 'mis_pendientes' || Route::currentRouteName() == 'mis_encargos' || Route::currentRouteName() == 'encargos_contacto')

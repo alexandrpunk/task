@@ -1,10 +1,10 @@
-<div class="list-group" role="grid">
+<div class="list-group">
     @foreach ($encargos as $encargo)
-    <div class="list-group-item task-list" role="row">
+    <div class="list-group-item task-list" role="option" aria-labelled='encargo'>
        <div class="row">
             <div class="col-xs-7 col-sm-10">
                 <div class="list-group-item-heading">
-                    <h4>{{$encargo->encargo}}</h4>
+                    <h4 id='encargo'>{{$encargo->encargo}}</h4>
                 </div>
                 <dl class="dl-horizontal">
                     @if(Route::currentRouteName() == 'mis_pendientes')
