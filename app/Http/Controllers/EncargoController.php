@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Validator;
 use DB;
-use Mail;
 use DateTime;
 use DateInterval;
 use App\Usuario;
@@ -18,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\EncargoNuevo;
 use App\Notifications\EncargoVisto;
+use App\Notifications\EncargoRecordatorio;
 use App\Notifications\EncargoConcluido;
 use App\Notifications\ComentarioNuevo;
 class EncargoController extends Controller {
@@ -273,30 +273,7 @@ class EncargoController extends Controller {
         
         #se va recorriendo encargo pro encargo para enviar su notificacion
         foreach ($encargos as $encargo) {
-            // se obtiene el estado actual de la tarea
-            $fecha_limite = strtotime($encargo->fecha_plazo);
-            $fecha_creacion = strtotime($encargo->created_at);
-            $hoy = Time();
-            $porcentaje = ($hoy - $fecha_creacion) / ($fecha_limite - $fecha_creacion) * 100;
-            $estado = '';
-            if ($porcentaje < 50 && $porcentaje > 0 ) {
-                $estado = 'en progreso';
-            } else if ($porcentaje > 50 && $porcentaje <= 100) {
-                $estado = 'cerca de vencer';
-            } else if ($porcentaje > 100 || $porcentaje < 0) {
-                $estado = 'Vencido';                      
-            }
-            $info = [
-                'id' => $encargo->id,
-                'encargo' => $encargo->encargo,
-                'asignador' => $encargo->asignador->nombre.' '.$encargo->asignador->apellido,
-                'fecha_limite' => strftime('%A %d de %B %Y', $fecha_limite),
-                'estado' => $estado
-            ];
-            $now = new DateTime();
-            $now->setTimestamp($hoy);
-            $encargo->update(['ultima_notificacion' => $now]);
-            Mail::to($encargo->responsable->email)->queue(new recordatorio($info));  
+            $encargo->responsable->notify(new EncargoRecordatorio($encargo));
         }
     }
     
@@ -324,7 +301,7 @@ class EncargoController extends Controller {
     }
     
     public function test () {
-        // $comentario = Comentario::all()->first();
-
+        // $encargo = Encargo:: find(1);
+        // $encargo->responsable->notify(new EncargoRecordatorio($encargo));
     }
 }

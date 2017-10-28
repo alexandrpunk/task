@@ -8,7 +8,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\ResetPassword;
+use App\Notifications\RestablecerPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
@@ -25,7 +25,7 @@ class Usuario extends Model implements AuthenticatableContract, CanResetPassword
     protected $dates = ['deleted_at'];
 
     public function sendPasswordResetNotification($token) {
-        $this->notify(new ResetPassword($token));
+        $this->notify(new RestablecerPassword($token));
     }
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
