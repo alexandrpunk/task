@@ -1,4 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,600,600i,700,700i');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i');
+
 
 html, body {
     width: 100%;
@@ -6,8 +8,8 @@ html, body {
 }
 
 body {
-    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
-    padding-top: 50px;
+    font-family:"Source Sans Pro", sans-serif;
+    padding-top: 70px;
 }
 .zro {
     margin: 0;
@@ -49,11 +51,18 @@ body {
 
 .navbar-task {
     color: #fff;
-    background-color: #19A5E6;
+    background-color: #00869D;
 }
 .navbar-task .navbar-brand {
+    font-family: 'Open Sans';
     color: #fff;
-    font-weight: 600;
+    font-weight: lighter;
+    padding: 10px 15px;
+}
+.navbar-task .navbar-brand .logo {
+    height: 30px;
+    width: auto;
+    display: inline-block;
 }
 .navbar-task .navbar-brand:hover {
     color: #fff;

@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-\Carbon\Carbon::setLocale('es_MX.utf8'); 
-setlocale(LC_TIME, 'es_MX.utf8');
 
 use Validator;
 use DB;
@@ -13,16 +11,15 @@ use App\Usuario;
 use App\Relacionusuario;
 use App\Comentario;
 use App\Encargo;
-use App\Mail\Invitacion;
-use App\Mail\Encargo_asignado;
-use App\Mail\Encargo_concluido;
-use App\Mail\Encargo_visto;
-use App\Mail\Recordatorio;
-use App\Mail\Comentario_nuevo;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\EncargoNuevo;
+use App\Notifications\EncargoVisto;
+use App\Notifications\EncargoConcluido;
+use App\Notifications\ComentarioNuevo;
 class EncargoController extends Controller {
 
     public function nuevo () {
@@ -53,16 +50,20 @@ class EncargoController extends Controller {
         ];
         $encargo = Encargo::create($data);
         if ($encargo->id_responsable != Auth::user()->id) {
-            $info = [
-                'id' => $encargo->id,
-                'nombre_asignador' => $encargo->asignador->nombre.' '.$encargo->asignador->apellido,
-                'nombre_responsable' => $encargo->responsable->nombre.' '.$encargo->responsable->apellido,
-                'encargo' => $encargo->encargo,
-                'fecha_limite' => strftime('%A %d de %B %Y', $encargo->fecha_plazo->getTimestamp()),
-            ];
-            Mail::to($encargo->responsable->email)->queue(new Encargo_asignado($info));
+            $encargo->responsable->notify(new EncargoNuevo($encargo));
+            $message = 'Le acabas de asignar un encago a: '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido;
+            $link = route('mis_encargos');
+            $desc_link = 'Haz click aqui para ver tus encargos';
+        } else {
+            $message = 'Te has asignado un pendiente nuevo';
+            $link = route('mis_pendientes');
+            $desc_link = 'Haz click aqui para ver tus pendientes';
         }
-        return redirect()->route('nuevo_encargo')->with('success','Se a registrado un nuevo encargo');
+        return redirect()->route('nuevo_encargo')->with([
+            'success'=> $message,
+            'link' => $link,
+            'desc_link' => $desc_link
+            ]);
     }
     
     public function concluir ($id) {
@@ -71,20 +72,7 @@ class EncargoController extends Controller {
         if (!$encargo->fecha_conclusion) {
             $encargo->update(['fecha_conclusion' => $now]);
             if ($encargo->id_asignador != Auth::user()->id) {
-                $fecha_conclucion = date_timestamp_get($encargo->fecha_conclusion);
-                $fecha_plazo = strtotime($encargo->fecha_plazo);
-                if ($fecha_conclucion > $fecha_plazo) {
-                    $estado = 'Concluido a destiempo';
-                } else {
-                    $estado = 'Concluido a tiempo';
-                }
-                $info = [
-                    'id' => $encargo->id,
-                    'nombre_responsable' => $encargo->responsable->nombre.' '.$encargo->responsable->apellido,
-                    'encargo' => $encargo->encargo,
-                    'estado' => $estado
-                ];
-                Mail::to($encargo->asignador->email)->queue(new Encargo_concluido($info));   
+                $encargo->asignador->notify(new EncargoConcluido($encargo));  
             }
             return back()->with('success','Se a concluido el encargo con exito');
         }
@@ -224,22 +212,28 @@ class EncargoController extends Controller {
             }
             return view('inc.list_view_encargos', ['encargos' => $encargos]);
         } else {
+            $data=[];
             if (Route::currentRouteName() == 'mis_pendientes') {
-                $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                $data['encargos'] = Encargo::where('id_responsable', Auth::user()->id)
                     ->WhereNull('fecha_conclusion')
                     ->get();
+                $data['titulo'] = 'Mis Pendientes';
             } else if (Route::currentRouteName() == 'mis_encargos') {
-                $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
                     ->where('id_responsable', '!=', Auth::user()->id)
                     ->WhereNull('fecha_conclusion')
                     ->get();
+                $data['titulo'] = 'Mis Encargos';
             } else if (Route::currentRouteName() == 'encargos_contacto') {
-                $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                $contacto = Usuario::find($parametros['id']);
+                $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
                     ->where('id_responsable', '=',  $parametros['id'])
                     ->WhereNull('fecha_conclusion')
                     ->get();
+                $data['titulo'] = 'Encargos de '.$contacto->nombre.' '.$contacto->apellido;
+                $data['contacto'] = $contacto->nombre.' '.$contacto->apellido;
             }
-            return view('lista', ['encargos' => $encargos]);
+            return view('lista', $data);
         }
     }
 
@@ -248,15 +242,8 @@ class EncargoController extends Controller {
         if ($data->id_responsable == Auth::user()->id && !$data->visto) {
             $data->update(['visto'=>1]);
             
-            if ($data->id_asignador != Auth::user()->id) {
-                $info = [
-                    'encargo' => $data->encargo,
-                    'nombre_responsable' => $data->responsable->nombre.' '.$data->responsable->apellido,
-                    'fecha_limite' =>  strftime('%A %d de %B %Y', strtotime($data->fecha_plazo)),
-                    'id' => $id
-                ];        
-                
-                Mail::to($data->asignador->email)->queue(new Encargo_visto($info));
+            if ($data->id_asignador != Auth::user()->id) {     
+                $data->asignador->notify(new EncargoVisto($data));
             }
         }
         return view('encargo.encargo', ['encargo' => $data]);
@@ -323,29 +310,21 @@ class EncargoController extends Controller {
             'id_usuario' => Auth::user()->id,
             'id_encargo' => $id
         ];
-        Comentario::create($data);
-        $encargo = Encargo::find($id);
-        if (Auth::user()->id == $encargo->id_responsable) {
-            $correo = $encargo->asignador->email;
-            $nombre = $encargo->asignador->nombre.' '. $encargo->asignador->apellido;
-        } else {
-            $correo = $encargo->responsable->email;
-            $nombre = $encargo->responsable->nombre.' '. $encargo->responsable->apellido;
+        $comentario = Comentario::create($data);
+        switch (Auth::user()->id) {
+            case $comentario->encargo->id_responsable :
+                $destinatario = Usuario::find($comentario->encargo->id_responsable);
+                break;
+            case $comentario->encargo->id_asignador :
+                $destinatario = Usuario::find($comentario->encargo->id_asignador);
+                break;
         }
-        $info = [
-            'comentario' => $request->comentario,
-            'encargo' => $encargo->encargo,
-            'nombre_comentarista' => $nombre,
-            'id' => $id
-        ];
-        
-        Mail::to($correo)->queue(new Comentario_nuevo($info));
+        $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
         return back()->with('success','Se a comentado el encargo con exito');
     }
     
     public function test () {
-        print_r (new datetime());
-//        dd( $_SERVER);
-        phpinfo();
+        // $comentario = Comentario::all()->first();
+
     }
 }

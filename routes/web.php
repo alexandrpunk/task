@@ -11,14 +11,14 @@
 |
 */
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/', function () { return view('inicio'); })->name('inicio');
+    Route::get('/', function () { return redirect()->route('mis_encargos'); })->name('inicio');
 
     Route::get('/encargos/crear', 'EncargoController@nuevo')->name('nuevo_encargo');
     Route::post('/encargos/crear', 'EncargoController@crear')->name('crear_encargo');
         
     #rutas apra ver y cambiar detalles de los encargos
     Route::get('/encargos/concluir/{id}', 'EncargoController@concluir');    
-    Route::get('/encargos/ver/{id}', 'EncargoController@ver');
+    Route::get('/encargos/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
     Route::post('/encargos/comentar/{id}', 'EncargoController@comentar');
     
     #lista los encargos por usuario

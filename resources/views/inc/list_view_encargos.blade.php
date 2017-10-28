@@ -1,10 +1,11 @@
-<div class="list-group">
+<div class="list-group" role='list'>
     @foreach ($encargos as $encargo)
-    <div class="list-group-item task-list" role="option" aria-labelled='encargo'>
+    <div class="list-group-item task-list" role="listitem">
        <div class="row">
-            <div class="col-xs-7 col-sm-10">
+            <div class="col-xs-7 col-sm-10" role="option">
+                <label class='sr-only'>Encargo</label>
                 <div class="list-group-item-heading">
-                    <h4 id='encargo'>{{$encargo->encargo}}</h4>
+                    <h4>{{$encargo->encargo}}</h4>
                 </div>
                 <dl class="dl-horizontal">
                     @if(Route::currentRouteName() == 'mis_pendientes')
@@ -26,11 +27,11 @@
             </div>
             <div class="col-xs-5 col-sm-2 text-center">
                <div class="btn-group-vertical" role="group">
-                   <a href="{{url('/encargos/ver')}}/{{$encargo->id}}" class="btn btn-primary">
+                   <a href="{{url('/encargos/ver')}}/{{$encargo->id}}" class="btn btn-primary" role='button' aria-label='Ver encargo: {{$encargo->encargo}}'>
                        <i class="fa fa-eye" aria-hidden="true"></i> ver
                     </a>
                     @if ($encargo->visto)
-                    <a href="{{url('/encargos/concluir')}}/{{$encargo->id}}" class="btn btn-success">
+                    <a href="{{url('/encargos/concluir')}}/{{$encargo->id}}" class="btn btn-success" role='button' aria-label='Concluir encargo: {{$encargo->encargo}}'>
                         <i class="fa fa-check-circle" aria-hidden="true"></i> concluir
                     </a>
                     @endif

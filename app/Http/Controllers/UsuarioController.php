@@ -7,7 +7,6 @@ use Mail;
 use App\Usuario;
 use App\Relacionusuario;
 use App\Http\Requests;
-use App\Mail\Invitacion;
 use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -21,7 +20,8 @@ use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use App\Notifications\EmailValidation;
+use App\Notifications\ValidarEmail;
+use App\Notifications\Invitacion;
 
 class UsuarioController extends Controller {
     use SendsPasswordResetEmails;   
@@ -69,7 +69,7 @@ class UsuarioController extends Controller {
                 }
             }
         }
-        $usuario->notify(new EmailValidation());
+        $usuario->notify(new ValidarEmail());
         return redirect()
             ->route('registrar')
             ->with('registro_exitoso', true)
@@ -98,7 +98,7 @@ class UsuarioController extends Controller {
             ->where('status', 2)
             ->update(['status' => 1]);
         Auth::login($usuario, true);
-        return redirect()->route('inicio')->with('success','Tu correo ha sido validado puedes usar tu cuenta');
+        return redirect()->route('mis_encargos')->with('success','Tu correo ha sido validado puedes usar tu cuenta');
     }
 
     public function agregarContacto(Request $request) {
@@ -118,30 +118,8 @@ class UsuarioController extends Controller {
                 'status' => 2
             ];                
             $usuario = Usuario::create($usuario_dummy);
-
-            Relacionusuario::create([
-                'id_usuario1' => Auth::user()->id,
-                'id_usuario2' => $usuario->id,
-                'status' => 2
-            ]);
-
-            Relacionusuario::create([
-                    'id_usuario1' =>  $usuario->id,
-                    'id_usuario2' => Auth::user()->id,
-                    'status' => 2
-            ]);
-
-            $data= [
-                'destinatario' => $request->email,
-                'nombre_invitador' => Auth::user()->nombre
-            ];
-            Mail::to($request->email)->queue(new Invitacion($data));
-
-            return redirect()
-                ->back()
-                ->with('info','Se enviado una invitacion para usar Task app al correo que trataste de agregar');
         }
-        
+
         if($usuario->status == 1) {
             try {
                 Relacionusuario::create([
@@ -158,7 +136,11 @@ class UsuarioController extends Controller {
 
                 return redirect()
                     ->back()
-                    ->with('success','Se a agregado el usuario a tu lista de contactos');
+                    ->with([
+                        'success' => 'Se a agregado el usuario a tu lista de contactos',
+                        'link' => route('listar_contactos'),
+                        'desc_link' => 'Volver a la lista de contactos'
+                    ]);
             } catch (QueryException $e) {
                 $error_code = $e->errorInfo[1];
                 if($error_code == 1062) {
@@ -178,16 +160,15 @@ class UsuarioController extends Controller {
                         'id_usuario2' => Auth::user()->id,
                         'status' => 2
                 ]);
+                $usuario->notify(new Invitacion(Auth::user()));
 
-                $data= [
-                    'destinatario' => $request->email,
-                    'nombre_invitador' => Auth::user()->nombre
-                ];
-                Mail::to($request->email)->queue(new Invitacion($data));
-    
                 return redirect()
                     ->back()
-                    ->with('info','Se enviado una invitacion para usar Task app al correo que trataste de agregar');
+                    ->with([
+                        'info' => 'Se enviado una invitacion para usar '.config('app.name').' al correo que trataste de agregar',
+                        'link' => route('listar_contactos'),
+                        'desc_link' => 'Volver a la lista de contactos'
+                    ]);
             } catch (QueryException $e) {
                 $error_code = $e->errorInfo[1];
                 if($error_code == 1062) {
@@ -197,9 +178,8 @@ class UsuarioController extends Controller {
                 }
             }
         }
-  
-    }
 
+    }
 
     public function contactos() {
         $relaciones = Relacionusuario::all()
@@ -210,7 +190,7 @@ class UsuarioController extends Controller {
         foreach ($relaciones as $relacion) {
             $contactos[]= $relacion->contacto[0];
         }
-        return view('lista', ['contactos' => $contactos]);
+        return view('lista', ['contactos' => $contactos, 'titulo' => 'Lista de contactos']);
     }
          
     public function login(Request $request) {
