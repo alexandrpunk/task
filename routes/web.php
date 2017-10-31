@@ -11,15 +11,17 @@
 |
 */
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/', function () { return redirect()->route('mis_encargos'); })->name('inicio');
+    Route::get('/', 'EncargoController@listarEncargos')->name('inicio');
 
     Route::get('/encargos/crear', 'EncargoController@nuevo')->name('nuevo_encargo');
     Route::post('/encargos/crear', 'EncargoController@crear')->name('crear_encargo');
-        
-    #rutas apra ver y cambiar detalles de los encargos
-    Route::get('/encargos/concluir/{id}', 'EncargoController@concluir');    
-    Route::get('/encargos/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
-    Route::post('/encargos/comentar/{id}', 'EncargoController@comentar');
+    
+    Route::middleware(['encargo_existe', 'encargo_permitido'])->group(function () {
+        #rutas apra ver y cambiar detalles de los encargos
+        Route::get('/encargos/concluir/{id}', 'EncargoController@concluir');    
+        Route::get('/encargos/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
+        Route::post('/encargos/comentar/{id}', 'EncargoController@comentar');
+    });
     
     #lista los encargos por usuario
     Route::get('/encargos/lista/{estado?}', 'EncargoController@listarEncargos')->name('mis_encargos');
@@ -35,7 +37,7 @@ Route::group(['middleware' => 'auth'], function() {
     // Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
     
-    Route::get('/test', 'EncargoController@test');
+    Route::get('/test/{id}', 'EncargoController@test')->middleware('permisos');
     
     Route::get('/logout',
         function () {
@@ -58,10 +60,9 @@ Route::group(['middleware' => 'guest'], function() {
 
     Route::get('/recuperar_password/reset/{token}', function ($token) {
         return view('auth.reset_pass', ['token' => $token]);
-        })->name('reset_pass');
+    })->name('reset_pass');
     Route::post('/recuperar_password/reset/{token}', 'ResetPasswordController@reset');
     // Route::post('/recuperar_password/{token}', 'UsuarioController@reset_pasword')->name('pos.recuperar_pass');
-    
 });
 
-Route::get('/contacto', function () { return view('usuario.contacto'); })->name('contacto');
+Route::get('/contactar', function () { return view('contactar'); })->name('contactar');

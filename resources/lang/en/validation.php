@@ -13,6 +13,7 @@ return [
     |
     */
     'not_past'             => 'The :attribute must be mayor a date equal or greater than today',
+    'contacto'             => "You don't have permission to assign a task to this user",
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',
     'after'                => 'The :attribute must be a date after :date.',

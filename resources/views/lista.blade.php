@@ -27,7 +27,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
             </ul>
             @else
             <ul class="nav nav-tabs" role="tablist" aria-label="Opciones de vista">
-                <li class="<?php if (Route::currentRouteName() == 'mis_encargos') {echo 'active';} ?>"  role="tab" aria-label="Ver Encargos">
+                <li class="<?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>"  role="tab" aria-label="Ver Encargos">
                     <a href="{{route('mis_encargos')}}">Encargos</a>
                 </li>
                 <li class="<?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>"  role="tab"  aria-label="Ver Pendientes">
@@ -55,7 +55,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
             </div>
         </div>
         <div class="panel-footer text-center">
-        @if (Route::currentRouteName() == 'mis_encargos' || Route::currentRouteName() == 'mis_pendientes' || Route::currentRouteName() == 'encargos_contacto')
+        @if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true) )
         <div class="input-group col-md-6  col-md-offset-3">
             <div class="input-group-addon hidden-xs" aria-hidden='true'>filtrar</div>
             <select class="form-control" id='estados_tareas' aria-label='filtrar los encargos'>
@@ -81,3 +81,4 @@ setlocale(LC_TIME, 'es_MX.utf8');
         </div>
     </div>
 @endsection
+

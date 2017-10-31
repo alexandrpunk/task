@@ -25,7 +25,9 @@ setlocale(LC_TIME, 'es_MX.utf8');
                 <dd>{{strftime('%A %d de %B %Y',strtotime($encargo->fecha_plazo))}}</dd>
                 <dt>Estado:</dt>
                 <dd>
-                @include('inc.estado_label') 
+                    <span style="background-color:{{$encargo->estado()->color}};" class="label label-primary">
+                        {{$encargo->estado()->nombre}}
+                    </span>
                 </dd>
             </dl>
             <hr>

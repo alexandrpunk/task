@@ -35,7 +35,7 @@ class EncargoController extends Controller {
         $this->validate($request, [
             'encargo' => 'required',
             'fecha_limite' => 'required|date|not_past',
-            'responsable' => 'required|numeric|exists:Usuarios,id',
+            'responsable' => 'required|numeric|exists:Usuarios,id|contacto',
         ]);
         
         $fecha = new DateTime($request->fecha_limite);
@@ -68,7 +68,7 @@ class EncargoController extends Controller {
     
     public function concluir ($id) {
         $now = new DateTime();
-        $encargo = Encargo::find($id); 
+        $encargo = Encargo::findOrFail($id); 
         if (!$encargo->fecha_conclusion) {
             $encargo->update(['fecha_conclusion' => $now]);
             if ($encargo->id_asignador != Auth::user()->id) {
@@ -80,11 +80,11 @@ class EncargoController extends Controller {
     }
 
     public function listarEncargos (Request $request) {
-        $parametros = $request->route()->parameters();
+        // $parametros = $request->route()->parameters();
         if($request->ajax()){
             switch (Route::currentRouteName()) {
                 case 'mis_encargos':
-                    switch ($parametros['estado']) {
+                    switch ($request->estado) {
                         case 0:
                         $encargos = Encargo::where('id_asignador', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
@@ -130,7 +130,7 @@ class EncargoController extends Controller {
                     }
                     break;
                 case 'mis_pendientes':
-                    switch ($parametros['estado']) {
+                    switch ($request->estado) {
                         case 0:#todos
                             $encargos = Encargo::where('id_responsable', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
@@ -170,39 +170,39 @@ class EncargoController extends Controller {
                     }
                     break;
                 case 'encargos_contacto':
-                    switch ($parametros['estado']) {
+                    switch ($request->estado) {
                         case 0:#todos
-                            $encargos = Encargo::where('id_responsable', $parametros['id'])
+                            $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->get();
                             break;
                         case 1:#en progreso
-                            $encargos = Encargo::where('id_responsable', $parametros['id'])
+                            $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
                                 ->get();
                             break;
                         case 2:#cerca de vencer
-                            $encargos = Encargo::where('id_responsable', $parametros['id'])
+                            $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','>', DB::raw('NOW()'))
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
                                 ->toSql();
                             break;
                         case 3:#vencidos
-                            $encargos = Encargo::where('id_responsable', $parametros['id'])
+                            $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','<', DB::raw('NOW()'))
                                 ->get();
                             break;
                         case 4:#concluidos a tiempo
-                            $encargos = Encargo::where('id_responsable', $parametros['id'])
+                            $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
                                 ->get();
                             break;
                         case 5:#concluidos a destiempo
-                            $encargos = Encargo::where('id_responsable', $parametros['id'])
+                            $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
                                 ->get();
@@ -218,16 +218,17 @@ class EncargoController extends Controller {
                     ->WhereNull('fecha_conclusion')
                     ->get();
                 $data['titulo'] = 'Mis Pendientes';
-            } else if (Route::currentRouteName() == 'mis_encargos') {
+            } else if (in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true)) {
+            // } else if (Route::currentRouteName() == 'inicio'||'mis_encargos') {
                 $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
                     ->where('id_responsable', '!=', Auth::user()->id)
                     ->WhereNull('fecha_conclusion')
                     ->get();
                 $data['titulo'] = 'Mis Encargos';
             } else if (Route::currentRouteName() == 'encargos_contacto') {
-                $contacto = Usuario::find($parametros['id']);
+                $contacto = Usuario::find($request->id);
                 $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
-                    ->where('id_responsable', '=',  $parametros['id'])
+                    ->where('id_responsable', '=',  $request->id)
                     ->WhereNull('fecha_conclusion')
                     ->get();
                 $data['titulo'] = 'Encargos de '.$contacto->nombre.' '.$contacto->apellido;
@@ -238,7 +239,7 @@ class EncargoController extends Controller {
     }
 
     public function ver($id) {
-        $data = Encargo::find($id);
+        $data = Encargo::findOrFail($id);
         if ($data->id_responsable == Auth::user()->id && !$data->visto) {
             $data->update(['visto'=>1]);
             
@@ -274,6 +275,7 @@ class EncargoController extends Controller {
         #se va recorriendo encargo pro encargo para enviar su notificacion
         foreach ($encargos as $encargo) {
             $encargo->responsable->notify(new EncargoRecordatorio($encargo));
+            $encargo->update(['ultima_notificacion' => new DateTime()]);
         }
     }
     
@@ -300,8 +302,11 @@ class EncargoController extends Controller {
         return back()->with('success','Se a comentado el encargo con exito');
     }
     
-    public function test () {
-        // $encargo = Encargo:: find(1);
+    public function test (Request $request) {
+        $encargo = Encargo:: find($request->id);
+        print_r ($encargo);
+        // $encargo->responsable->notify(new EncargoRecordatorio($encargo));
+        // $encargo->update(['ultima_notificacion' => new DateTime()]);
         // $encargo->responsable->notify(new EncargoRecordatorio($encargo));
     }
 }

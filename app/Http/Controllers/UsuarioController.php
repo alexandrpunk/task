@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Validator;
 use Mail;
+use Password;
 use App\Usuario;
 use App\Relacionusuario;
 use App\Http\Requests;
@@ -14,8 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Input;
-
-use Password;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;

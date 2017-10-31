@@ -50,7 +50,7 @@
                             </li>
                             <li role="separator" class="divider" aria-label='divisor'></li >
                             <li role='link' aria-labelledby='item7'>
-                                <a href="{{url('/contacto')}}" id='item7' role='menuitem'>
+                                <a href="{{url('/contactar')}}" id='item7' role='menuitem'>
                                     <i class="fa fa-envelope fa-fw" aria-hidden="true"></i> Errores y Sugerencias
                                 </a>
                             </li>

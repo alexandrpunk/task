@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Validator;
 use DateTime;
-
+use Illuminate\Support\Facades\Auth;
+use App\Relacionusuario;
 class AppServiceProvider extends ServiceProvider {
     /**
      * Bootstrap any application services.
@@ -19,6 +20,15 @@ class AppServiceProvider extends ServiceProvider {
             $fecha = $fecha->format('Y-m-d');
             $hoy = $hoy->format('Y-m-d');
             return $fecha >= $hoy; 
+        });
+
+        Validator::extend('contacto', function($attribute, $value, $parameters, $validator) {
+            try {
+                Relacionusuario::where([['id_usuario1', Auth::user()->id], ['id_usuario2', $value]])->firstOrFail();
+                return true;
+            } catch (ModelNotFoundException $ex) {
+                return false;
+            }
         });
     }
 

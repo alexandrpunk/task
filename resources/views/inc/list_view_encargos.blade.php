@@ -1,3 +1,7 @@
+<?php
+\Carbon\Carbon::setLocale('es_MX.utf8'); 
+setlocale(LC_TIME, 'es_MX.utf8');
+?>
 <div class="list-group" role='list'>
     @foreach ($encargos as $encargo)
     <div class="list-group-item task-list" role="listitem">
@@ -21,7 +25,12 @@
                     <dd>{{strftime('%A %d de %B %Y',strtotime($encargo->fecha_plazo))}}</dd>
                     <dt>Estado:</dt>
                     <dd>
-                    @include('inc.estado_label')                    
+                        <span style="background-color:{{$encargo->estado()->color}};" class="label label-primary">
+                            {{$encargo->estado()->nombre}}
+                        </span>
+                        @if (!$encargo->visto)
+                        <span class="label label-info">Sin ver</span>
+                        @endif                
                     </dd>
                 </dl>
             </div>

@@ -13,6 +13,7 @@ return [
     |
     */
     'not_past'             => 'La :attribute debe ser igual o mayor al dia de hoy',
+    'not_past'             => 'No tienes permisos para asignarle encargos a este usuario',
     'accepted'             => ':attribute debe ser aceptado.',
     'active_url'           => ':attribute no es una URL válida.',
     'after'                => ':attribute debe ser una fecha posterior a :date.',
