@@ -36,7 +36,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
             @endif
         </div>
     </div>
-    {{--dd($encargo->comentarios)--}}
+    
     <div class="panel panel-info">
         <div class="panel-heading">Comentarios</div>
         <div class="panel-body">

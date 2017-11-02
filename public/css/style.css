@@ -9,98 +9,43 @@ html, body {
 
 body {
     font-family:"Source Sans Pro", sans-serif;
-    padding-top: 70px;
-}
-.zro {
-    margin: 0;
-    padding: 0;
-}
-
-.containervc {
-    display: table;
-    position: relative;
-    width: 150px;
-    max-width: 150px;
-    height: 100%;
-    margin: auto;
-}
-.vcenter {
-    display: table-cell;
-    text-align: center;
-    vertical-align: middle;
-}
-.center-cont {
-    display: block;
-    margin: 0 0 10px;
-    width: auto;
+    background-color: #ebebeb;
 }
 
 .print {
     border: solid 1px red;
 }
 
-.tsk-btn {
-    display: table-cell;
-    vertical-align: middle;
-    width: 150px;
-    max-width: 150px;
-    height: 150px;
-    font-size: 1.5em;
-    font-weight: 700;
-}
-
-.navbar-task {
-    color: #fff;
-    background-color: #00869D;
-}
 .navbar-task .navbar-brand {
     font-family: 'Open Sans';
     color: #fff;
     font-weight: lighter;
-    padding: 10px 15px;
 }
-.navbar-task .navbar-brand .logo {
+.logo {
     height: 30px;
     width: auto;
     display: inline-block;
 }
-.navbar-task .navbar-brand:hover {
+
+
+.task .estado{
+    font-size: 1rem;
+    line-height: 35px;
+    text-align: center;
+    display: block;
+    width: 100%;
     color: #fff;
+    border-radius: 100px 0 0 100px;
 }
-
-.navbar-task .navbar-nav>li>a,
-.navbar-task .navbar-nav>li>a:link,
-.navbar-task .navbar-nav>li>a:visited,
-.navbar-task .navbar-nav>li>a:hover,
-.navbar-task .navbar-nav>li>a:active {
-    color: #fff;
-}
-
-.navbar-toggle {
-    display:none;
-}
-
-.panel.with-nav-tabs .panel-heading{
-    padding: 5px 5px 0 5px;
-}
-.panel.with-nav-tabs .nav-tabs{
-	border-bottom: none;
-}
-.panel.with-nav-tabs .nav-justified{
-	margin-bottom: -1px;
-}
-
-.task-list h4{
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    line-height: 1.5em;
-    margin: 5px 0;
-    font-weight: 600;
-}
-
-.task-list p:last-child {
-    margin-bottom: 5px;
+.task .fecha{
+    font-size: 0.8rem;
+    line-height: 35px;
+    margin: 0 15px;
+    display: block;
+    color: #747474;
+    width: 100%;
+    font-weight: bolder;
+    text-align: center;
 }
 
 .comentario{
@@ -117,54 +62,7 @@ body {
     border-bottom: initial;
 }
 
-.nav-tabs > li, .nav-pills > li {
-    float:none;
-    display:inline-block;
-    *display:inline; /* ie7 fix */
-    zoom:1; /* hasLayout ie7 trigger */
-}
-
-.nav-tabs, .nav-pills {
-    text-align:center;
-}
-.full-height {
-    height: calc(100vh - 200px);
-    overflow-y: auto;
-  }
-
 .navbar-default .navbar-toggle:focus,
 .navbar-default .navbar-toggle:hover {
     background-color: #19A5E6;
-}
-@media only screen and (max-width:767px){
-    .dropdown-menu{
-        display: block;
-        position: static;
-        border:0 none;
-        box-shadow:none;
-        margin-top:0;
-        width:100%;
-    }
-    .navbar-nav .dropdown-menu > li > a, 
-    .navbar-nav .dropdown-menu .dropdown-header {
-        padding:5px 15px 5px 25px;
-    }
-    .navbar-nav .dropdown-menu > li > a{
-        line-height:20px;
-    }
-    .navbar-default .navbar-nav .dropdown-menu > li > a{    
-        color:#777;
-    }
-    .navbar-toggle {
-        display:block;
-    }
-    .task-list h4 {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    line-height: 1.2em;
-    font-size: 1.1em;
-    margin: 5px 0;
-    font-weight: 600;
-    }
 }
