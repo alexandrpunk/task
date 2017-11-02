@@ -28,7 +28,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
             </li>
         </ul>
     </div>
-    <div class="card-body h-100" style='overflow-y:auto'>
+    <div class="card-body h-100 p-2 p-sm-3" style='overflow-y:auto'>
         <div class="input-group" style='margin-bottom:15px;'>
             <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
             <input type="search" class="form-control" oninput="w3.filterHTML('.list-group', '.list-group-item', this.value)" placeholder='buscar...'>
@@ -42,7 +42,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
     <div class="card-footer px-0">
         @if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true) )
         <div class="input-group input-group-sm col col-sm-9 mx-sm-auto">
-            <div class="input-group-addon" aria-hidden='true'>filtrar</div>
+            <div class="input-group-addon d-none d-sm-block" aria-hidden='true'>filtrar</div>
             <select class="form-control form-control-sm" id='estados_tareas' aria-label='filtrar los encargos'>
                 <option value="0">Todos</option>
                 <option value="1">En progreso</option>

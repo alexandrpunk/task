@@ -27,26 +27,41 @@ body {
     display: inline-block;
 }
 
+.task{
+    border-radius: 0 !important;
+    border-left: solid 5px;
+}
+ .task .user{
+    font-size: 0.9rem;
+    margin: 0;
 
-.task .estado{
-    font-size: 1rem;
-    line-height: 35px;
-    text-align: center;
     display: block;
-    width: 100%;
-    color: #fff;
-    border-radius: 100px 0 0 100px;
-}
-.task .fecha{
-    font-size: 0.8rem;
-    line-height: 35px;
-    margin: 0 15px;
+    color:#919191;
+ }
+ .task .time{
+    font-size: 0.95rem;
+    margin: 0;
     display: block;
-    color: #747474;
-    width: 100%;
-    font-weight: bolder;
-    text-align: center;
-}
+
+    color:#919191;
+ }
+ .task h4 {
+    font-size: 1.5rem;
+ }
+ .task h4.truncado {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+ }
+ .task .options{
+    margin: 0;
+ }
+ .task .options .btn{
+    padding: 3px 5px;
+ }
+ .task hr{
+     margin: 8px 0;
+ }
 
 .comentario{
     border-bottom: solid 1px #eee;
@@ -65,4 +80,28 @@ body {
 .navbar-default .navbar-toggle:focus,
 .navbar-default .navbar-toggle:hover {
     background-color: #19A5E6;
+}
+
+@media only screen and (max-width:767px){
+    .dropdown-menu{
+        display: block;
+        position: static;
+        border:0 none;
+        box-shadow:none;
+        margin-top:0;
+        width:100%;
+    }
+    .navbar-nav .dropdown-menu > li > a, 
+    .navbar-nav .dropdown-menu .dropdown-header {
+        padding:5px 15px 5px 25px;
+    }
+    .navbar-nav .dropdown-menu > li > a{
+        line-height:20px;
+    }
+    .navbar-default .navbar-nav .dropdown-menu > li > a{    
+        color:#777;
+    }
+    .navbar-toggle {
+        display:block;
+    }
 }

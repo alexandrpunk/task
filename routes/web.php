@@ -18,9 +18,10 @@ Route::group(['middleware' => 'auth'], function() {
     
     Route::middleware(['encargo_existe', 'encargo_permitido'])->group(function () {
         #rutas apra ver y cambiar detalles de los encargos
-        Route::get('/encargos/concluir/{id}', 'EncargoController@concluir');    
+        Route::get('/encargos/concluir/{id}', 'EncargoController@concluir')->name('concluir_encargo');    
         Route::get('/encargos/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
-        Route::post('/encargos/comentar/{id}', 'EncargoController@comentar');
+        Route::post('/encargos/comentar/{id}', 'EncargoController@comentar')->name('comentar_encargo');
+        Route::post('/encargos/rechazar/{id}', 'EncargoController@rechazar')->name('rechazar_encargo');
     });
     
     #lista los encargos por usuario
