@@ -5,7 +5,7 @@
     <div class="panel panel-default">
         <div class="panel-heading">Añadir contacto a mi lista</div>
         <div class="panel-body">
-            <form method="POST" action="{{ route('agregar') }}" data-toggle="validator">
+            <form method="POST" action="{{ route('agregar_contacto') }}" data-toggle="validator">
                 {!! csrf_field() !!}
                 <div class="form-group">
                     <input type="email" class="form-control" name="email" value="{{old('email')}}" placeholder="Correo electronico del contacto a agregar" maxlength="100" required>

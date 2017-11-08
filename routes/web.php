@@ -10,11 +10,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::group(['middleware' => 'auth'], function() {
-    Route::get('/', 'EncargoController@listarEncargos')->name('inicio');
+Route::middleware(['middleware' => 'auth'])->group(function() {
 
-    Route::get('/encargos/crear', 'EncargoController@nuevo')->name('nuevo_encargo');
-    Route::post('/encargos/crear', 'EncargoController@crear')->name('crear_encargo');
+    Route::get('/', 'EncargoController@listarEncargos')->name('inicio');
+    
+
+    Route::get('/encargos/crear/{id?}', 'EncargoController@nuevo')->name('nuevo_encargo');
+    Route::post('/encargos/crear', 'EncargoController@crear');
     
     Route::middleware(['encargo_existe', 'encargo_permitido'])->group(function () {
         #rutas apra ver y cambiar detalles de los encargos
@@ -33,7 +35,7 @@ Route::group(['middleware' => 'auth'], function() {
 //    Route::get('/encargos/editar/{id}', function () { return view('inicio'); });
 
     Route::get('/contactos/lista', 'UsuarioController@contactos')->name('listar_contactos');
-    Route::get('/contactos/agregar', function () { return view('usuario.agregar'); })->name('agregar');
+    Route::get('/contactos/agregar', function () { return view('usuario.agregar'); })->name('agregar_contacto');
     Route::post('/contactos/agregar', 'UsuarioController@agregarContacto');
     // Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
@@ -46,6 +48,7 @@ Route::group(['middleware' => 'auth'], function() {
             return redirect()->route('login');
         }
     )->name('logout');
+    
 });
 
 Route::group(['middleware' => 'guest'], function() {
@@ -53,7 +56,7 @@ Route::group(['middleware' => 'guest'], function() {
     Route::post('/registro', 'UsuarioController@registrar');
     Route::get('/registro/validar/{token}', 'UsuarioController@validarEmail')->name('validar_email');
 
-    Route::get('/login', function () { return view('auth.login'); })->name('get.login');
+    Route::get('/login', function () { return view('auth.login'); })->name('login');
     Route::post('/login', 'UsuarioController@login')->name('login');
 
     Route::get('/recuperar_password', function () { return view('auth.reset_pass'); })->name('recuperar_pass');

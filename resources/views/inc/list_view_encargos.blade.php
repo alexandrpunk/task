@@ -4,14 +4,20 @@ setlocale(LC_TIME, 'es_MX.utf8');
 ?>
 <div class="list-group" role='list'>
     @foreach ($encargos as $encargo)
-    <div class='list-group-item task py-3' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
+    <div class='list-group-item task' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
     <div class='encargo-header'>
         <span class='user'>
-            {{$encargo->asignador->nombre}} te ha encargado:
+            @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
+                Te encargaste:
+            @elseif ($encargo->id_asignador != Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
+                Encargado por: {{$encargo->asignador->nombre}} {{$encargo->responsable->apellido}}
+            @elseif ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable != Auth::user()->id)
+               Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
+            @endif
         </span>
     </div>
     <div class='encargo-body'>
-        <h4 class='truncado'>{{$encargo->encargo}} orem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde e</h4>
+        <h4 class='truncado'>{{$encargo->encargo}}</h4>
         <span class='time'>
             <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
@@ -30,25 +36,20 @@ setlocale(LC_TIME, 'es_MX.utf8');
                     <i class="fa fa-eye fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>ver</span>
                 </a>
             </li>
+            @if($encargo->visto)
             <li class="list-inline-item">
-                <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center @if (!$encargo->visto) disabled @endif'><i class="fa fa-check fa-fw" aria-hidden="true">
+                <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center'><i class="fa fa-check fa-fw" aria-hidden="true">
                     </i> <span class='d-block d-sm-inline'>concluir</span>
                 </a>
             </li>
             <li class="list-inline-item">
-                <a href='#' onclick="clickAndDisable(this);"  class='btn text-danger text-center @if (!$encargo->visto) disabled @endif'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
+                <a href='#' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
                     </i> <span class='d-block d-sm-inline '>rechazar</span>
                 </a>
             </li>
+            @endif
         </ul>
     </div>
     </div>
     @endforeach
 </div>
-
-<script>
-function clickAndDisable(link) {
-         $(link).addClass('disabled');
-         $(link).find('span').html('procesando...');
-   } 
-</script>

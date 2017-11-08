@@ -1,48 +1,37 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url('/') }}">
+<nav class="navbar navbar-encargapp fixed-top p-0">
+    @if( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','listar_contactos'], true) )
+    <div class="container my-2">
+        <a class="navbar-brand" href="{{route('mis_encargos')}}">
             <img class='logo' src="{{url('/img/logo-encargapp.svg')}}" alt="encargapp"> {{ config('app.name') }} <span class="badge d-none d-sm-inline">{{ config('app.version') }}</span>
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            {{Auth::user()->nombre}}
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="ml-auto navbar-nav">
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <button class="d-none d-md-block btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{Auth::user()->nombre}}
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class='dropdown-item' href="{{route('inicio')}}" role='menuitem'>
-                                <i class="fa fa-home" aria-hidden="true"></i> Inicio
-                            </a>
-                            <a class='dropdown-item' href="{{route('nuevo_encargo')}}" role='menuitem'>
-                                <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> Crear encargo
-                            </a>
-                            <a class='dropdown-item' href="{{url('/contactos/agregar')}}" role='menuitem'>
-                                <i class="fa fa-user-plus fa-fw" aria-hidden="true"></i> Añadir contacto
-                            </a>
-                            <a class='dropdown-item' href="{{route('mis_encargos')}}" role='menuitem'>
-                                <i class="fa fa-share-square fa-fw" aria-hidden="true"></i> Mis Encargos
-                            </a>
-                            <a class='dropdown-item' href="{{route('mis_pendientes')}}" role='menuitem'>
-                                <i class="fa fa-list-alt fa-fw" aria-hidden="true"></i> Mis Pendientes
-                            </a>
-                            <a class='dropdown-item' href="{{route('listar_contactos')}}" role='menuitem'>
-                                <i class="fa fa-address-book fa-fw" aria-hidden="true"></i> Lista de Contactos
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class='dropdown-item' href="{{url('/contactar')}}" role='menuitem'>
-                                <i class="fa fa-envelope fa-fw" aria-hidden="true"></i> Errores y Sugerencias
-                            </a>
-                            <a class='dropdown-item' href="{{route('logout')}}" role='menuitem'>
-                                <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i> Cerrar Sesion
-                            </a>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+        <div class="dropdown">
+            <button type="button" class="btn btn-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <button class="dropdown-item" type="button">Action</button>
+                <button class="dropdown-item" type="button">Another action</button>
+                <button class="dropdown-item" type="button">Something else here</button>
+            </div>
         </div>
     </div>
+    <div class="w-100">
+            <ul class="nav section-tabs justify-content-center">
+                <li class="nav-item" role="tab" aria-label="Ver Encargos">
+                    <a class="nav-link <?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>" href="{{route('mis_encargos')}}">Encargos</a>
+                </li>
+                <li class="nav-item" role="tab"  aria-label="Ver Pendientes">
+                    <a class="nav-link <?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>" href="{{route('mis_pendientes')}}">Pendientes</a>
+                </li>
+                <li class="nav-item" role="tab" aria-label="Ver contactos">
+                    <a class="nav-link <?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>" href="{{route('listar_contactos')}}">Contactos</a>
+                </li>
+            </ul>
+    </div>
+    @else
+    <div class="container my-2">
+        <a href="@yield('back')" class="btn btn-default text-white"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        <span class="navbar-title mr-auto text-truncate">@yield('title')</span>
+    </div>
+     @endif
 </nav>

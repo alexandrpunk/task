@@ -1,5 +1,9 @@
 @extends('layouts.base')
 @section('title', $titulo)
+@if (Route::currentRouteName() == 'encargos_contacto')
+@section('back', Route('listar_contactos'))
+@endif
+
 @section('css')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" integrity="sha256-yMjaV542P+q1RnH6XByCPDfUFhmOafWbeLPmqKh11zo=" crossorigin="anonymous">
 @endsection
@@ -9,25 +13,8 @@
 <script src="https://www.w3schools.com/lib/w3.js"></script>
 @endsection
 
-<?php
-\Carbon\Carbon::setLocale('es_MX.utf8'); 
-setlocale(LC_TIME, 'es_MX.utf8');
-?>
 @section('content')
 <div class="card h-100">
-    <div class="card-header p-0 pt-1 border-bottom-0">
-        <ul class="nav nav-tabs justify-content-center">
-            <li class="nav-item" role="tab" aria-label="Ver Encargos">
-                <a class="nav-link <?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>" href="{{route('mis_encargos')}}">Encargos</a>
-            </li>
-            <li class="nav-item" role="tab"  aria-label="Ver Pendientes">
-                <a class="nav-link <?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>" href="{{route('mis_pendientes')}}">Pendientes</a>
-            </li>
-            <li class="nav-item" role="tab" aria-label="Ver contactos">
-                <a class="nav-link <?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>" href="{{route('listar_contactos')}}">Contactos</a>
-            </li>
-        </ul>
-    </div>
     <div class="card-body h-100 p-2 p-sm-3" style='overflow-y:auto'>
         <div class="input-group" style='margin-bottom:15px;'>
             <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
@@ -35,11 +22,13 @@ setlocale(LC_TIME, 'es_MX.utf8');
         </div>
         @if (Route::currentRouteName() == 'listar_contactos')
             @include('inc.list_view_contactos')
-        @elseif (Route::currentRouteName() == 'mis_pendientes' || Route::currentRouteName() == 'mis_encargos' || Route::currentRouteName() == 'encargos_contacto')
+        @elseif (in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true))
+        <div id="encargos">
             @include('inc.list_view_encargos')
+        </div>
         @endif
     </div>
-    <div class="card-footer px-0">
+    <div class="card-footer px-0 text-center">
         @if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true) )
         <div class="input-group input-group-sm col col-sm-9 mx-sm-auto">
             <div class="input-group-addon d-none d-sm-block" aria-hidden='true'>filtrar</div>
@@ -59,7 +48,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
             </span>
         </div>          
         @else
-        <a href="{{url('/contactos/agregar')}}" class="btn btn-info">
+        <a href="{{route('agregar_contacto')}}" class="btn btn-info btn-sm mx-auto">
             <i class="fa fa-user-plus" aria-hidden="true"></i> agregar nuevo contacto
         </a>
         @endif

@@ -83,6 +83,7 @@ class EncargoController extends Controller {
         // $parametros = $request->route()->parameters();
         if($request->ajax()){
             switch (Route::currentRouteName()) {
+                case 'inicio_filtrado':
                 case 'mis_encargos':
                     switch ($request->estado) {
                         case 0:
@@ -219,7 +220,6 @@ class EncargoController extends Controller {
                     ->get();
                 $data['titulo'] = 'Mis Pendientes';
             } else if (in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true)) {
-            // } else if (Route::currentRouteName() == 'inicio'||'mis_encargos') {
                 $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
                     ->where('id_responsable', '!=', Auth::user()->id)
                     ->WhereNull('fecha_conclusion')

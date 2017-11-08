@@ -4,8 +4,8 @@ $(document).ready(function() {
             type: "GET",
             url: $(this).attr('data-url')+'/'+$( "#estados_tareas" ).val(),
             success: function(result){
-                $("#tareas").empty();
-                $("#tareas").html(result);
+                $("#encargos").empty();
+                $("#encargos").html(result);
                 console.log(result);
             }
         });

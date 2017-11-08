@@ -143,7 +143,7 @@ class UsuarioController extends Controller {
             } catch (QueryException $e) {
                 $error_code = $e->errorInfo[1];
                 if($error_code == 1062) {
-                    return redirect('/contactos/agregar')->withErrors('El contacto ya esta en tu lista');
+                    return redirect()->route('agregar_contacto')->withErrors('El contacto ya esta en tu lista');
                 }
             }
         } else if ($usuario->status == 2 || $usuario->status == 3) {
@@ -203,7 +203,7 @@ class UsuarioController extends Controller {
             switch ($usuario->status) {
                 case 1:
                     if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
-                        return redirect('/');
+                        return redirect()->route('mis_encargos');
                     } else {
                         return back()->withInput()->withErrors(['password' => 'la contraseña es incorrecta']);
                     }
