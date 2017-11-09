@@ -1,7 +1,8 @@
 $( document ).ready(function() {
     var z = $('nav').height();
-    $('body').css( "padding-top", z+15+'px');
-
+    var x = $('footer').outerHeight();
+    $('body').css( "padding-top", z+'px');
+    $('body').css( "padding-bottom", x+'px');
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })

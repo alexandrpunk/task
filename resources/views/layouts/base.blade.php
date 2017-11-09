@@ -16,41 +16,44 @@
 <body>
 <span class="sr-only">Titulo de la pagina: @yield('title')</span>
     @include('inc.navbar')
-    <div class="container h-100 pb-3" role='main'>
-        @if ($errors->any())
-        <div class="alert alert-danger" role="alertdialog" aria-labelledby="error">
-        <label class="sr-only" id="error">Alerta de error</label>
-            <ul role='list' aria-label='listado de errores'>
-            @foreach ($errors->all() as $error)
-                <li role='listitem' aria-level="2">{{$error}}</li>
-            @endforeach
-            </ul>
-        </div>
-        @elseif (session('success'))
-        <div class="alert alert-success" role='alertdialog' aria-labelledby="success">
-            @if (session('link'))
-                <p id="success">
-                    {{ session('success') }}
-                    <a href="{{ session('link') }}" class="label label-primary">{{ session('desc_link') }}</a>
-                </p>
-            @else
-                <p id="success">{{ session('success') }}</p>
+    <div class="h-100 list-body" role='main'>
+        <div class="container">
+            @if ($errors->any())
+            <div class="alert alert-danger" role="alertdialog" aria-labelledby="error">
+            <label class="sr-only" id="error">Alerta de error</label>
+                <ul role='list' aria-label='listado de errores'>
+                @foreach ($errors->all() as $error)
+                    <li role='listitem' aria-level="2">{{$error}}</li>
+                @endforeach
+                </ul>
+            </div>
+            @elseif (session('success'))
+            <div class="alert alert-success" role='alertdialog' aria-labelledby="success">
+                @if (session('link'))
+                    <p id="success">
+                        {{ session('success') }}
+                        <a href="{{ session('link') }}" class="label label-primary">{{ session('desc_link') }}</a>
+                    </p>
+                @else
+                    <p id="success">{{ session('success') }}</p>
+                @endif
+            </div>
+            @elseif (session('info'))
+            <div class="alert alert-info" role='alertdialog' aria-labelledby="info">
+                @if (session('link'))
+                    <p id="info">
+                        {{ session('info') }}
+                        <a href="{{ session('link') }}" class="label label-primary">{{ session('desc_link') }}</a>
+                    </p>
+                @else
+                    <p id="info">{{ session('info') }}</p>
+                @endif
+            </div>
             @endif
+        @yield('content')
         </div>
-        @elseif (session('info'))
-        <div class="alert alert-info" role='alertdialog' aria-labelledby="info">
-            @if (session('link'))
-                <p id="info">
-                    {{ session('info') }}
-                    <a href="{{ session('link') }}" class="label label-primary">{{ session('desc_link') }}</a>
-                </p>
-            @else
-                <p id="info">{{ session('info') }}</p>
-            @endif
-        </div>
-        @endif
-    @yield('content')
     </div>
+    @yield('footer')
     <!-- Scripts -->
     @include('inc.js')
     @yield('js')

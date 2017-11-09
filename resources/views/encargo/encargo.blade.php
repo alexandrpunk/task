@@ -17,7 +17,7 @@
 setlocale(LC_TIME, 'es_MX.utf8');
 ?>
 @section('content')
-<div class='list-group-item rounded task' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
+<div class='list-group-item rounded task mt-3' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
     <div class='encargo-header'>
         <span class='user'>
             @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
@@ -63,7 +63,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
     </div>
 </div>
 
-<div class="card mt-3">
+<div class="card my-3">
     <h5 class="card-header">Comentarios</h5>
     <div class="card-body">
         @if (count($encargo->comentarios) > 0)

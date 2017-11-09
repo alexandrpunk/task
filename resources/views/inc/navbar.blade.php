@@ -9,9 +9,9 @@
                 <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <button class="dropdown-item" type="button">Action</button>
-                <button class="dropdown-item" type="button">Another action</button>
-                <button class="dropdown-item" type="button">Something else here</button>
+                <a class="dropdown-item">perfil</a>
+                <a class="dropdown-item">contacto y errores</a>
+                <a href='{{route("logout")}}' class="dropdown-item">cerrar sesion</a>
             </div>
         </div>
     </div>

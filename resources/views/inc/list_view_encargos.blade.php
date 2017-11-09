@@ -2,7 +2,20 @@
 \Carbon\Carbon::setLocale('es_MX.utf8'); 
 setlocale(LC_TIME, 'es_MX.utf8');
 ?>
-<div class="list-group" role='list'>
+@if (count($encargos) == 0)
+    @if (Route::currentRouteName() == 'mis_encargos')
+        <h1 class="text-muted text-center font-weight-light ">No has hecho ningun encargo aun.</h1>
+        <p class="lead text-muted text-center">Puedes hacer uno haciendo click <a href="{{route('nuevo_encargo')}}">aqui</a></p>
+    @elseif (Route::currentRouteName() == 'mis_pendientes')
+        <h1 class="text-muted text-center font-weight-light ">No tienes ningun pendiente.</h1>
+        <p class="lead text-muted text-center">Puedes asignarte uno haciendo click <a href="{{route('nuevo_encargo')}}">aqui</a></p>
+    @elseif (Route::currentRouteName() == 'encargos_contacto')
+        <h1 class="text-muted text-center font-weight-light ">No le has encargado nada a {{$contacto}}.</h1>
+        <p class="lead text-muted text-center">Puedes hacerle uno haciendo click <a href="{{route('nuevo_encargo')}}">aqui</a></p>
+    @endif
+    
+@else
+<div class="list-group" role='list' id='encargos'>
     @foreach ($encargos as $encargo)
     <div class='list-group-item task' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
     <div class='encargo-header'>
@@ -53,3 +66,4 @@ setlocale(LC_TIME, 'es_MX.utf8');
     </div>
     @endforeach
 </div>
+@endif
