@@ -12,7 +12,7 @@
 */
 Route::middleware(['middleware' => 'auth'])->group(function() {
 
-    Route::get('/', 'EncargoController@listarEncargos')->name('inicio');
+    Route::get('/', function () { return redirect()->route('mis_encargos'); })->name('inicio');
     
 
     Route::get('/encargos/crear/{id?}', 'EncargoController@nuevo')->name('nuevo_encargo');

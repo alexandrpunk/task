@@ -1,6 +1,6 @@
 @extends('layouts.base')
 @section('title', 'Crear Encargo')
-@section('back', route('inicio'))
+@section('back', route('mis_encargos'))
 @section('css')
 <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.common.min.css" />
 <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.default.mobile.min.css" />
@@ -50,12 +50,12 @@
 @endsection
 
 @section('content')
-    <div class="card">
+    <div class="card p-3 my-3">
         <label class="sr-only">'formulario para la creacion de encargos'</label>   
-        <div class="card-body">
-            <form method="POST" action="{{ route('nuevo_encargo') }}" id='encargoForm'>
-                {!! csrf_field() !!}
-                <div class="form-group">
+        <form method="POST" action="{{ route('nuevo_encargo') }}" id='encargoForm'>
+            {!! csrf_field() !!}
+            <div class="row">
+                <div class="form-group col-12 col-sm-6 mb-sm-0">
                     <label for="responsable" aria-hidden='true'>Responsable</label>
                     <select class="form-control" id='responsable' validationMessage="Selecciona un responsable" name="responsable" role='combobox' style="width: 100%" required>
                         @foreach ($contactos as $contacto)
@@ -65,21 +65,19 @@
                         @endforeach                        
                     </select>
                 </div>
-                
-                <div class="form-group">
-                    <label for="encargo">Encargo</label>
-                    <textarea class="form-control" id='encargo' name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required validationMessage="Describa su encargo" >{{old('encargo')}}</textarea>
-                </div>
-                    
-                <div class="form-group">
+
+                <div class="form-group col-12 col-sm-6 mb-sm-0">
                     <label for="fecha_limite">Fecha limite</label>
                     <input type="date" class="form-control" id='fecha_limite' name="fecha_limite" value="{{old('fecha_limite')}}" placeholder="Selecciona la fecha para el encargo" required validationMessage="Selecciona un fecha" >
                 </div>
-                
-                
-                <button type="reset" class="btn btn-danger">Limpiar</button>
-                <button type="submit" class="btn btn-primary">Crear encargo</button>
-            </form>
-        </div>
+            </div>
+            <div class="form-group">
+                <label for="encargo">Encargo</label>
+                <textarea class="form-control" id='encargo' name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required validationMessage="Describa su encargo" >{{old('encargo')}}</textarea>
+            </div>           
+            
+            <button type="reset" class="btn btn-danger">Limpiar</button>
+            <button type="submit" class="btn btn-primary">Crear encargo</button>
+        </form>
     </div>
 @endsection

@@ -31,7 +31,7 @@ class UsuarioController extends Controller {
             'nombre' => 'required|max:100',
             'apellido' => 'required|max:100',
             'email' => 'required|max:100|unique:Usuarios|email',
-            'telefono' => 'max:20',
+            'telefono' => 'digits:10',
             'password' => 'required|min:8|max:15'
         ]);
         
@@ -63,9 +63,13 @@ class UsuarioController extends Controller {
                         ->withInput();
                 } else {
                     return redirect('/registro')
-                        ->withErrors($validator)
+                        ->withErrors('El correo electronico que intentas usar ya esta en uso.')
                         ->withInput();
-                }
+                } 
+            } else {
+                return redirect('/registro')
+                    ->withErrors($validator)
+                    ->withInput();
             }
         }
         $usuario->notify(new ValidarEmail());
