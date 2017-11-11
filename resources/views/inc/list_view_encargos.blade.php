@@ -1,7 +1,3 @@
-<?php
-\Carbon\Carbon::setLocale('es_MX.utf8'); 
-setlocale(LC_TIME, 'es_MX.utf8');
-?>
 @if (count($encargos) == 0)
     @if (Route::currentRouteName() == 'mis_encargos')
         <h1 class="text-muted text-center font-weight-light ">No has hecho ningun encargo aun.</h1>

@@ -136,7 +136,9 @@ p.logo-login{
  .task hr{
      margin: 8px 0;
  }
-
+.contacto{
+    display: flex;
+}
 .contacto h4{
     font-size: 1.4rem;
     margin: 0;

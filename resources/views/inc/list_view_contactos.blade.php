@@ -1,8 +1,8 @@
 <div class="list-group" role='list'>
     @foreach ($contactos as $contacto)
-    <div class="list-group-item contacto row mx-0 d-flex">
+    <div class="list-group-item contacto row mx-0">
         <div class="col-12 col-sm-auto px-0 align-self-center text-center">
-            <img class='rounded ' src="http://via.placeholder.com/80x80">
+            <img class='rounded mb-2 mb-sm-0' src="http://via.placeholder.com/80x80">
         </div>
         <div class="col-12 col-sm align-self-center">
             <h4 class='nombre'>{{$contacto->nombre}} {{$contacto->apellido}}</h4>

@@ -5,7 +5,6 @@
 @endif
 
 @section('css')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" integrity="sha256-yMjaV542P+q1RnH6XByCPDfUFhmOafWbeLPmqKh11zo=" crossorigin="anonymous">
 @endsection
 
 @section('js')
@@ -15,7 +14,7 @@
 
 @section('content')
     <section class="py-3">
-        <div class="input-group" style='margin-bottom:15px;'>
+        <div class="input-group mb-3">
             <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
             <input type="search" class="form-control" oninput="w3.filterHTML('.list-group', '.list-group-item', this.value)" placeholder='buscar...'>
         </div>

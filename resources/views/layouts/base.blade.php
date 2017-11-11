@@ -16,37 +16,37 @@
 <body>
 <span class="sr-only">Titulo de la pagina: @yield('title')</span>
     @include('inc.navbar')
-    <div class="h-100 list-body" role='main'>
+    <div class="h-100 list-body " role='main'>
         <div class="container">
             @if ($errors->any())
-            <div class="alert alert-danger" role="alertdialog" aria-labelledby="error">
+            <div class="alert alert-danger mt-3" role="alertdialog" aria-labelledby="error">
             <label class="sr-only" id="error">Alerta de error</label>
-                <ul role='list' aria-label='listado de errores'>
+                <ul class='my-0' role='list' aria-label='listado de errores'>
                 @foreach ($errors->all() as $error)
                     <li role='listitem' aria-level="2">{{$error}}</li>
                 @endforeach
                 </ul>
             </div>
             @elseif (session('success'))
-            <div class="alert alert-success" role='alertdialog' aria-labelledby="success">
+            <div class="alert alert-success mt-3" role='alertdialog' aria-labelledby="success">
                 @if (session('link'))
-                    <p id="success">
+                    <span id="success">
                         {{ session('success') }}
-                        <a href="{{ session('link') }}" class="label label-primary">{{ session('desc_link') }}</a>
-                    </p>
+                        <a href="{{ session('link') }}" class="badge badge-info">{{ session('desc_link') }}</a>
+                    </span>
                 @else
-                    <p id="success">{{ session('success') }}</p>
+                    <span id="success">{{ session('success') }}</span>
                 @endif
             </div>
             @elseif (session('info'))
-            <div class="alert alert-info" role='alertdialog' aria-labelledby="info">
+            <div class="alert alert-info mt-3" role='alertdialog' aria-labelledby="info">
                 @if (session('link'))
-                    <p id="info">
+                    <span id="info">
                         {{ session('info') }}
-                        <a href="{{ session('link') }}" class="label label-primary">{{ session('desc_link') }}</a>
-                    </p>
+                        <a href="{{ session('link') }}" class="badge badge-info">{{ session('desc_link') }}</a>
+                    </span>
                 @else
-                    <p id="info">{{ session('info') }}</p>
+                    <span id="info">{{ session('info') }}</span>
                 @endif
             </div>
             @endif

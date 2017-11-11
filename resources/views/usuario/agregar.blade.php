@@ -1,10 +1,10 @@
 @section('title', 'Agregar contacto')
+@section('back', route('listar_contactos'))
 @extends('layouts.base')
 
 @section('content')
-    <div class="panel panel-default">
-        <div class="panel-heading">Añadir contacto a mi lista</div>
-        <div class="panel-body">
+    <div class="card my-3">
+        <div class="card-body">
             <form method="POST" action="{{ route('agregar_contacto') }}" data-toggle="validator">
                 {!! csrf_field() !!}
                 <div class="form-group">
