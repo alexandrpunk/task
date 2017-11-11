@@ -28,6 +28,7 @@
 @section('js')
 <script src="http://kendo.cdn.telerik.com/2017.3.1026/js/kendo.all.min.js"></script>
 <script>
+$( document ).ready(function() {
     // create ComboBox from select HTML element
     $("#responsable").kendoComboBox({
         suggest: true,
@@ -45,6 +46,7 @@
     });
 
     var validator = $("form").kendoValidator().data("kendoValidator");
+});
 </script>
 <!--<script src="https://cdn.jsdelivr.net/bootstrap.datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js" integrity="sha256-5YmaxAwMjIpMrVlK84Y/+NjCpKnFYa8bWWBbUHSBGfU=" crossorigin="anonymous"></script>-->
 @endsection
