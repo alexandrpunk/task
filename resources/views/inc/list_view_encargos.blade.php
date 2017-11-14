@@ -52,7 +52,7 @@
                 </a>
             </li>
             <li class="list-inline-item">
-                <a href='#' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
+                <a href='http://www.google.com' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
                     </i> <span class='d-block d-sm-inline '>rechazar</span>
                 </a>
             </li>

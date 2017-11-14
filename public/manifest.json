@@ -1,0 +1,29 @@
+{
+    "name": "Encargapp",
+    "short_name": "Encargapp",
+    "description": "Una app de gestion de encargos simple.",
+    "lang": "es-MX",
+    "scope": "/",
+    "start_url": "/encargos/lista",
+    "display": "standalone",
+    "orientation":"portrait-primary",
+    "background_color": "#fff",
+    "theme_color": "#00869d",
+    "icons": [{
+      "src": "img/icons/encargapp192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }, {
+      "src": "img/icons/encargapp256.png",
+      "sizes": "256x256",
+      "type": "image/png"
+    }, {
+      "src": "img/icons/encargapp384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    }, {
+      "src": "img/icons/encargapp512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }]
+  }

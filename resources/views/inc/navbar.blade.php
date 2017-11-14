@@ -10,10 +10,12 @@
                 <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item disabled text-muted"><i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>perfil</a>
-                <a href='{{route("contactar")}}' class="dropdown-item"><i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
+                <a class="dropdown-item disabled text-muted" target='_self'><i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>perfil</a>
+                <a href='{{route("contactar")}}' class="dropdown-item" target='_self'><i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
                 <div class="dropdown-divider"></div>
-                <a href='{{route("logout")}}' class="dropdown-item"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion</a>
+                <a href='{{route("logout")}}' class="dropdown-item" target='_self'><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion</a>
+                <a class="dropdown-item" href="javascript:top.frames.location.reload();">refresh</a>
+
             </div>
         </div>
         @endif
@@ -22,13 +24,13 @@
     <div class="w-100">
             <ul class="nav section-tabs justify-content-center">
                 <li class="nav-item" role="tab" aria-label="Ver Encargos">
-                    <a class="nav-link <?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>" href="{{route('mis_encargos')}}">Encargos</a>
+                    <a class="nav-link <?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>" href="{{route('mis_encargos')}}" target='_self'>Encargos</a>
                 </li>
                 <li class="nav-item" role="tab"  aria-label="Ver Pendientes">
-                    <a class="nav-link <?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>" href="{{route('mis_pendientes')}}">Pendientes</a>
+                    <a class="nav-link <?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>" href="{{route('mis_pendientes')}}" target='_self'>Pendientes</a>
                 </li>
                 <li class="nav-item" role="tab" aria-label="Ver contactos">
-                    <a class="nav-link <?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>" href="{{route('listar_contactos')}}">Contactos</a>
+                    <a class="nav-link <?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>" href="{{route('listar_contactos')}}" target='_self'>Contactos</a>
                 </li>
             </ul>
     </div>
@@ -36,7 +38,7 @@
     @else
     <div class="container my-2">
         @hasSection('back')
-        <a href="@yield('back')" class="btn btn-default text-white"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+        <a href="@yield('back')" class="btn btn-default text-white" target='_self'><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
         @endif
         <span class="navbar-title mr-auto text-truncate">@yield('title')</span>
     </div>
