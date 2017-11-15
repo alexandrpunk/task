@@ -14,6 +14,7 @@ class Encargo extends Model {
     ];
     protected $dates = ['deleted_at'];
     
+    
     public function asignador() {
         return $this->belongsTo('App\Usuario', 'id_asignador');
     }
@@ -26,7 +27,7 @@ class Encargo extends Model {
         return $this->hasMany('App\Comentario', 'id_encargo');
     }
 
-    public function estado() {
+    public function getEstadoAttribute() {
         $fecha_limite = strtotime($this->fecha_plazo);
         $fecha_creacion = strtotime($this->created_at);
         $hoy = Time();

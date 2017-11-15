@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Encargapp">
     <link rel="apple-touch-startup-image" href="{{url('/img/icons/ios/launch.png')}}">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="apple-touch-icon" href="{{url('/img/icons/ios/icon.png')}}">
     <link rel="apple-touch-icon" sizes="152x152" href="{{url('/img/icons/ios/icon152.png')}}">
     <link rel="apple-touch-icon" sizes="167x167" href="{{url('/img/icons/ios/icon167.png')}}">

@@ -185,14 +185,13 @@ class UsuarioController extends Controller {
     }
 
     public function contactos() {
-        $relaciones = Relacionusuario::all()
-            ->where('id_usuario1', Auth::user()->id)
-            ->where('id_usuario2', '!=', Auth::user()->id)
-            ->where('status', 1);
-        $contactos = [];
-        foreach ($relaciones as $relacion) {
-            $contactos[]= $relacion->contacto[0];
-        }
+        $contactos = Relacionusuario::where('id_usuario1',Auth::user()->id)
+            ->where('id_usuario2','!=',Auth::user()->id)
+            ->where('status',1)
+            ->with('contacto')
+            ->get()
+            ->sortBy('contacto.nombre');
+        
         return view('lista', ['contactos' => $contactos, 'titulo' => 'Lista de contactos']);
     }
          

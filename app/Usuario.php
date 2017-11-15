@@ -45,12 +45,8 @@ class Usuario extends Model implements AuthenticatableContract, CanResetPassword
         return $this->hasMany('App\Encargo', 'id_responsable');
     }
     
-    public function relacion1() {
+    public function contactos() {
         return $this->hasMany('App\Relacionusuario', 'id_usuario1');
-    }
-    
-    public function relacion2() {
-        return $this->hasMany('App\Relacionusuario', 'id_usuario2');
     }
         
     public function comentarios() {

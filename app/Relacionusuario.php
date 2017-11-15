@@ -13,9 +13,9 @@ class Relacionusuario extends Model {
     ];
     
     public function usuario() {
-        return $this->hasMany('App\Usuario', 'id', 'id_usuario1');
+        return $this->hasOne('App\Usuario', 'id', 'id_usuario1');
     }
     public function contacto() {
-        return $this->hasMany('App\Usuario', 'id', 'id_usuario2');
+        return $this->hasOne('App\Usuario', 'id', 'id_usuario2');
     }
 }

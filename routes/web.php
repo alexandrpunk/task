@@ -40,7 +40,7 @@ Route::middleware(['middleware' => 'auth'])->group(function() {
     // Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
     
-    Route::get('/test/{id}', 'EncargoController@test')->middleware('permisos');
+    Route::get('/test/{id?}', 'EncargoController@test');
     
     Route::get('/logout',
         function () {

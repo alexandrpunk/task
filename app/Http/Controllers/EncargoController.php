@@ -23,11 +23,12 @@ use App\Notifications\ComentarioNuevo;
 class EncargoController extends Controller {
 
     public function nuevo () {
-        $relaciones = Relacionusuario::all()->where('id_usuario1', Auth::user()->id)->where('status', 1);
-        $contactos = [];
-        foreach ($relaciones as $relacion) {
-            $contactos[]= $relacion->contacto[0];
-        }
+        $contactos = Relacionusuario::where('id_usuario1',Auth::user()->id)
+            ->where('status',1)
+            ->with('contacto')
+            ->get()
+            ->sortBy('contacto.nombre');
+        
         return view('encargo.crear', ['contactos' => $contactos]);
     }
 
@@ -90,6 +91,7 @@ class EncargoController extends Controller {
                         $encargos = Encargo::where('id_asignador', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where('id_responsable', '!=', Auth::user()->id)
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 1:#en progreso
@@ -97,6 +99,7 @@ class EncargoController extends Controller {
                                 ->where('id_responsable', '!=', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 2:#cerca de vencer
@@ -105,6 +108,7 @@ class EncargoController extends Controller {
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','>', DB::raw('NOW()'))
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 3:#vencidos
@@ -112,6 +116,7 @@ class EncargoController extends Controller {
                                 ->where('id_responsable', '!=', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','<', DB::raw('NOW()'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 4:#concluidos a tiempo
@@ -119,6 +124,7 @@ class EncargoController extends Controller {
                                 ->where('id_responsable', '!=', Auth::user()->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 5:#concluidos a destiempo
@@ -126,6 +132,7 @@ class EncargoController extends Controller {
                                 ->where('id_responsable', '!=', Auth::user()->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                     }
@@ -135,12 +142,14 @@ class EncargoController extends Controller {
                         case 0:#todos
                             $encargos = Encargo::where('id_responsable', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 1:#en progreso
                             $encargos = Encargo::where('id_responsable', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 2:#cerca de vencer
@@ -148,24 +157,28 @@ class EncargoController extends Controller {
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','>', DB::raw('NOW()'))
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 3:#vencidos
                             $encargos = Encargo::where('id_responsable', Auth::user()->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','<', DB::raw('NOW()'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 4:#concluidos a tiempo
                             $encargos = Encargo::where('id_responsable', Auth::user()->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 5:#concluidos a destiempo
                             $encargos = Encargo::where('id_responsable', Auth::user()->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                     }
@@ -175,12 +188,14 @@ class EncargoController extends Controller {
                         case 0:#todos
                             $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 1:#en progreso
                             $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 2:#cerca de vencer
@@ -188,24 +203,28 @@ class EncargoController extends Controller {
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','>', DB::raw('NOW()'))
                                 ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
+                                ->orderBy('created_at', 'desc')
                                 ->toSql();
                             break;
                         case 3:#vencidos
                             $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNull('fecha_conclusion')
                                 ->where('fecha_plazo','<', DB::raw('NOW()'))
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 4:#concluidos a tiempo
                             $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                         case 5:#concluidos a destiempo
                             $encargos = Encargo::where('id_responsable', $request->id)
                                 ->WhereNotNull('fecha_conclusion')
                                 ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                                ->orderBy('created_at', 'desc')
                                 ->get();
                             break;
                     }
@@ -217,12 +236,14 @@ class EncargoController extends Controller {
             if (Route::currentRouteName() == 'mis_pendientes') {
                 $data['encargos'] = Encargo::where('id_responsable', Auth::user()->id)
                     ->WhereNull('fecha_conclusion')
+                    ->orderBy('created_at', 'desc')
                     ->get();
                 $data['titulo'] = 'Mis Pendientes';
             } else if (in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true)) {
                 $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
                     ->where('id_responsable', '!=', Auth::user()->id)
                     ->WhereNull('fecha_conclusion')
+                    ->orderBy('created_at', 'desc')
                     ->get();
                 $data['titulo'] = 'Mis Encargos';
             } else if (Route::currentRouteName() == 'encargos_contacto') {
@@ -230,6 +251,7 @@ class EncargoController extends Controller {
                 $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
                     ->where('id_responsable', '=',  $request->id)
                     ->WhereNull('fecha_conclusion')
+                    ->orderBy('created_at', 'desc')
                     ->get();
                 $data['titulo'] = 'Encargos de '.$contacto->nombre.' '.$contacto->apellido;
                 $data['contacto'] = $contacto->nombre.' '.$contacto->apellido;
@@ -248,6 +270,10 @@ class EncargoController extends Controller {
             }
         }
         return view('encargo.encargo', ['encargo' => $data]);
+    }
+    public function rechazar($id) {
+        // $data = Encargo::findOrFail($id);
+        // return view('encargo.encargo', ['encargo' => $data]);
     }
     
     public function notificar () {
@@ -303,10 +329,11 @@ class EncargoController extends Controller {
     }
     
     public function test (Request $request) {
-        $encargo = Encargo:: find($request->id);
-        print_r ($encargo);
-        // $encargo->responsable->notify(new EncargoRecordatorio($encargo));
-        // $encargo->update(['ultima_notificacion' => new DateTime()]);
-        // $encargo->responsable->notify(new EncargoRecordatorio($encargo));
+        $encargos = Encargo::all();
+
+        foreach ($encargos as $encargo) {
+            echo '<p>'.$encargo.'</p>';
+        }
+
     }
 }

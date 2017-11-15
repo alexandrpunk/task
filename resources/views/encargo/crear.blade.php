@@ -61,8 +61,8 @@ $( document ).ready(function() {
                     <label for="responsable" aria-hidden='true'>Responsable</label>
                     <select class="form-control" id='responsable' validationMessage="Selecciona un responsable" name="responsable" role='combobox' style="width: 100%" required>
                         @foreach ($contactos as $contacto)
-                            <option value="{{$contacto->id}}" @php if($contacto->id == old('responsable')){echo 'selected';} @endphp role='option'>
-                                {{ $contacto->nombre }} {{ $contacto->apellido }}
+                            <option value="{{$contacto->contacto->id}}" @php if($contacto->contacto->id == old('responsable')){echo 'selected';} @endphp role='option'>
+                                {{ $contacto->contacto->nombre }} {{ $contacto->contacto->apellido }}
                             </option>
                         @endforeach                        
                     </select>
