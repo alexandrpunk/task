@@ -81,183 +81,33 @@ class EncargoController extends Controller {
     }
 
     public function listarEncargos (Request $request) {
-        // $parametros = $request->route()->parameters();
-        if($request->ajax()){
-            switch (Route::currentRouteName()) {
-                case 'inicio_filtrado':
-                case 'mis_encargos':
-                    switch ($request->estado) {
-                        case 0:
-                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('id_responsable', '!=', Auth::user()->id)
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 1:#en progreso
-                            $encargos = Encargo::where('id_asignador', Auth::user()->id)
-                                ->where('id_responsable', '!=', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 2:#cerca de vencer
-                            $encargos = Encargo::where('id_asignador', Auth::user()->id)
-                                ->where('id_responsable', '!=', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('fecha_plazo','>', DB::raw('NOW()'))
-                                ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 3:#vencidos
-                            $encargos = Encargo::where('id_asignador', Auth::user()->id)
-                                ->where('id_responsable', '!=', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('fecha_plazo','<', DB::raw('NOW()'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 4:#concluidos a tiempo
-                            $encargos = Encargo::where('id_asignador', Auth::user()->id)
-                                ->where('id_responsable', '!=', Auth::user()->id)
-                                ->WhereNotNull('fecha_conclusion')
-                                ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 5:#concluidos a destiempo
-                            $encargos = Encargo::where('id_asignador', Auth::user()->id)
-                                ->where('id_responsable', '!=', Auth::user()->id)
-                                ->WhereNotNull('fecha_conclusion')
-                                ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                    }
-                    break;
-                case 'mis_pendientes':
-                    switch ($request->estado) {
-                        case 0:#todos
-                            $encargos = Encargo::where('id_responsable', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 1:#en progreso
-                            $encargos = Encargo::where('id_responsable', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 2:#cerca de vencer
-                            $encargos = Encargo::where('id_responsable', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('fecha_plazo','>', DB::raw('NOW()'))
-                                ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 3:#vencidos
-                            $encargos = Encargo::where('id_responsable', Auth::user()->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('fecha_plazo','<', DB::raw('NOW()'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 4:#concluidos a tiempo
-                            $encargos = Encargo::where('id_responsable', Auth::user()->id)
-                                ->WhereNotNull('fecha_conclusion')
-                                ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 5:#concluidos a destiempo
-                            $encargos = Encargo::where('id_responsable', Auth::user()->id)
-                                ->WhereNotNull('fecha_conclusion')
-                                ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                    }
-                    break;
-                case 'encargos_contacto':
-                    switch ($request->estado) {
-                        case 0:#todos
-                            $encargos = Encargo::where('id_responsable', $request->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 1:#en progreso
-                            $encargos = Encargo::where('id_responsable', $request->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '<', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 2:#cerca de vencer
-                            $encargos = Encargo::where('id_responsable', $request->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('fecha_plazo','>', DB::raw('NOW()'))
-                                ->where(DB::raw('time_to_sec(timediff(now(), created_at)'), '>=', DB::raw('time_to_sec(timediff(fecha_plazo, created_at))*0.5)'))
-                                ->orderBy('created_at', 'desc')
-                                ->toSql();
-                            break;
-                        case 3:#vencidos
-                            $encargos = Encargo::where('id_responsable', $request->id)
-                                ->WhereNull('fecha_conclusion')
-                                ->where('fecha_plazo','<', DB::raw('NOW()'))
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 4:#concluidos a tiempo
-                            $encargos = Encargo::where('id_responsable', $request->id)
-                                ->WhereNotNull('fecha_conclusion')
-                                ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                        case 5:#concluidos a destiempo
-                            $encargos = Encargo::where('id_responsable', $request->id)
-                                ->WhereNotNull('fecha_conclusion')
-                                ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
-                                ->orderBy('created_at', 'desc')
-                                ->get();
-                            break;
-                    }
-                    break;       
-            }
-            return view('inc.list_view_encargos', ['encargos' => $encargos]);
-        } else {
-            $data=[];
-            if (Route::currentRouteName() == 'mis_pendientes') {
-                $data['encargos'] = Encargo::where('id_responsable', Auth::user()->id)
-                    ->WhereNull('fecha_conclusion')
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-                $data['titulo'] = 'Mis Pendientes';
-            } else if (in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true)) {
-                $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
-                    ->where('id_responsable', '!=', Auth::user()->id)
-                    ->WhereNull('fecha_conclusion')
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-                $data['titulo'] = 'Mis Encargos';
-            } else if (Route::currentRouteName() == 'encargos_contacto') {
+        $data=[];
+        $usuario = null;
+        switch (Route::currentRouteName()) {
+            case 'mis_encargos':
+                $vista = 1; 
+                $data['titulo'] = 'Mis encargos';         
+                break;
+            case 'mis_pendientes':
+                $vista = 2; 
+                $data['titulo'] = 'Mis pendientes'; 
+                break;
+            case 'encargos_contacto':
+                $usuario = $request->id;
                 $contacto = Usuario::find($request->id);
-                $data['encargos'] = Encargo::where('id_asignador', Auth::user()->id)
-                    ->where('id_responsable', '=',  $request->id)
-                    ->WhereNull('fecha_conclusion')
-                    ->orderBy('created_at', 'desc')
-                    ->get();
+                $vista = 3;
                 $data['titulo'] = 'Encargos de '.$contacto->nombre.' '.$contacto->apellido;
                 $data['contacto'] = $contacto->nombre.' '.$contacto->apellido;
-            }
+                break;       
+        } 
+        if($request->ajax()){
+            $encargos = Encargo::filtrarEstado($request->estado,$usuario,$vista); 
+            return view('inc.list_view_encargos', ['encargos' => $encargos]);
+        } else {
+            $encargos = Encargo::filtrarEstado(0,$usuario,$vista); 
+            $data['encargos'] = $encargos; 
             return view('lista', $data);
-        }
+        }         
     }
 
     public function ver($id) {
@@ -329,10 +179,11 @@ class EncargoController extends Controller {
     }
     
     public function test (Request $request) {
-        $encargos = Encargo::all();
-
+        $encargos = Encargo::filtrarEstado(2,null,1);
+    //    dd($encargos);
         foreach ($encargos as $encargo) {
-            echo '<p>'.$encargo.'</p>';
+            echo '<p>'.$encargo.'<br>'.$encargo->estado->nombre.'<br>'.$encargo->estado->porcentaje.'</p>';
+            echo '<hr>';
         }
 
     }

@@ -13,13 +13,13 @@
 @else
 <div class="list-group" role='list' id='encargos'>
     @foreach ($encargos as $encargo)
-    <div class='list-group-item task' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
+    <div class='list-group-item task' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
     <div class='encargo-header'>
         <span class='user'>
             @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
                 Te encargaste:
             @elseif ($encargo->id_asignador != Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
-                Encargado por: {{$encargo->asignador->nombre}} {{$encargo->responsable->apellido}}
+                Encargado por: {{$encargo->asignador->nombre}} {{$encargo->asignador->apellido}}
             @elseif ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable != Auth::user()->id)
                Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
             @endif

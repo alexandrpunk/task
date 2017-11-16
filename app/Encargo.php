@@ -2,8 +2,12 @@
 
 namespace App;
 
+use DB;
+use DateTime;
+use DateInterval;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Encargo extends Model {
     use SoftDeletes;
@@ -38,13 +42,14 @@ class Encargo extends Model {
                     $nombre = 'en progreso';
                     $color = '#e6c94c';
                     break;
-                case ($porcentaje > 50 && $porcentaje <= 100):
+                case ($porcentaje >= 50 && $porcentaje <= 100):
                     $nombre = 'cerca de vencer';
                     $color = '#dd7f21';
                     break;
                 case ($porcentaje > 100 || $porcentaje < 0):
                     $nombre = 'Vencido';
                     $color = '#f00';
+                    $porcentaje = 100;
                     break;
             }
         } else {
@@ -58,8 +63,181 @@ class Encargo extends Model {
                     $color = '#229f22';
                     break;
             }
+            $porcentaje = 100;
         }
         
-        return (object)$estado = ['nombre' => $nombre, 'color' => $color];
+        return (object)$estado = ['nombre' => $nombre, 'color' => $color, 'porcentaje' => $porcentaje];
     }
+    
+    public static function filtrarEstado($estado, $usuario, $vista) {
+         switch ($estado) {
+            case 0:#todos
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNull('fecha_conclusion')
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                }
+                break;
+            case 1:#en progreso
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 50)
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 0)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 50)
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 0)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 50)
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 0)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                }
+                break;
+            case 2:#cerca de vencer
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            // ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 50)
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 100)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>=', 50)
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<=', 100)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNull('fecha_conclusion')
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>=', 50)
+                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 100)
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                }
+                break;
+              case 3:#vencidos
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','<', DB::raw('NOW()'))
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','<', DB::raw('NOW()'))
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNull('fecha_conclusion')
+                            ->where('fecha_plazo','<', DB::raw('NOW()'))
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                }
+                break;
+            case 4:#concluidos a tiempo
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->orderBy('created_at', 'asc')
+                            ->get();
+                        break;
+                }
+                break;
+            case 5:#concluidos a destiempo
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                        break;
+                }
+                break;
+        }
+        return $encargos;
+    }
+
 }
