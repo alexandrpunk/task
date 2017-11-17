@@ -17,9 +17,9 @@
                 <a href="" class="btn btn-sm btn-default text-success d-inline-block  d-sm-block">
                     <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>encargar</span>
                 </a>
-                <a href="" class="btn btn-sm btn-default text-danger d-inline-block  d-sm-block">
+                {{--  <a href="" class="btn btn-sm btn-default text-danger d-inline-block  d-sm-block">
                     <i class="fa fa-ban fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>bloquear</span>
-                </a>
+                </a>  --}}
             </div>
         </div>
     </div>

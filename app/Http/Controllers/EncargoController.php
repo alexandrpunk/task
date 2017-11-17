@@ -101,8 +101,8 @@ class EncargoController extends Controller {
                 break;       
         } 
         if($request->ajax()){
-            $encargos = Encargo::filtrarEstado($request->estado,$usuario,$vista); 
-            return view('inc.list_view_encargos', ['encargos' => $encargos]);
+            $data['encargos'] = Encargo::filtrarEstado($request->estado,$usuario,$vista);
+            return view('inc.list_view_encargos', $data);
         } else {
             $encargos = Encargo::filtrarEstado(0,$usuario,$vista); 
             $data['encargos'] = $encargos; 
@@ -146,15 +146,19 @@ class EncargoController extends Controller {
                                 ->where(DB::raw('timediff(NOW(), ultima_notificacion)'), '>', DB::raw('sec_to_time(TIME_TO_SEC(timediff(fecha_plazo, created_at))/3)'));
                         })->orWhereNull('ultima_notificacion');
                     })
+                    ->where('mute', false)
                     ->get();
         
         #se va recorriendo encargo pro encargo para enviar su notificacion
         foreach ($encargos as $encargo) {
             $encargo->responsable->notify(new EncargoRecordatorio($encargo));
-            $encargo->update(['ultima_notificacion' => new DateTime()]);
+            $encargo->updateUltimaNotificacion();
         }
     }
-    
+    public function silenciar ($id) {
+        Encargo::find($id)->silenciar();       
+
+    }
     public function comentar (Request $request, $id) {
         $this->validate($request, [
             'comentario' => 'required',
@@ -176,15 +180,10 @@ class EncargoController extends Controller {
         }
         $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
         return back()->with('success','Se a comentado el encargo con exito');
-    }
-    
+    }    
     public function test (Request $request) {
-        $encargos = Encargo::filtrarEstado(2,null,1);
-    //    dd($encargos);
-        foreach ($encargos as $encargo) {
-            echo '<p>'.$encargo.'<br>'.$encargo->estado->nombre.'<br>'.$encargo->estado->porcentaje.'</p>';
-            echo '<hr>';
-        }
-
+        // $encargo->updateUltimaNotificacion();
+        // $encargo = Encargo::find(14);
+        // echo $encargo->ultima_notificacion;
     }
 }

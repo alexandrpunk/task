@@ -14,7 +14,7 @@ class Encargo extends Model {
     
     protected $table = 'Encargos';
     protected $fillable = [
-        'encargo', 'fecha_plazo', 'fecha_conclusion', 'ultima_notificacion', 'visto', 'id_asignador', 'id_responsable'
+        'encargo', 'fecha_plazo', 'fecha_conclusion', 'ultima_notificacion', 'mute', 'visto', 'id_asignador', 'id_responsable'
     ];
     protected $dates = ['deleted_at'];
     
@@ -29,6 +29,14 @@ class Encargo extends Model {
     
     public function comentarios() {
         return $this->hasMany('App\Comentario', 'id_encargo');
+    }
+    public function silenciar() {
+        if ($this->mute) {
+            $this->update(['mute'=> false]);
+        } else {
+            $this->update(['mute'=> true]);
+        }
+        
     }
 
     public function getEstadoAttribute() {
@@ -101,16 +109,16 @@ class Encargo extends Model {
                         $encargos = Encargo::where('id_asignador', Auth::user()->id)
                             ->where('id_responsable','!=', Auth::user()->id)
                             ->WhereNull('fecha_conclusion')
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 50)
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 0)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '<', 50)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '>', 0)
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
                     case 2:#mis pendientes
                         $encargos = Encargo::where('id_responsable', Auth::user()->id)
                             ->WhereNull('fecha_conclusion')
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 50)
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 0)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '<', 50)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '>', 0)
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -118,8 +126,8 @@ class Encargo extends Model {
                         $encargos = Encargo::where('id_asignador', Auth::user()->id)
                             ->where('id_responsable', $usuario)
                             ->WhereNull('fecha_conclusion')
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 50)
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 0)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '<', 50)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '>', 0)
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -131,16 +139,16 @@ class Encargo extends Model {
                         $encargos = Encargo::where('id_asignador', Auth::user()->id)
                             ->where('id_responsable','!=', Auth::user()->id)
                             ->WhereNull('fecha_conclusion')
-                            // ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>', 50)
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 100)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '>=', 50)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '<', 100)
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
                     case 2:#mis pendientes
                         $encargos = Encargo::where('id_responsable', Auth::user()->id)
                             ->WhereNull('fecha_conclusion')
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>=', 50)
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<=', 100)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '>=', 50)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '<', 100)
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -148,8 +156,8 @@ class Encargo extends Model {
                         $encargos = Encargo::where('id_asignador', Auth::user()->id)
                             ->where('id_responsable', $usuario)
                             ->WhereNull('fecha_conclusion')
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '>=', 50)
-                            ->where(DB::raw('(timediff(now(),created_at)/timediff(fecha_plazo, created_at))*100'), '<', 100)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '>=', 50)
+                            ->where(DB::raw('(UNIX_TIMESTAMP(now())-UNIX_TIMESTAMP(created_at))/(UNIX_TIMESTAMP(fecha_plazo)-UNIX_TIMESTAMP(created_at))*100'), '<', 100)
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -239,5 +247,8 @@ class Encargo extends Model {
         }
         return $encargos;
     }
-
+    
+    public function updateUltimaNotificacion(){
+        $this->update(['ultima_notificacion' => new DateTime()]);
+    }
 }

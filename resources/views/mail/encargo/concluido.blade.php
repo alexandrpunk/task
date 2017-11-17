@@ -16,7 +16,7 @@
         Cumplido el dia: {{strftime('%A %d de %B %Y',strtotime($encargo->fecha_conclusion->getTimestamp()))}}
     </p>
     <p style='font-size:1rem;font-weight:bolder;color:#545454;'>
-        Estado de finalizacion: {{$encargo->estado()->nombre}}
+        Estado de finalizacion: {{$encargo->estado->nombre}}
     </p>
 </div>
 <div style='text-align:center;'>

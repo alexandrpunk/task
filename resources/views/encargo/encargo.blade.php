@@ -11,13 +11,32 @@
 @endsection
 
 @section('js')
+<script>
+
+$("#silenciar").click(function(){
+   $("#silenciar").prop('disabled', true);
+    $.ajax({
+        type: "GET",
+        url: $(this).attr('data-url'),
+        success: function(result){
+            $("#silenciar").prop('disabled', false);
+            $("#silenciar").toggleClass('text-muted');
+
+            if ($('#silenciar').data('muted')) {
+                $("#silenciar").html('<i class="fa fa-bell fa-fw" aria-hidden="true"></i>');
+                $('#silenciar').data('muted',0);
+            } else {
+                $("#silenciar").html('<i class="fa fa-bell-slash fa-fw" aria-hidden="true"></i>');
+                $('#silenciar').data('muted',1);
+            }
+        }
+    });
+});
+</script>
 @endsection
-<?php
-\Carbon\Carbon::setLocale('es_MX.utf8'); 
-setlocale(LC_TIME, 'es_MX.utf8');
-?>
+
 @section('content')
-<div class='list-group-item rounded task mt-3' style='border-left-color:{{$encargo->estado()->color}};' role='listitem'>
+<div class='list-group-item rounded task mt-3' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
     <div class='encargo-header'>
         <span class='user'>
             @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
@@ -26,16 +45,22 @@ setlocale(LC_TIME, 'es_MX.utf8');
                 Encargado por: {{$encargo->asignador->nombre}} {{$encargo->responsable->apellido}}
             @elseif ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable != Auth::user()->id)
                Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
-            @endif
-            
+            @endif            
         </span>
+        <button class="btn btn-sm float-right text-dark @if($encargo->mute) text-muted @endif" id='silenciar' data-muted='{{$encargo->mute}}' data-url="{{route('silenciar_encargo', ['id' => $encargo->id])}}">
+            @if($encargo->mute)
+            <i class="fa fa-bell-slash fa-fw" aria-hidden="true"></i>
+            @else
+            <i class="fa fa-bell fa-fw" aria-hidden="true"></i>
+            @endif
+        </button>
     </div>
     <div class='encargo-body'>
         <h4>
             {{$encargo->encargo}}
         </h4>
         <span class='time'>
-            <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
+            <i class="fa fa-clock-o text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
             @if ($encargo->visto)
                 <i class="fa fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo visto"></i>
@@ -47,17 +72,17 @@ setlocale(LC_TIME, 'es_MX.utf8');
     </div>
     <div class='encargo-opciones'>
         <ul class="list-inline options">
-            @if($encargo->visto)
+            @if($encargo->visto && $encargo->fecha_conclusion == null && $encargo->id_responsable == Auth::user()->id)
             <li class="list-inline-item">
                 <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center'><i class="fa fa-check fa-fw" aria-hidden="true">
                     </i> concluir
                 </a>
             </li>
-            <li class="list-inline-item">
+            {{--  <li class="list-inline-item">
                 <a href='#' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
                     </i> rechazar
                 </a>
-            </li>
+            </li>  --}}
             @endif
         </ul>
     </div>

@@ -28,12 +28,15 @@
     <div class='encargo-body'>
         <h4 class='truncado'>{{$encargo->encargo}}</h4>
         <span class='time'>
-            <i class="fa fa-clock-o text-primary" aria-hidden="true"></i>
+            <i class="fa fa-clock-o text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
             @if ($encargo->visto)
                 <i class="fa fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo visto"></i>
             @else
                 <i class="fa fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo sin ver"></i>
+            @endif
+            @if ($encargo->mute)
+                <i class="fa fa-bell-slash fa-fw text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo silenciado"></i>
             @endif
         </span>
         <hr>
@@ -51,11 +54,11 @@
                     </i> <span class='d-block d-sm-inline'>concluir</span>
                 </a>
             </li>
-            <li class="list-inline-item">
+            {{--  <li class="list-inline-item">
                 <a href='http://www.google.com' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
                     </i> <span class='d-block d-sm-inline '>rechazar</span>
                 </a>
-            </li>
+            </li>  --}}
             @endif
         </ul>
     </div>

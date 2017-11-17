@@ -23,7 +23,8 @@ Route::middleware(['middleware' => 'auth'])->group(function() {
         Route::get('/encargos/concluir/{id}', 'EncargoController@concluir')->name('concluir_encargo');    
         Route::get('/encargos/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
         Route::post('/encargos/comentar/{id}', 'EncargoController@comentar')->name('comentar_encargo');
-        Route::post('/encargos/rechazar/{id}', 'EncargoController@rechazar')->name('rechazar_encargo');
+        Route::get('/encargos/rechazar/{id}', 'EncargoController@rechazar')->name('rechazar_encargo');
+        Route::get('/encargos/silenciar/{id}', 'EncargoController@silenciar')->name('silenciar_encargo');
     });
     
     #lista los encargos por usuario

@@ -16,7 +16,7 @@
         Con plazo de cumplimineto para: {{strftime('%A %d de %B %Y',strtotime($encargo->fecha_plazo))}}
     </p>
     <p style='font-size:1rem;font-weight:bolder;color:#545454;'>
-        Estado: <span style='background-color:{{$encargo->estado()->color}};color:#fff;padding:2px 5px;text-align:center;border-radius:3px;'>{{$encargo->estado()->nombre}}</span>
+        Estado: <span style='background-color:{{$encargo->estado->color}};color:#fff;padding:2px 5px;text-align:center;border-radius:3px;'>{{$encargo->estado->nombre}}</span>
     </p>
 </div>
 <div style='text-align:center;'>

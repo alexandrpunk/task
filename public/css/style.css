@@ -107,8 +107,11 @@ p.logo-login{
  .task .user{
     font-size: 0.9rem;
     margin: 0;
-
-    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    max-width: 50%;
     color:#919191;
  }
  .task .time{
