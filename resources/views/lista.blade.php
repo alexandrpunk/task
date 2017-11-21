@@ -38,6 +38,7 @@
             <option value="3">Vencidos</option>
             <option value="4">Concluidos a tiempo</option>
             <option value="5">Concluidos a destiempo</option>
+            <option value="6">Rechazados</option>
         </select>            
         <span class="input-group-btn">
             <button class="btn btn-sm btn-info" type="button" data-url="{{Request::url()}}" id='filtrar'>filtrar</button>

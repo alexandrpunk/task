@@ -10,12 +10,11 @@
                 <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item disabled text-muted" target='_self'><i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>perfil</a>
+                <a class="dropdown-item disabled text-muted" target='_self'><i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>{{Auth::user()->nombre}} {{Auth::user()->apellido}}</a>
                 <a href='{{route("contactar")}}' class="dropdown-item" target='_self'><i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
                 <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="javascript:top.frames.location.reload();">Recargar app</a>
                 <a href='{{route("logout")}}' class="dropdown-item" target='_self'><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion</a>
-                <a class="dropdown-item" href="javascript:top.frames.location.reload();">refresh</a>
-
             </div>
         </div>
         @endif

@@ -61,17 +61,24 @@ class Encargo extends Model {
                     break;
             }
         } else {
-            switch ($this->fecha_conclusion > $this->fecha_plazo) {
-                case true :
-                    $nombre = 'concluido a destiempo';
-                    $color = '#788960';
-                    break;
-                case false:
-                    $nombre = 'concluido a tiempo';
-                    $color = '#229f22';
-                    break;
-            }
-            $porcentaje = 100;
+            if ($this->fecha_conclusion < $this->created_at) {
+                $nombre = 'Rechazado';
+                $color = '#5D5D5D';
+                $porcentaje = 0;
+
+            } else {
+                switch ($this->fecha_conclusion > $this->fecha_plazo) {
+                    case true :
+                        $nombre = 'concluido a destiempo';
+                        $color = '#788960';
+                        break;
+                    case false:
+                        $nombre = 'concluido a tiempo';
+                        $color = '#229f22';
+                        break;
+                }
+                $porcentaje = 100;
+            }            
         }
         
         return (object)$estado = ['nombre' => $nombre, 'color' => $color, 'porcentaje' => $porcentaje];
@@ -197,6 +204,7 @@ class Encargo extends Model {
                             ->where('id_responsable','!=', Auth::user()->id)
                             ->WhereNotNull('fecha_conclusion')
                             ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '>=', 'created_at')
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -204,6 +212,7 @@ class Encargo extends Model {
                         $encargos = Encargo::where('id_responsable', Auth::user()->id)
                             ->WhereNotNull('fecha_conclusion')
                             ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '>=', 'created_at')
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -212,6 +221,7 @@ class Encargo extends Model {
                             ->where('id_responsable', $usuario)
                             ->WhereNotNull('fecha_conclusion')
                             ->whereColumn('fecha_plazo', '>=', 'fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '>=', 'created_at')
                             ->orderBy('created_at', 'asc')
                             ->get();
                         break;
@@ -224,6 +234,7 @@ class Encargo extends Model {
                             ->where('id_responsable','!=', Auth::user()->id)
                             ->WhereNotNull('fecha_conclusion')
                             ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '>=', 'created_at')
                             ->orderBy('created_at', 'desc')
                             ->get();
                         break;
@@ -231,6 +242,7 @@ class Encargo extends Model {
                         $encargos = Encargo::where('id_responsable', Auth::user()->id)
                             ->WhereNotNull('fecha_conclusion')
                             ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '>=', 'created_at')
                             ->orderBy('created_at', 'desc')
                             ->get();
                         break;
@@ -239,6 +251,34 @@ class Encargo extends Model {
                             ->where('id_responsable', $usuario)
                             ->WhereNotNull('fecha_conclusion')
                             ->whereColumn('fecha_plazo', '<', 'fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '>=', 'created_at')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                        break;
+                }
+                break;
+                case 6:#Rechazadas
+                switch ($vista) {
+                    case 1:#mis encargos 
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable','!=', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '<', 'created_at')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                        break;
+                    case 2:#mis pendientes
+                        $encargos = Encargo::where('id_responsable', Auth::user()->id)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '<', 'created_at')
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+                        break;
+                    case 3:#encargos contacto
+                        $encargos = Encargo::where('id_asignador', Auth::user()->id)
+                            ->where('id_responsable', $usuario)
+                            ->WhereNotNull('fecha_conclusion')
+                            ->whereColumn('fecha_conclusion', '<', 'created_at')
                             ->orderBy('created_at', 'desc')
                             ->get();
                         break;

@@ -48,17 +48,12 @@
                     <i class="fa fa-eye fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>ver</span>
                 </a>
             </li>
-            @if($encargo->visto)
+            @if($encargo->visto && $encargo->fecha_conclusion == null)
             <li class="list-inline-item">
                 <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center'><i class="fa fa-check fa-fw" aria-hidden="true">
                     </i> <span class='d-block d-sm-inline'>concluir</span>
                 </a>
             </li>
-            {{--  <li class="list-inline-item">
-                <a href='http://www.google.com' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
-                    </i> <span class='d-block d-sm-inline '>rechazar</span>
-                </a>
-            </li>  --}}
             @endif
         </ul>
     </div>

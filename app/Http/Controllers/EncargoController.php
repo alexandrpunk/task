@@ -121,9 +121,15 @@ class EncargoController extends Controller {
         }
         return view('encargo.encargo', ['encargo' => $data]);
     }
+
     public function rechazar($id) {
-        // $data = Encargo::findOrFail($id);
-        // return view('encargo.encargo', ['encargo' => $data]);
+        $encargo = Encargo::find($id);
+        $encargo->fecha_conclusion = (new DateTime())->setTimestamp(0);
+        $encargo->save();
+        if($encargo->id_asignador != Auth::user()->id) {
+            $encargo->asignador->notify(new EncargoRechazado($encargo));
+        }
+        return back()->with('success','Haz rechazado el encargo');
     }
     
     public function notificar () {
@@ -155,10 +161,12 @@ class EncargoController extends Controller {
             $encargo->updateUltimaNotificacion();
         }
     }
+
     public function silenciar ($id) {
         Encargo::find($id)->silenciar();       
 
     }
+
     public function comentar (Request $request, $id) {
         $this->validate($request, [
             'comentario' => 'required',
@@ -180,10 +188,13 @@ class EncargoController extends Controller {
         }
         $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
         return back()->with('success','Se a comentado el encargo con exito');
-    }    
+    }  
+
     public function test (Request $request) {
-        // $encargo->updateUltimaNotificacion();
-        // $encargo = Encargo::find(14);
-        // echo $encargo->ultima_notificacion;
+        // $encargos = Encargo::filtrarEstado(6,5,2);
+        // foreach ($encargos as $encargo){
+        //     echo $encargo;
+
+        // }
     }
 }

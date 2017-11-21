@@ -47,6 +47,7 @@ $("#silenciar").click(function(){
                Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
             @endif            
         </span>
+        @if ($encargo->id_responsable == Auth::user()->id)
         <button class="btn btn-sm float-right text-dark @if($encargo->mute) text-muted @endif" id='silenciar' data-muted='{{$encargo->mute}}' data-url="{{route('silenciar_encargo', ['id' => $encargo->id])}}">
             @if($encargo->mute)
             <i class="fa fa-bell-slash fa-fw" aria-hidden="true"></i>
@@ -54,6 +55,7 @@ $("#silenciar").click(function(){
             <i class="fa fa-bell fa-fw" aria-hidden="true"></i>
             @endif
         </button>
+        @endif
     </div>
     <div class='encargo-body'>
         <h4>
@@ -78,11 +80,11 @@ $("#silenciar").click(function(){
                     </i> concluir
                 </a>
             </li>
-            {{--  <li class="list-inline-item">
-                <a href='#' onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
+            <li class="list-inline-item">
+                <a href="{{route('rechazar_encargo', ['id' => $encargo->id])}}" onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
                     </i> rechazar
                 </a>
-            </li>  --}}
+            </li>
             @endif
         </ul>
     </div>

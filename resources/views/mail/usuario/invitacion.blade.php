@@ -17,7 +17,7 @@
     ¿Cómo funciona?
 </h2>
 <p style='font-size:1.1rem;text-align:center;'>
-    Tu le haces un encargo a uno de tus contactos, y {{config('app.name')}} se da a la tarea de que este se cumpla, le enviamos recordatorios, le damos seguimiento al tiempo restante que le quede al encargo para cumplirse y te avisamos si tu contacto ya ha tu encargo, si lo ha concluido o si tiene algun comentario.
+    Tu le haces un encargo a uno de tus contactos, y {{config('app.name')}} se da a la tarea de que este se cumpla, le enviamos recordatorios, le damos seguimiento al tiempo restante que le quede al encargo para cumplirse y te avisamos si tu contacto ya ha cumplido tu encargo, si lo ha concluido o si tiene algun comentario.
 </p>
 <p style='font-size:1.1rem;text-align:center;'>
     Ademas puedes utilizar  {{config('app.name')}} para gestionar tus propios encargos.
