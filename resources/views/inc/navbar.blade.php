@@ -1,27 +1,34 @@
 <nav class="navbar navbar-encargapp fixed-top p-0">
     @if( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','listar_contactos','login'], true) )
     <div class="container my-2">
-        <a class="navbar-brand" href="{{route('mis_encargos')}}">
-            <img class='logo' src="{{url('/img/logo-encargapp.svg')}}" alt="encargapp"> {{ config('app.name') }} <span class="badge d-none d-sm-inline">{{ config('app.version') }}</span>
+        <a class="navbar-brand" href="{{route('mis_encargos')}}" role=''>
+            <img class='logo' src="{{url('/img/logo-encargapp.svg')}}" alt="encargapp" aria-hidden="true"> {{ config('app.name') }} <span class="badge d-none d-sm-inline">{{ config('app.version') }}</span>
         </a>
         @if (Auth::check())        
-        <div class="dropdown">
-            <button type="button" class="btn btn-info" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <div class="dropdown" role='menu' >
+            <a class="btn text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label='menu'>
                 <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
-            </button>
+            </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item disabled text-muted" target='_self'><i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>{{Auth::user()->nombre}} {{Auth::user()->apellido}}</a>
-                <a href='{{route("contactar")}}' class="dropdown-item" target='_self'><i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
+                <a class="dropdown-item disabled text-muted" role='menuitem'>
+                    <i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>{{Auth::user()->nombre}} {{Auth::user()->apellido}}
+                </a>
+                <a href='{{route("contactar")}}' class="dropdown-item" role='menuitem'>
+                    <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="javascript:top.frames.location.reload();">Recargar app</a>
-                <a href='{{route("logout")}}' class="dropdown-item" target='_self'><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion</a>
+                <a class="dropdown-item" href="javascript:top.frames.location.reload();" role='menuitem'>
+                    Recargar app
+                </a>
+                <a href='{{route("logout")}}' class="dropdown-item" role='menuitem'>
+                    <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion
+                </a>
             </div>
         </div>
         @endif
     </div>
     @if (Auth::check())
-    <div class="w-100">
-            <ul class="nav section-tabs justify-content-center">
+    <div class="w-100" role='navigation'>
+            <ul class="nav section-tabs justify-content-center" role='tablist'>
                 <li class="nav-item" role="tab" aria-label="Ver Encargos">
                     <a class="nav-link <?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>" href="{{route('mis_encargos')}}" target='_self'>Encargos</a>
                 </li>

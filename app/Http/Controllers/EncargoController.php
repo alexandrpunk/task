@@ -19,6 +19,7 @@ use App\Notifications\EncargoNuevo;
 use App\Notifications\EncargoVisto;
 use App\Notifications\EncargoRecordatorio;
 use App\Notifications\EncargoConcluido;
+use App\Notifications\EncargoRechazado;
 use App\Notifications\ComentarioNuevo;
 class EncargoController extends Controller {
 

@@ -11,47 +11,54 @@
     @endif
     
 @else
-<div class="list-group" role='list' id='encargos'>
+<div class="list-group" role='list' id='encargos' aria-label='lista de encargos'>
     @foreach ($encargos as $encargo)
     <div class='list-group-item task' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
+    <div role='option'>
     <div class='encargo-header'>
         <span class='user'>
             @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
                 Te encargaste:
             @elseif ($encargo->id_asignador != Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
-                Encargado por: {{$encargo->asignador->nombre}} {{$encargo->asignador->apellido}}
+                {{$encargo->asignador->nombre}} {{$encargo->asignador->apellido}} te encargo:
             @elseif ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable != Auth::user()->id)
-               Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
+               Le encargaste a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
             @endif
         </span>
     </div>
     <div class='encargo-body'>
         <h4 class='truncado'>{{$encargo->encargo}}</h4>
-        <span class='time'>
+        <span class="sr-only">encargado el:{{$encargo->created_at->formatLocalized('%A %d de %B %Y')}}</span>
+        <span class="sr-only">con plazo para el: {{strftime('%A %d de %B %Y',strtotime($encargo->fecha_plazo))}}</span>
+        <span class="sr-only">@if ($encargo->visto) visto @else sin ver @endif</span>
+        <span class="sr-only">@if ($encargo->mute) silenciado @endif</span>
+        <span class='time' aria-hidden='true'>
             <i class="fa fa-clock-o text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
             @if ($encargo->visto)
-                <i class="fa fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo visto"></i>
+                <i class="fa fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="visto"></i>
             @else
-                <i class="fa fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo sin ver"></i>
+                <i class="fa fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="sin ver"></i>
             @endif
             @if ($encargo->mute)
-                <i class="fa fa-bell-slash fa-fw text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo silenciado"></i>
+                <i class="fa fa-bell-slash fa-fw text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="silenciado"></i>
             @endif
         </span>
         <hr>
     </div>
+    </div>
     <div class='encargo-opciones'>
         <ul class="list-inline options">
             <li class="list-inline-item">
-                <a onclick="clickAndDisable(this);" href="{{route('ver_encargo', ['id' => $encargo->id])}}" class='btn text-primary text-center'>
+                <a onclick="clickAndDisable(this);" href="{{route('ver_encargo', ['id' => $encargo->id])}}" class='btn text-primary text-center' aria-label='ver encargo'>
                     <i class="fa fa-eye fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>ver</span>
                 </a>
             </li>
             @if($encargo->visto && $encargo->fecha_conclusion == null)
             <li class="list-inline-item">
-                <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center'><i class="fa fa-check fa-fw" aria-hidden="true">
-                    </i> <span class='d-block d-sm-inline'>concluir</span>
+                <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center' aria-label='concluir encargo'>
+                    <i class="fa fa-check fa-fw" aria-hidden="true"></i>
+                    <span class='d-block d-sm-inline'>concluir</span>
                 </a>
             </li>
             @endif

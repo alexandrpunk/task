@@ -1,4 +1,8 @@
 @extends('layouts.base')
+<?php
+\Carbon\Carbon::setLocale('es_MX.utf8'); 
+setlocale(LC_TIME, 'es_MX.utf8');
+?>
 @section('title', $titulo)
 @if (Route::currentRouteName() == 'encargos_contacto')
 @section('back', Route('listar_contactos'))
@@ -13,8 +17,9 @@
 @endsection
 
 @section('content')
-    <section class="py-3">
-        <div class="input-group mb-3">
+    <section class="py-3" role='region'>
+     <span class="sr-only" role='heading'>Titulo de la seccion: @yield('title')</span>
+        <div class="input-group mb-3" role='search'>
             <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
             <input type="search" class="form-control" oninput="w3.filterHTML('.list-group', '.list-group-item', this.value)" placeholder='buscar...'>
         </div>

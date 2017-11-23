@@ -24,8 +24,7 @@
     @yield('css')
 
 </head>
-<body>
-<span class="sr-only">Titulo de la pagina: @yield('title')</span>
+<body role='aplication'>
     @include('inc.navbar')
     <div class="h-100 list-body " role='main'>
         <div class="container">
