@@ -25,7 +25,7 @@
 
 @section('content')
 <div class="card p-3 my-3">
-    <form method="POST" action="{{ route('registrar') }}">
+    <form method="POST" action="{{ route('editar_usuario') }}">
         {!! csrf_field() !!}
         <div class="row">
             <div class="col-12 col-sm-3">
