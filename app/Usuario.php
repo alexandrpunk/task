@@ -30,6 +30,15 @@ class Usuario extends Model implements AuthenticatableContract, CanResetPassword
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }
+    public function setNombreAttribute($value) {
+        $this->attributes['nombre'] =strtolower($value);
+    }
+    public function setApellidoAttribute($value) {
+        $this->attributes['apellido'] =strtolower($value);
+    }
+    public function setEmailAttribute($value) {
+        $this->attributes['email'] =strtolower($value);
+    }
 
     public function verificado() {
         $this->status = 1;

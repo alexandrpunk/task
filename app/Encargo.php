@@ -18,7 +18,9 @@ class Encargo extends Model {
     ];
     protected $dates = ['deleted_at'];
     
-    
+    public function setEncargoAttribute($value) {
+        $this->attributes['encargo'] =strtolower($value);
+    }
     public function asignador() {
         return $this->belongsTo('App\Usuario', 'id_asignador');
     }
@@ -35,8 +37,7 @@ class Encargo extends Model {
             $this->update(['mute'=> false]);
         } else {
             $this->update(['mute'=> true]);
-        }
-        
+        }        
     }
 
     public function getEstadoAttribute() {

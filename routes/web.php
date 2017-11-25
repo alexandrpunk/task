@@ -40,6 +40,8 @@ Route::middleware(['middleware' => 'auth'])->group(function() {
     Route::post('/contactos/agregar', 'UsuarioController@agregarContacto');
     // Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
+    Route::get('/usuario/editar/', function () { return view('usuario.editar'); })->name('editar_usuario');
+    Route::post('/usuario/editar/', 'UsuarioController@editar');
     
     Route::get('/test/{id?}', 'EncargoController@test');
     

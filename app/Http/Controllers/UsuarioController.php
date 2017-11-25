@@ -31,7 +31,7 @@ class UsuarioController extends Controller {
             'nombre' => 'required|max:100',
             'apellido' => 'required|max:100',
             'email' => 'required|max:100|unique:Usuarios|email',
-            'telefono' => 'digits:10',
+            'telefono' => 'digits:10|nullable',
             'password' => 'required|min:8|max:15'
         ]);
         
@@ -78,7 +78,25 @@ class UsuarioController extends Controller {
             ->with('registro_exitoso', true)
             ->with('email', $request->email);
     }
-    
+    public function editar (Request $request) {
+        $validator = Validator::make($request->all(), [
+            'nombre' => 'max:100',
+            'apellido' => 'max:100',
+            'telefono' => 'digits:10|nullable',
+            'avatar'=> 'image|size:2048|dimensions:min_width=300,min_height=300'
+        ]);
+        
+        $data=[
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'email' => $request->email,
+            'telefono' => $request->telefono,
+            'email_token' => str_random(10),
+            'password' => $request->password,
+            'status' => 3
+        ];
+        return back()->with('success','Haz actualiado tu informacion');
+    }
     public function validarEmail ($token) {
         try {
             $usuario = Usuario::where('email_token',$token)->firstOrFail();
