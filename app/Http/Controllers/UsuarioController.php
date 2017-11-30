@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Validator;
 use Mail;
 use Password;
+use Validator;
 use App\Usuario;
 use App\Relacionusuario;
-use App\Http\Requests;
 use Illuminate\Http\Request;
-use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Notifications\Invitacion;
+use App\Notifications\ValidarEmail;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use App\Notifications\ValidarEmail;
-use App\Notifications\Invitacion;
 
 class UsuarioController extends Controller {
     use SendsPasswordResetEmails;   
@@ -79,22 +79,26 @@ class UsuarioController extends Controller {
             ->with('email', $request->email);
     }
     public function editar (Request $request) {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'nombre' => 'max:100',
             'apellido' => 'max:100',
             'telefono' => 'digits:10|nullable',
-            'avatar'=> 'image|size:2048|dimensions:min_width=300,min_height=300'
+            'display'=> 'image|mimes:jpeg,png,jpg,gif|max:2048|dimensions:min_width=300,min_height=300'
         ]);
-        
         $data=[
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
-            'email' => $request->email,
             'telefono' => $request->telefono,
-            'email_token' => str_random(10),
-            'password' => $request->password,
-            'status' => 3
         ];
+        if ($request->hasFile('display')) {
+            $imageName = Auth::user()->id.'.'.$request->display->extension();
+            if ( !is_null(Auth::user()->display) ) {
+                Storage::delete('profile/'.Auth::user()->display);
+            }
+            $request->display->storeAs('profile', $imageName, 'public');
+            $data['display'] = $imageName;
+        }
+        Usuario::find(Auth::user()->id)->update($data);
         return back()->with('success','Haz actualiado tu informacion');
     }
     public function validarEmail ($token) {

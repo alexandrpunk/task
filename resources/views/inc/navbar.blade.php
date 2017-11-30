@@ -6,7 +6,7 @@
         </a>
         @if (Auth::check())        
         <div class="dropdown" role='menu' >
-            <a class="btn btn-outline-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label='menu'>
+            <a class="btn btn-outline-light btn-sm" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label='menu'>
                 <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right">

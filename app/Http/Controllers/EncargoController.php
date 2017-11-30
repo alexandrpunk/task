@@ -192,6 +192,7 @@ class EncargoController extends Controller {
     }  
 
     public function test (Request $request) {
+        echo  Storage::url('profile/5.png');
         // $encargos = Encargo::filtrarEstado(6,5,2);
         // foreach ($encargos as $encargo){
         //     echo $encargo;

@@ -1,8 +1,14 @@
 <div class="list-group" role='list' aria-label='lista de contactos'>
     @foreach ($contactos as $contacto)
+        @if ( is_null($contacto->contacto->display) )
+            @php
+            $contacto->contacto->display = 'avatar.jpg';
+            @endphp
+
+        @endif
     <div class="list-group-item contacto row mx-0">
         <div class="col-12 col-sm-auto px-0 align-self-center text-center" aria-hidden='true'>
-            <img class='rounded mb-2 mb-sm-0' src="http://via.placeholder.com/80x80">
+            <img class='display mb-2 mb-sm-0' src="{{ url('storage/profile') }}/{{ $contacto->contacto->display }}">
         </div>
         <div class="col-12 col-sm align-self-center" role='option'>
             <h4 class='nombre'>{{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}</h4>

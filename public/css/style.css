@@ -138,8 +138,20 @@ p.logo-login{
  .task hr{
      margin: 8px 0;
  }
+ .display{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 1px solid #ced4da;
+    border-radius: 3px;
+ }
+
 .contacto{
     display: flex;
+}
+.contacto .display{
+    width: 80px;
+    height: 80px;
 }
 .contacto h4{
     font-size: 1.4rem;
