@@ -63,7 +63,7 @@
         @yield('content')
         </div>
     </div>
-    @yield('footer')
+    {{--  @yield('footer')  --}}
     <!-- Scripts -->
     @include('inc.js')
     @yield('js')

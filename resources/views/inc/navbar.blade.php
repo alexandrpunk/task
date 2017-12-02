@@ -1,29 +1,39 @@
 <nav class="navbar navbar-encargapp fixed-top p-0">
     @if( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','listar_contactos','login'], true) )
-    <div class="container my-2">
+    <div class="container">
         <a class="navbar-brand" href="{{route('mis_encargos')}}" role=''>
-            <img class='logo' src="{{url('/img/logo-encargapp.svg')}}" alt="encargapp" aria-hidden="true"> {{ config('app.name') }} <span class="badge d-none d-sm-inline">{{ config('app.version') }}</span>
+            <img class='logo' src="{{url('/img/logo-encargapp.svg')}}" alt="encargapp" aria-hidden="true"> {{ config('app.name') }}
         </a>
-        @if (Auth::check())        
-        <div class="dropdown" role='menu' >
-            <a class="btn btn-outline-light btn-sm" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label='menu'>
-                <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item " href="{{route('editar_usuario')}}" role='menuitem'>
-                    <i class="fa fa-fw fa-id-card" aria-hidden="true"></i> {{Auth::user()->nombre}} <small class='text-muted'>ver perfil</small>
-                </a>
-                <a href='{{route("contactar")}}' class="dropdown-item" role='menuitem'>
-                    <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="javascript:top.frames.location.reload();" role='menuitem'>
-                    Recargar app
-                </a>
-                <a href='{{route("logout")}}' class="dropdown-item" role='menuitem'>
-                    <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion
-                </a>
-            </div>
-        </div>
+        @if (Auth::check())
+        <ul class="list-inline align-self-center my-2">
+            <li class="list-inline-item  ">
+            <button class="btn btn-sm btn-link text-light"><i class="fa fa-calendar-plus-o fa-fw " aria-hidden="true"></i></button>
+            </li>
+            <li class="list-inline-item ">
+                <button class="btn btn-sm btn-link text-light"><i class="fa fa-search fa-fw" aria-hidden="true"></i></button>
+            </li>
+            <li class="list-inline-item ">
+                <div class="dropdown" role='menu' >
+                    <a class="btn btn-sm text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label='menu'>
+                        <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item " href="{{route('editar_usuario')}}" role='menuitem'>
+                            <i class="fa fa-fw fa-id-card" aria-hidden="true"></i> {{Auth::user()->nombre}} <small class='text-muted'>ver perfil</small>
+                        </a>
+                        <a href='{{route("contactar")}}' class="dropdown-item" role='menuitem'>
+                            <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="javascript:top.frames.location.reload();" role='menuitem'>
+                            Recargar app
+                        </a>
+                        <a href='{{route("logout")}}' class="dropdown-item" role='menuitem'>
+                            <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion
+                        </a>
+                    </div>
+                </div>
+            </li>
+        </ul>
         @endif
     </div>
     @if (Auth::check())
