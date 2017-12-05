@@ -16,10 +16,14 @@ body {
 }
 
 .navbar-encargapp {
+    padding: 0;
     background-color:#00869d ;
     box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.3);
 }
 .navbar-encargapp .navbar-brand {
+    margin:0;
+    padding:0;
+    line-height:1.55;
     font-family: 'Open Sans';
     color: #fff;
     font-weight: lighter;
@@ -54,11 +58,14 @@ body {
 .navbar-encargapp .navbar-title {
     color: #fff;
     font-weight: 400;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     max-width: 80%;
 }
 .navbar-encargapp .dropdown-menu.dropdown-menu-right {
-    right:0;left:auto
+    right:0;left:auto;
+}
+.navbar-encargapp .dropdown-menu.dropdown-menu-left {
+    right:auto;left:0;
 }
 .navbar-encargapp .dropdown-menu .dropdown-item {
     transition: ease 0.3s;

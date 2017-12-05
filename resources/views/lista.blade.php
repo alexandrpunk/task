@@ -19,10 +19,6 @@ setlocale(LC_TIME, 'es_MX.utf8');
 @section('content')
     <section class="py-3" role='region'>
      <span class="sr-only" role='heading'>Titulo de la seccion: @yield('title')</span>
-        <div class="input-group mb-3" role='search'>
-            <span class="input-group-addon"><i class="fa fa-search" aria-hidden="true"></i></span>
-            <input type="search" class="form-control" oninput="w3.filterHTML('.list-group', '.list-group-item', this.value)" placeholder='buscar...'>
-        </div>
         @if (Route::currentRouteName() == 'listar_contactos')
             @include('inc.list_view_contactos')
         @elseif (in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true))
@@ -32,7 +28,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
 @endsection
 
 @section('footer')
-<footer class="fixed-bottom p-3 text-center footer-encargapp">
+{{--  <footer class="fixed-bottom p-3 text-center footer-encargapp">
     @if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true) )
     <div class="input-group input-group-sm col col-sm-9 mx-sm-auto">
         <div class="input-group-addon d-none d-sm-block" aria-hidden='true'>filtrar</div>
@@ -57,5 +53,5 @@ setlocale(LC_TIME, 'es_MX.utf8');
         <i class="fa fa-user-plus" aria-hidden="true"></i> agregar nuevo contacto
     </a>
     @endif
-</footer>
+</footer>  --}}
 @endsection
