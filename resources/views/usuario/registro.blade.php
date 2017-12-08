@@ -1,3 +1,4 @@
+@php ($menu = 2)
 @section('title', 'Registrar nueva cuenta')
 @section('back', route('login'))
 @extends('layouts.base')

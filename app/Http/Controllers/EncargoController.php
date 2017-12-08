@@ -75,6 +75,8 @@ class EncargoController extends Controller {
             $encargo->update(['fecha_conclusion' => $now]);
             if ($encargo->id_asignador != Auth::user()->id) {
                 $encargo->asignador->notify(new EncargoConcluido($encargo));  
+            } else if ($encargo->id_responsable != Auth::user()->id) {
+                $encargo->responsable->notify(new EncargoConcluido($encargo));  
             }
             return back()->with('success','Se a concluido el encargo con exito');
         }
@@ -129,6 +131,8 @@ class EncargoController extends Controller {
         $encargo->save();
         if($encargo->id_asignador != Auth::user()->id) {
             $encargo->asignador->notify(new EncargoRechazado($encargo));
+        } else if ($encargo->id_responsable != Auth::user()->id){
+            $encargo->responsable->notify(new EncargoRechazado($encargo));
         }
         return back()->with('success','Haz rechazado el encargo');
     }
@@ -179,15 +183,17 @@ class EncargoController extends Controller {
             'id_encargo' => $id
         ];
         $comentario = Comentario::create($data);
-        switch (Auth::user()->id) {
-            case $comentario->encargo->id_responsable :
-                $destinatario = Usuario::find($comentario->encargo->id_responsable);
-                break;
-            case $comentario->encargo->id_asignador :
-                $destinatario = Usuario::find($comentario->encargo->id_asignador);
-                break;
+        if ( !($comentario->encargo->id_responsable == Auth::user()->id && $comentario->encargo->id_asignador == Auth::user()->id) ){
+            switch (Auth::user()->id) {
+                case $comentario->encargo->id_responsable :
+                    $destinatario = Usuario::find($comentario->encargo->id_responsable);
+                    break;
+                case $comentario->encargo->id_asignador :
+                    $destinatario = Usuario::find($comentario->encargo->id_asignador);
+                    break;
+            }
+            $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
         }
-        $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
         return back()->with('success','Se a comentado el encargo con exito');
     }  
 

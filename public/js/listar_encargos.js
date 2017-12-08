@@ -1,14 +1,17 @@
 $(document).ready(function() {
-    $("#filtrar").click(function(){
-        $.ajax({
-            type: "GET",
-            url: $(this).attr('data-url')+'/'+$( "#estados_tareas" ).val(),
-            success: function(result){
-                $("#encargos").empty();
-                $("#encargos").html(result);
-                console.log(result);
-            }
-        });
+    $(".filter").click(function(event){
+      event.preventDefault();
+      $(".filter").removeClass('selected');
+      $(this).addClass('selected');
+      $.ajax({
+          type: "GET",
+          url: $(this).attr('href')+'/'+$(this).attr('data-value'),
+          success: function(result){
+              $("#encargos").empty();
+              $("#encargos").html(result);
+              console.log(result);
+          }
+      });
     });
 });
 

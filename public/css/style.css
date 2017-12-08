@@ -23,8 +23,6 @@ body {
 .navbar-encargapp .navbar-brand {
     margin:0;
     padding:0;
-    line-height:1.55;
-    font-family: 'Open Sans';
     color: #fff;
     font-weight: lighter;
 }
@@ -58,7 +56,9 @@ body {
 .navbar-encargapp .navbar-title {
     color: #fff;
     font-weight: 400;
-    font-size: 1.25rem;
+    line-height:1.55;
+    /* font-size: 1.25rem; */
+    font-family: 'Open Sans';
     max-width: 80%;
 }
 .navbar-encargapp .dropdown-menu.dropdown-menu-right {
@@ -179,7 +179,12 @@ p.logo-login{
 .navbar-default .navbar-toggle:hover {
     background-color: #19A5E6;
 } */
-
+.dropdown-item.filter.selected::after{
+    content: "•";
+    margin-left: 5px;
+    font-size: 1.2rem;
+    font-weight: bolder;
+}
 @media only screen and (max-width:320px){
 
 }

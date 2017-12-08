@@ -1,4 +1,6 @@
+@php ($menu = 2)
 @section('title', 'Recuperar contraseña')
+@section('back', Route('login'))
 @extends('layouts.base')
 
 <!-- Main Content -->

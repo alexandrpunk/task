@@ -1,18 +1,16 @@
-@extends('layouts.base')
+@php ($menu = 2)
 @section('title', 'Detalles del encargo')
-
 @if($encargo->id_responsable == Auth::user()->id)
     @section('back', route('mis_pendientes'))
 @else
     @section('back', route('mis_encargos'))
 @endif
-
+@extends('layouts.base')
 @section('css')
 @endsection
 
 @section('js')
 <script>
-
 $("#silenciar").click(function(){
    $("#silenciar").prop('disabled', true);
     $.ajax({
@@ -74,7 +72,7 @@ $("#silenciar").click(function(){
     </div>
     <div class='encargo-opciones'>
         <ul class="list-inline options">
-            @if($encargo->visto && $encargo->fecha_conclusion == null && $encargo->id_responsable == Auth::user()->id)
+            @if( ($encargo->visto && $encargo->fecha_conclusion == null && $encargo->id_responsable == Auth::user()->id)||($encargo->fecha_conclusion == null && $encargo->id_asignador == Auth::user()->id) )
             <li class="list-inline-item">
                 <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center'><i class="fa fa-check fa-fw" aria-hidden="true">
                     </i> concluir

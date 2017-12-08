@@ -1,3 +1,4 @@
+@php ($menu = 2)
 @section('title', 'Agregar contacto')
 @section('back', route('listar_contactos'))
 @extends('layouts.base')

@@ -1,6 +1,7 @@
-@extends('layouts.base')
+@php ($menu = 2)
 @section('title', 'Crear Encargo')
 @section('back', route('mis_encargos'))
+@extends('layouts.base')
 @section('css')
 <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.common.min.css" />
 <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2017.3.1026/styles/kendo.default.mobile.min.css" />

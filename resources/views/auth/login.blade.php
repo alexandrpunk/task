@@ -1,6 +1,6 @@
+@php ($menu = 2)
 @section('title', 'Iniciar Sesion')
 @extends('layouts.base')
-
 @section('content')
 <div class="col col-md-5 col-sm-9 mx-auto py-3 px-0">
     <div class="card">

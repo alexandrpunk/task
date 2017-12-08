@@ -1,3 +1,4 @@
+@php ($menu = 2)
 @section('title', 'Contacto y reporte de errores')
 @section('back', route('mis_encargos'))
 @extends('layouts.base')

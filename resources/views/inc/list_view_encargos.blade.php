@@ -1,3 +1,4 @@
+<div class="list-group" role='list' id='encargos' aria-label='lista de encargos'>
 @if (count($encargos) == 0)
     @if (Route::currentRouteName() == 'mis_encargos')
         <h1 class="text-muted text-center font-weight-light ">No has hecho ningun encargo aun.</h1>
@@ -11,7 +12,6 @@
     @endif
     
 @else
-<div class="list-group" role='list' id='encargos' aria-label='lista de encargos'>
     @foreach ($encargos as $encargo)
     <div class='list-group-item task' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
     <div role='option'>
@@ -66,5 +66,5 @@
     </div>
     </div>
     @endforeach
-</div>
 @endif
+</div>
