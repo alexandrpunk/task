@@ -1,5 +1,5 @@
 @php ($menu = 2)
-@section('title', 'Registrar nueva cuenta')
+@section('title', Ver y editar perfil')
 @section('back', route('login'))
 @extends('layouts.base')
 @section('css')

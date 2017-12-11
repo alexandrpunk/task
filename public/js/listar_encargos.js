@@ -3,6 +3,8 @@ $(document).ready(function() {
       event.preventDefault();
       $(".filter").removeClass('selected');
       $(this).addClass('selected');
+      $(".filter").attr('aria-checked',false);
+      $(this).attr('aria-checked',true);      
       $.ajax({
           type: "GET",
           url: $(this).attr('href')+'/'+$(this).attr('data-value'),

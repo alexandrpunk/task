@@ -1,7 +1,7 @@
-<nav class="navbar navbar-encargapp fixed-top">
+<nav class="navbar navbar-encargapp fixed-top" role='banner'>
     @if ($menu == 1)
     <div class="container-fluid my-2 mx-0 mx-sm-2" id='main-nav'>
-        <a class="navbar-brand" href="{{route('mis_encargos')}}" role=''>
+        <a class="navbar-brand" href="{{route('mis_encargos')}}">
             <img class='logo' src="{{url('/img/logo-encargapp.svg')}}" alt="encargapp" aria-hidden="true">
             {{ config('app.name') }}
         </a>
@@ -9,20 +9,20 @@
         {{--  lista de botones  --}}
         <ul class="list-inline mb-0">
             {{--  boton de crear encargo  --}}
-            <li class="list-inline-item  ">
+            <li class="list-inline-item ">
                 @if ( Route::currentRouteName() == 'listar_contactos' )
-                <a href='{{route("agregar_contacto")}}' class="text-light">
+                <a href='{{route("agregar_contacto")}}' class="text-light" role='button' aria-label='agregar contacto'>
                     <i class="fa fa-user-plus fa-fw " aria-hidden="true"></i>
                 </a>
                 @else
-                <a href='{{route("nuevo_encargo")}}' class="text-light">
+                <a href='{{route("nuevo_encargo")}}' class="text-light" role='button' aria-label='asignar encargo'>
                     <i class="fa fa-calendar-plus-o fa-fw " aria-hidden="true"></i>
                 </a>
                 @endif
             </li>
             {{--  boton de busqueda  --}}
             <li class="list-inline-item mx-2">
-                <a href="" class="text-light simpleButton" role='button' id='search'>
+                <a href="" class="text-light simpleButton" role='button' id='search' aria-label='buscar'>
                     <i class="fa fa-search fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
@@ -71,12 +71,13 @@
     @elseif ($menu == 2)
     {{--  barra de titulo  --}}
     <div class="container-fluid my-2 mx-0 mx-sm-2" id='main-nav' style='padding:3px 0'>
+       
         @hasSection('back')
-        <a href="@yield('back')" class="text-white mx-2" target='_self'><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i></a>
+        <a href="@yield('back')" class="text-white mx-2" target='_self' role='button' aria-label='regresar a la pagina anterior'><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i></a>
         @endif
-        <span class="navbar-title mr-auto text-truncate">@yield('title')</span>
+        <span class="navbar-title mr-auto text-truncate" aria-hidden="true">@yield('title')</span>
         @if (Route::currentRouteName() == 'encargos_contacto')
-        <a href="" class="text-white mx-2" role='button' id='search'>
+        <a href="" class="text-white mx-2" role='button'  aria-label='buscar' id='search'>
             <i class="fa fa-search fa-fw" aria-hidden="true"></i>
         </a>
         @endif

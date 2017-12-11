@@ -7,6 +7,7 @@ use Validator;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use App\Relacionusuario;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 class AppServiceProvider extends ServiceProvider {
     /**
      * Bootstrap any application services.

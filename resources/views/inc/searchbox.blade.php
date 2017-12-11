@@ -8,8 +8,8 @@
         </a>
         @endif
         <div class="dropdown-menu dropdown-menu-left">
-            <h6 class="dropdown-header">Filtrar por:</h6>
-            <a class="simpleButton dropdown-item filter selected" href="{{ Request::url() }}" data-value='0' role='menuitem'>Todos</a>
+            <h6 class="dropdown-header" aria-hidden="true">Filtrar por:</h6>
+            <a class="simpleButton dropdown-item filter selected" aria-checked='true' href="{{ Request::url() }}" data-value='0' role='menuitem'>Todos</a>
             <a class="simpleButton dropdown-item filter" href="{{ Request::url() }}" data-value='1' role='menuitem'>En progreso</a>
             <a class="simpleButton dropdown-item filter" href="{{ Request::url() }}" data-value='2' role='menuitem'>Cerca de vencer</a>
             <a class="simpleButton dropdown-item filter" href="{{ Request::url() }}" data-value='3' role='menuitem'>Vencidos</a>
@@ -18,9 +18,9 @@
             <a class="simpleButton dropdown-item filter" href="{{ Request::url() }}" data-value='6' role='menuitem'>Rechazados</a>
         </div>
     </div>
-    <input type="search" id='search-box' class='form-control form-control-sm mx-3 col' oninput="w3.filterHTML('.list-group', '.list-group-item', this.value)" placeholder="Buscar..." role='search' disabled>
+    <input type="search" id='search-box' class='form-control form-control-sm mx-3 col' oninput="w3.filterHTML('.list-group', '.list-group-item', this.value)" placeholder="Buscar..." disabled>
     <div class="col-auto p-0">
-        <a href="" class="text-light simpleButton" id='cancel-search'>
+        <a href="" class="text-light simpleButton" id='cancel-search' role='button' aria-label='cerrar busqueda'>
             <i class="fa fa-times fa-fw" aria-hidden="true"></i>
         </a>
     </div>

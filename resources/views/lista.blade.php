@@ -19,7 +19,6 @@
 
 @section('content')
     <section class="py-3" role='region'>
-     <span class="sr-only" role='heading'>Titulo de la seccion: @yield('title')</span>
         @if (Route::currentRouteName() == 'listar_contactos')
             @include('inc.list_view_contactos')
         @elseif (in_array(Route::currentRouteName(), ['inicio','mis_encargos','mis_pendientes','encargos_contacto'], true))

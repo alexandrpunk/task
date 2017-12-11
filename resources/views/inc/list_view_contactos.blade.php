@@ -24,7 +24,6 @@
         <div class="col-12 col-sm-auto align-self-center px-0 text-center">
             <div class="align-self-baseline">
                 <a href="{{route('encargos_contacto', ['id' => $contacto->contacto->id])}}" class="btn btn-sm btn-default text-info d-inline-block d-sm-block" aria-label='ver encargos de {{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}'>
-                    <i class="fa fa-address-card fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>encargos</span>
                 </a>
                 {{--  <a href="" class="btn btn-sm btn-default text-success d-inline-block  d-sm-block">
                     <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>encargar</span>

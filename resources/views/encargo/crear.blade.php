@@ -42,13 +42,12 @@
 
 @section('content')
     <div class="card p-3 my-3">
-        <label class="sr-only">'formulario para la creacion de encargos'</label>   
-        <form method="POST" action="{{ route('nuevo_encargo') }}" id='encargoForm'>
+        <form method="POST" action="{{ route('nuevo_encargo') }}" id='encargoForm' aria-label='Formulario de creacion de encargos'>
             {!! csrf_field() !!}
             <div class="row">
                 <div class="form-group col-12 col-sm-6 mb-sm-0">
                     <label for="responsable" aria-hidden='true'>Responsable</label>
-                    <select id='responsable' name="responsable" style="width: 100%" required >
+                    <select id='responsable' name="responsable" style="width: 100%" required>
                         @foreach ($contactos as $contacto)
                             <option value="{{$contacto->contacto->id}}">
                                 {{ $contacto->contacto->nombre }} {{ $contacto->contacto->apellido }}
@@ -58,13 +57,13 @@
                 </div>
 
                 <div class="form-group col-12 col-sm-6 mb-sm-0">
-                    <label for="fecha_limite">Fecha limite</label>
+                    <label for="fecha_limite" aria-hidden='true'>Fecha limite</label>
                     <input type="date" class="form-control" id='fecha_limite' name="fecha_limite" value="{{old('fecha_limite')}}" placeholder="Selecciona la fecha para el encargo" required >
                 </div>
             </div>
             <div class="form-group">
-                <label for="encargo">Encargo</label>
-                <textarea class="form-control" id='encargo' name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required >{{old('encargo')}}</textarea>
+                <label for="encargo" aria-hidden='true'>Encargo</label>
+                <textarea class="form-control" id='encargo' name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required>{{old('encargo')}}</textarea>
             </div>           
             
             <button type="reset" class="btn btn-danger">Limpiar</button>
