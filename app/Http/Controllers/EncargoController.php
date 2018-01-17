@@ -23,21 +23,16 @@ use App\Notifications\EncargoRechazado;
 use App\Notifications\ComentarioNuevo;
 class EncargoController extends Controller {
 
-    public function nuevo () {
-        $contactos = Relacionusuario::where('id_usuario1',Auth::user()->id)
-            ->where('status',1)
-            ->with('contacto')
-            ->get()
-            ->sortBy('contacto.nombre');
-        
-        return view('encargo.crear', ['contactos' => $contactos]);
+    public function nuevo ($id) {
+        $usuario = Usuario::find($id);        
+        return view('encargo.crear', ['usuario' => $usuario]);
     }
 
     public function crear (Request $request) {
         $this->validate($request, [
             'encargo' => 'required',
             'fecha_limite' => 'required|date|not_past',
-            'responsable' => 'required|numeric|exists:Usuarios,id|contacto',
+            'id' => 'required|numeric|exists:Usuarios,id|contacto',
         ]);
         
         $fecha = new DateTime($request->fecha_limite);
@@ -47,25 +42,26 @@ class EncargoController extends Controller {
             'fecha_plazo' => $fecha->add(new DateInterval('PT23H59M59S')),
             'visto' => 0,
             'id_asignador' => Auth::user()->id,
-            'id_responsable' => $request->responsable,
+            'id_responsable' => $request->id,
             'ultima_notificacion' =>  new DateTime()
         ];
         $encargo = Encargo::create($data);
-        if ($encargo->id_responsable != Auth::user()->id) {
-            $encargo->responsable->notify(new EncargoNuevo($encargo));
-            $message = 'Le acabas de asignar un encago a: '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido;
-            $link = route('mis_encargos');
-            $desc_link = 'Haz click aqui para ver tus encargos';
-        } else {
-            $message = 'Te has asignado un pendiente nuevo';
-            $link = route('mis_pendientes');
-            $desc_link = 'Haz click aqui para ver tus pendientes';
-        }
-        return redirect()->route('nuevo_encargo')->with([
-            'success'=> $message,
-            'link' => $link,
-            'desc_link' => $desc_link
-            ]);
+        return 'hola mundo';
+        // if ($encargo->id_responsable != Auth::user()->id) {
+        //     $encargo->responsable->notify(new EncargoNuevo($encargo));
+        //     $message = 'Le acabas de asignar un encago a: '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido;
+        //     $link = route('mis_encargos');
+        //     $desc_link = 'Haz click aqui para ver tus encargos';
+        // } else {
+        //     $message = 'Te has asignado un pendiente nuevo';
+        //     $link = route('mis_pendientes');
+        //     $desc_link = 'Haz click aqui para ver tus pendientes';
+        // }
+        // return redirect()->route('nuevo_encargo')->with([
+        //     'success'=> $message,
+        //     'link' => $link,
+        //     'desc_link' => $desc_link
+        //     ]);
     }
     
     public function concluir ($id) {
@@ -198,7 +194,7 @@ class EncargoController extends Controller {
     }  
 
     public function test (Request $request) {
-        echo  Storage::url('profile/5.png');
+        echo str_random(32);
         // $encargos = Encargo::filtrarEstado(6,5,2);
         // foreach ($encargos as $encargo){
         //     echo $encargo;

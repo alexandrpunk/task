@@ -1,5 +1,5 @@
 @php ($menu = 2)
-@section('title', Ver y editar perfil')
+@section('title', 'Ver y editar perfil')
 @section('back', route('login'))
 @extends('layouts.base')
 @section('css')
@@ -12,7 +12,7 @@ function habilitarEdicion(){
     $("#display, #nombre, #apellido, #telefono").attr("disabled", false);
 }
 
-$( "#cancelar" ).click(function( event ) {
+$( "#cancelar" ).click( function(event) {
     event.preventDefault();
     $('#perfil')[0].reset();
     $( "#editar, #guardar, #cancelar" ).toggleClass( "d-none");

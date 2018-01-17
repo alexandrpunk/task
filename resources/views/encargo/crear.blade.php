@@ -16,7 +16,7 @@
 @section('js')
 <script src="http://kendo.cdn.telerik.com/2017.3.1026/js/kendo.all.min.js"></script>
 <script>
-    $("#responsable").kendoComboBox({
+    /*$("#responsable").kendoComboBox({
         suggest: true,
         clearButton: false,
         filter: "contains"
@@ -30,22 +30,25 @@
     combobox.input.attr("placeholder", "Selecciona un responsable");
     combobox.input.attr("required", true);
     combobox.text('');
-    combobox.input.addClass('form-control');
+    combobox.input.addClass('form-control');*/
 
-    $("button[type='reset']").on("click", function(event){
-        event.preventDefault();
-        combobox.text('');
-        $('#encargoForm').find("input, textarea").val("");
+    var audio = new Audio('{{url("/sound/error_1.wav")}}'); 
+    $("#test").on("click", function(event){
+        audio.play();
     });
 </script>
 @endsection
 
 @section('content')
     <div class="card p-3 my-3">
-        <form method="POST" action="{{ route('nuevo_encargo') }}" id='encargoForm' aria-label='Formulario de creacion de encargos'>
+        <form method="POST" action="{{Request::url()}}" id='encargoForm' aria-label='Formulario de creacion de encargos'>
             {!! csrf_field() !!}
+            <div class="form-group">
+                <label for="encargo" aria-hidden='true'>Encargo</label>
+                <textarea class="form-control form-control-sm" id='encargo' name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required>{{old('encargo')}}</textarea>
+            </div>
             <div class="row">
-                <div class="form-group col-12 col-sm-6 mb-sm-0">
+                {{--  <div class="form-group col-12 col-sm-6 mb-sm-0">
                     <label for="responsable" aria-hidden='true'>Responsable</label>
                     <select id='responsable' name="responsable" style="width: 100%" required>
                         @foreach ($contactos as $contacto)
@@ -54,20 +57,16 @@
                             </option>
                         @endforeach                        
                     </select>
-                </div>
+                </div>  --}}
 
-                <div class="form-group col-12 col-sm-6 mb-sm-0">
+                <div class="form-group col-12 col-sm-2 mb-sm-0">
                     <label for="fecha_limite" aria-hidden='true'>Fecha limite</label>
-                    <input type="date" class="form-control" id='fecha_limite' name="fecha_limite" value="{{old('fecha_limite')}}" placeholder="Selecciona la fecha para el encargo" required >
+                    <input type="date" class="form-control form-control-sm" id='fecha_limite' name="fecha_limite" value="{{old('fecha_limite')}}" placeholder="Selecciona la fecha para el encargo" required >
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="encargo" aria-hidden='true'>Encargo</label>
-                <textarea class="form-control" id='encargo' name="encargo" placeholder="Describe tu encargo aqui"  rows="8" required>{{old('encargo')}}</textarea>
-            </div>           
-            
-            <button type="reset" class="btn btn-danger">Limpiar</button>
-            <button type="submit" class="btn btn-primary">Crear encargo</button>
+            </div>        
+            <hr>
+            <button type="reset" class="btn btn-sm btn-danger">Limpiar</button>
+            <button type="submit" class="btn btn-sm btn-success">Enviar encargo</button>
         </form>
     </div>
 @endsection
