@@ -29,7 +29,12 @@ class EncargoController extends Controller {
     }
 
     public function crear (Request $request) {
-        $this->validate($request, [
+        $req = [
+            'id' => $request->id,
+            'encargo' => $request->encargo,
+            'fecha_limite' => $request->fecha_limite
+        ];
+        $validator = Validator::make($req, [
             'encargo' => 'required',
             'fecha_limite' => 'required|date|not_past',
             'id' => 'required|numeric|exists:Usuarios,id|contacto',
@@ -45,23 +50,18 @@ class EncargoController extends Controller {
             'id_responsable' => $request->id,
             'ultima_notificacion' =>  new DateTime()
         ];
-        $encargo = Encargo::create($data);
-        return 'hola mundo';
-        // if ($encargo->id_responsable != Auth::user()->id) {
-        //     $encargo->responsable->notify(new EncargoNuevo($encargo));
-        //     $message = 'Le acabas de asignar un encago a: '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido;
-        //     $link = route('mis_encargos');
-        //     $desc_link = 'Haz click aqui para ver tus encargos';
-        // } else {
-        //     $message = 'Te has asignado un pendiente nuevo';
-        //     $link = route('mis_pendientes');
-        //     $desc_link = 'Haz click aqui para ver tus pendientes';
-        // }
-        // return redirect()->route('nuevo_encargo')->with([
-        //     'success'=> $message,
-        //     'link' => $link,
-        //     'desc_link' => $desc_link
-        //     ]);
+        if ($validator->passes()) {
+            $encargo = Encargo::create($data);
+            if ( $encargo->id_responsable == Auth::user()->id) {
+                $message = 'Tu pendiente a sido registrado correctamente';
+            } else {
+                $destinatario = $ecnargo->responsable->nombre.' '.$ecnargo->responsable->apellido;
+                $message = 'Tu encargo a sido enviado a '.$destinatario. 'correctamente';
+            }
+            return response()->json(['message' => $message],200);
+        } else {
+            return response()->json(['message' => 'Ha ocurrido un error al enviar el encargo:','errors'=>$validator->errors()],500);
+        }
     }
     
     public function concluir ($id) {

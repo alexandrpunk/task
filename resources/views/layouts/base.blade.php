@@ -25,40 +25,13 @@
 
 </head>
 <body role='aplication'>
-    @if ($errors->any())
-    <div class="alert alert-danger" role="alert" aria-labelledby="error">
-    <label class="sr-only" id="error">Hubo un error</label>
-        <ul class='my-0' role='list' aria-label='listado de errores'>
-        @foreach ($errors->all() as $error)
-            <li role='listitem' aria-level="2">{{$error}}</li>
-        @endforeach
-        </ul>
-    </div>
-    @elseif (session('success'))
-    <div class="alert alert-success" role='alert' aria-labelledby="success">
-        @if (session('link'))
-            <span id="success">
-                {{ session('success') }}
-                <a href="{{ session('link') }}" class="badge badge-info">{{ session('desc_link') }}</a>
-            </span>
-        @else
-            <span id="success">{{ session('success') }}</span>
-        @endif
-    </div>
-    @elseif (session('info'))
-    <div class="alert alert-info" role='alert' aria-labelledby="info">
-        @if (session('link'))
-            <span id="info">
-                {{ session('info') }}
-                <a href="{{ session('link') }}" class="badge badge-info">{{ session('desc_link') }}</a>
-            </span>
-        @else
-            <span id="info">{{ session('info') }}</span>
-        @endif
-    </div>
-    @else
-        <span class="sr-only" role='alert'>estas en @yield('title')</span>  
-    @endif
+        <div class="alert alert-dismissible fade mt-4 mx-5 fixed-top shadow d-none" style='z-index:9999;' role="alert" id='alerta'>
+            <button type="button" class="close" id='closeId' aria-label="Cerrar notificacion">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <span class="sr-only" role='alert'>estas en @yield('title')</span>  
+  
     @include('inc.navbar')
     <div class="h-100 list-body " role='main'>
         <div class="container">

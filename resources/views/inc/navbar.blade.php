@@ -15,7 +15,7 @@
                     <i class="fa fa-user-plus fa-fw " aria-hidden="true"></i>
                 </a>
                 @else
-                <a href='{{route("nuevo_encargo")}}' class="text-light" role='button' aria-label='asignar encargo'>
+                <a href='' class="text-light" role='button' aria-label='asignar encargo'>
                     <i class="fa fa-calendar-plus-o fa-fw " aria-hidden="true"></i>
                 </a>
                 @endif
