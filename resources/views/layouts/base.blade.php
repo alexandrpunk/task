@@ -25,8 +25,11 @@
 
 </head>
 <body role='aplication'>
-        <div class="alert alert-dismissible fade mt-4 mx-5 fixed-top shadow d-none" style='z-index:9999;' role="alert" id='alerta'>
-            <button type="button" class="close" id='closeId' aria-label="Cerrar notificacion">
+        <div class="alert alert-dismissible fade mt-4 mx-5 fixed-top shadow" style='z-index:9999;' role="alert" id='alerta'>
+            <div id="alert-field">
+
+            </div>
+            <button type="button" class="close" id='closeAlert' aria-label="Cerrar notificacion">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>

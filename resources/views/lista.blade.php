@@ -18,7 +18,7 @@
 @endsection
 
 @section('content')
-<a href="http://task.test/encargos/crear/2">test</a>
+<a href="http://task.test/test">test</a>
     <section class="py-3" role='region'>
         @if (Route::currentRouteName() == 'listar_contactos')
             @include('inc.list_view_contactos')

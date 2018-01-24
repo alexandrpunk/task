@@ -43,7 +43,7 @@ Route::middleware(['middleware' => 'auth'])->group(function() {
     Route::get('/usuario/editar/', function () { return view('usuario.editar'); })->name('editar_usuario');
     Route::post('/usuario/editar/', 'UsuarioController@editar');
     
-    Route::get('/test/{id?}', 'EncargoController@test');
+    Route::get('/test/{id?}', function () { return view('test'); });
     
     Route::get('/logout',
         function () {

@@ -22,17 +22,18 @@
             dataType: 'json',
             data: $("#encargoForm").serialize(), // serializes the form's elements.
             success: function(data) {
-                console.log(data);
+                $( "#alerta" ).removeClass('alert-success alert-danger alert-warning alert-info show');
+                $( "#alert-field" ).empty();
                 $( "#alerta" ).addClass('alert-success show');
-                $( "#alerta" ).removeClass('d-none');
-                $( "#alerta" ).append('<p>'+data.message+'</p>');
+                $( "#alert-field" ).append('<p>'+data.message+'</p>');
                 successAudio.play();
             },
             error: function(error) {
+                $( "#alerta" ).removeClass('alert-success alert-danger alert-warning alert-info show');
+                $( "#alert-field" ).empty();
+
                 var data = error.responseJSON;
-                $( "#alerta" ).addClass('alert-danger show');
-                $( "#alerta" ).removeClass('d-none');
-                $( "#alerta" ).append('<p>'+data.message+'</p>');
+                $( "#alert-field" ).append('<p>'+data.message+'</p>');
                 var list = '<ul>';
                 $.each(data.errors, function(i, item) {
                     if (item.constructor === Array) {
@@ -42,10 +43,16 @@
                     }
                 });
                 list += '</ul>';
-                $( "#alerta" ).append(list);
+                $( "#alert-field" ).append(list);
                 errorAudio.play();
+                $( "#alerta" ).addClass('alert-danger show');
             }
         });
+    });
+
+    $("#closeAlert").click(function(){ 
+        $( "#alerta" ).removeClass('alert-success alert-danger alert-warning alert-info show');
+        $( "#alert-field" ).empty();
     });
 </script>
 @endsection
