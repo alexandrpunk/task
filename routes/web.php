@@ -15,7 +15,7 @@ Route::middleware(['middleware' => 'auth'])->group(function() {
     Route::get('/', function () { return redirect()->route('mis_encargos'); })->name('inicio');
     
 
-    Route::get('/encargos/crear/{id}', 'EncargoController@nuevo')->name('nuevo_encargo');
+    Route::get('/encargos/crear/{id?}', 'EncargoController@nuevo')->name('nuevo_encargo');
     Route::post('/encargos/crear/{id}', 'EncargoController@crear');
     
     Route::middleware(['encargo_existe', 'encargo_permitido'])->group(function () {

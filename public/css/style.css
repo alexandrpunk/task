@@ -177,16 +177,18 @@ p.logo-login{
     color:#868e96;
 }
 
-/* .navbar-default .navbar-toggle:focus,
-.navbar-default .navbar-toggle:hover {
-    background-color: #19A5E6;
-} */
 .dropdown-item.filter.selected::after{
     content: "•";
     margin-left: 5px;
     font-size: 1.2rem;
     font-weight: bolder;
 }
-@media only screen and (max-width:320px){
-
+#responsable{
+    font-weight: bold;
+    vertical-align: middle;
+}
+@media only screen and (max-width:500px){
+    #responsable {
+        max-width: 170px;
+    }
 }

@@ -11,19 +11,19 @@
             {{--  boton de crear encargo  --}}
             <li class="list-inline-item ">
                 @if ( Route::currentRouteName() == 'listar_contactos' )
-                <a href='{{route("agregar_contacto")}}' class="text-light" role='button' aria-label='agregar contacto'>
-                    <i class="fa fa-user-plus fa-fw " aria-hidden="true"></i>
+                <a href='{{route("agregar_contacto")}}' class="text-light " role='button' aria-label='agregar contacto'>
+                    <i class="fas fa-user-plus fa-fw " aria-hidden="true"></i>
                 </a>
                 @else
-                <a href='' class="text-light" role='button' aria-label='asignar encargo'>
-                    <i class="fa fa-calendar-plus-o fa-fw " aria-hidden="true"></i>
+                <a href='{{route("nuevo_encargo")}}' class="text-light " role='button' aria-label='asignar encargo'>
+                    <i class="fas fa-calendar-plus fa-fw " aria-hidden="true"></i>
                 </a>
                 @endif
             </li>
             {{--  boton de busqueda  --}}
             <li class="list-inline-item mx-2">
                 <a href="" class="text-light simpleButton" role='button' id='search' aria-label='buscar'>
-                    <i class="fa fa-search fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-search fa-fw" aria-hidden="true"></i>
                 </a>
             </li>
             {{--  menu  --}}
@@ -31,20 +31,20 @@
                 {{--  menu dropdown  --}}
                 <div class="dropdown" role='menu' >
                     <a class="text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label='menu'>
-                        <i class="fa fa-ellipsis-v fa-fw" aria-hidden="true"></i>
+                        <i class="fas fa-ellipsis-v fa-fw" aria-hidden="true"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item " href="{{route('editar_usuario')}}" role='menuitem'>
-                            <i class="fa fa-fw fa-id-card" aria-hidden="true"></i> {{Auth::user()->nombre}} <small class='text-muted'>ver perfil</small>
+                            <i class="fas fa-fw fa-id-card" aria-hidden="true"></i> {{Auth::user()->nombre}} <small class='text-muted'>ver perfil</small>
                         </a>
                         <a href='{{route("contactar")}}' class="dropdown-item" role='menuitem'>
-                            <i class="fa fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
+                            <i class="fas fa-exclamation-circle fa-fw" aria-hidden="true"></i>contacto y errores</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="javascript:top.frames.location.reload();" role='menuitem'>
                             Recargar app
                         </a>
                         <a href='{{route("logout")}}' class="dropdown-item" role='menuitem'>
-                            <i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>cerrar sesion
+                            <i class="fas fa-sign-out-alt fa-fw" aria-hidden="true"></i>cerrar sesion
                         </a>
                     </div>
                 </div>
@@ -70,15 +70,16 @@
         @endauth
     @elseif ($menu == 2)
     {{--  barra de titulo  --}}
-    <div class="container-fluid my-2 mx-0 mx-sm-2" id='main-nav' style='padding:3px 0'>
-       
+    <div class="container-fluid my-2 mx-2" id='main-nav' style='padding:3px 0'>       
         @hasSection('back')
-        <a href="@yield('back')" class="text-white mx-2" target='_self' role='button' aria-label='regresar a la pagina anterior'><i class="fa fa-arrow-left fa-fw" aria-hidden="true"></i></a>
+        <a href="@yield('back')" class="text-white mx-2" target='_self' role='button' aria-label='regresar a la pagina anterior'>
+            <i class="fas fa-arrow-left fa-fw" aria-hidden="true"></i>
+        </a>
         @endif
         <span class="navbar-title mr-auto text-truncate" aria-hidden="true">@yield('title')</span>
         @if (Route::currentRouteName() == 'encargos_contacto')
         <a href="" class="text-white mx-2" role='button'  aria-label='buscar' id='search'>
-            <i class="fa fa-search fa-fw" aria-hidden="true"></i>
+            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
         </a>
         @endif
     </div>

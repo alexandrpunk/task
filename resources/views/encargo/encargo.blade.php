@@ -40,7 +40,7 @@ $("#silenciar").click(function(){
             @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
                 Te encargaste:
             @elseif ($encargo->id_asignador != Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
-                Encargado por: {{$encargo->asignador->nombre}} {{$encargo->responsable->apellido}}
+                Encargado por: {{$encargo->asignador->nombre}} {{$encargo->asignador->apellido}}
             @elseif ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable != Auth::user()->id)
                Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
             @endif            
@@ -48,9 +48,9 @@ $("#silenciar").click(function(){
         @if ($encargo->id_responsable == Auth::user()->id)
         <button class="btn btn-sm float-right text-dark @if($encargo->mute) text-muted @endif" id='silenciar' data-muted='{{$encargo->mute}}' data-url="{{route('silenciar_encargo', ['id' => $encargo->id])}}">
             @if($encargo->mute)
-            <i class="fa fa-bell-slash fa-fw" aria-hidden="true"></i>
+            <i class="fas fa-bell-slash fa-fw" aria-hidden="true"></i>
             @else
-            <i class="fa fa-bell fa-fw" aria-hidden="true"></i>
+            <i class="fas fa-bell fa-fw" aria-hidden="true"></i>
             @endif
         </button>
         @endif
@@ -60,12 +60,12 @@ $("#silenciar").click(function(){
             {{$encargo->encargo}}
         </h4>
         <span class='time'>
-            <i class="fa fa-clock-o text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
+            <i class="far fa-clock text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
             @if ($encargo->visto)
-                <i class="fa fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo visto"></i>
+                <i class="fas fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo visto"></i>
             @else
-                <i class="fa fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo sin ver"></i>
+                <i class="fas fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo sin ver"></i>
             @endif
         </span>
         <hr>

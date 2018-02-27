@@ -1,10 +1,7 @@
 <div class="list-group" role='list' aria-label='lista de contactos'>
     @foreach ($contactos as $contacto)
         @if ( is_null($contacto->contacto->display) )
-            @php
-            $contacto->contacto->display = 'avatar.jpg';
-            @endphp
-
+        @php($contacto->contacto->display = 'avatar.jpg')
         @endif
     <div class="list-group-item contacto row mx-0">
         <div class="col-12 col-sm-auto px-0 align-self-center text-center" aria-hidden='true'>
@@ -23,7 +20,8 @@
         </div>
         <div class="col-12 col-sm-auto align-self-center px-0 text-center">
             <div class="align-self-baseline">
-                <a href="{{route('encargos_contacto', ['id' => $contacto->contacto->id])}}" class="btn btn-sm btn-default text-info d-inline-block d-sm-block" aria-label='ver encargos de {{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}'>
+                <a href="{{route('encargos_contacto', ['id' => $contacto->contacto->id])}}" class="btn btn-sm btn-primary d-inline-block d-sm-block" aria-label='ver encargos de {{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}'>
+                    encargos
                 </a>
                 {{--  <a href="" class="btn btn-sm btn-default text-success d-inline-block  d-sm-block">
                     <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>encargar</span>

@@ -13,7 +13,11 @@
                 {{ csrf_field() }}
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                     <div class="input-group">
-                        <div class="input-group-addon bg-info text-light"><i class="fa fa-user-circle" aria-hidden="true"></i></div>
+                        <div class="input-group-prepend text-light">
+                            <span class="input-group-text bg-info text-light">
+                                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                            </span>
+                        </div>
                         <input type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
                     </div>
                     @if ($errors->has('email'))
@@ -22,7 +26,11 @@
                 </div>
                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                     <div class="input-group">
-                        <div class="input-group-addon bg-info text-light"><i class="fa fa-key" aria-hidden="true"></i></div>
+                        <div class="input-group-prepend text-light">
+                            <span class="input-group-text bg-info text-light">
+                                <i class="fas fa-key" aria-hidden="true"></i>
+                            </span>
+                        </div>
                         <input type="password" class="form-control" name="password" required autocomplete="off">
                     </div>
                     @if ($errors->has('password'))

@@ -19,7 +19,7 @@ class Encargo extends Model {
     protected $dates = ['deleted_at'];
     
     public function setEncargoAttribute($value) {
-        $this->attributes['encargo'] =strtolower($value);
+        $this->attributes['encargo'] = trim( mb_strtolower($value) );
     }
     public function asignador() {
         return $this->belongsTo('App\Usuario', 'id_asignador');

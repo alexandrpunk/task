@@ -13,7 +13,7 @@
 <div style='font-size:1.5rem;background-color:#E8E8E8;border-radius:4px;padding:10px;text-align:center;margin:0 10%;'>
     <p>"{{$encargo->encargo}}"</p>
     <p style='font-size:1rem;font-weight:bolder;color:#545454;'>
-        Cumplido el dia: {{strftime('%A %d de %B %Y',strtotime($encargo->fecha_conclusion->getTimestamp()))}}
+        Cumplido el dia: {{ strftime( '%A %d de %B %Y', strtotime( $encargo->fecha_conclusion ) ) }}
     </p>
     <p style='font-size:1rem;font-weight:bolder;color:#545454;'>
         Estado de finalizacion: {{$encargo->estado->nombre}}

@@ -1,0 +1,32 @@
+.contact-list {
+    border:solid 1px rgb(206, 212, 218);
+    margin-top:5px;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 4px;
+}
+.contact-list > .contact-item {
+    border-bottom:solid 1px rgb(206, 212, 218);
+    padding: 5px;
+    font-size: 1.08em;
+    transition: ease 0.2s;
+    user-select: none;
+}
+.contact-list > .contact-item > .display-contact{
+    border-radius: 2px;
+    margin-right: 5px;
+    width:35px;
+    height:35px;
+    object-fit:cover;
+}
+.contact-list > .contact-item:hover {
+    background-color: #00899C;
+    cursor: pointer;
+    color: #fff;
+}
+.contact-list > .contact-item:hover > .text-muted {
+    color: #fff !important;
+}
+.contact-list > .contact-item:last-of-type {
+    border-bottom:none;
+}

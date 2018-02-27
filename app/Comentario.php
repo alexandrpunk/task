@@ -14,6 +14,10 @@ class Comentario extends Model {
     ];
     protected $dates = ['deleted_at'];
     
+    public function setComentarioAttribute($value) {
+        $this->attributes['comentario'] = trim( mb_strtolower($value) );
+    }
+
     public function usuario() {
         return $this->belongsTo('App\Usuario', 'id_usuario');
     }

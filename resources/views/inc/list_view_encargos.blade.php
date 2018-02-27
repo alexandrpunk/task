@@ -1,16 +1,18 @@
+@php \Carbon\Carbon::setLocale('es_MX.utf8');
+setlocale(LC_TIME, 'es_MX.utf8');
+@endphp
 <div class="list-group" role='list' id='encargos' aria-label='lista de encargos'>
 @if (count($encargos) == 0)
     @if (Route::currentRouteName() == 'mis_encargos')
-        <h1 class="text-muted text-center font-weight-light ">No has hecho ningun encargo aun.</h1>
-        <p class="lead text-muted text-center">Puedes hacer uno haciendo click <a href="">aqui</a></p>
+        <h1 class="text-muted text-center font-weight-light "> No has hecho ningun encargo aun.</h1>
+        <p class="lead text-muted text-center">Puedes hacer uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
     @elseif (Route::currentRouteName() == 'mis_pendientes')
         <h1 class="text-muted text-center font-weight-light ">No tienes ningun pendiente.</h1>
-        <p class="lead text-muted text-center">Puedes asignarte uno haciendo click <a href="">aqui</a></p>
+        <p class="lead text-muted text-center">Puedes asignarte uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
     @elseif (Route::currentRouteName() == 'encargos_contacto')
         <h1 class="text-muted text-center font-weight-light ">No le has encargado nada a {{$contacto}}.</h1>
-        <p class="lead text-muted text-center">Puedes hacerle uno haciendo click <a href="">aqui</a></p>
+        <p class="lead text-muted text-center">Puedes hacerle uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
     @endif
-    
 @else
     @foreach ($encargos as $encargo)
     <div class='list-group-item task' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
@@ -33,15 +35,15 @@
         <span class="sr-only">@if ($encargo->visto) visto @else sin ver @endif</span>
         <span class="sr-only">@if ($encargo->mute) silenciado @endif</span>
         <span class='time' aria-hidden='true'>
-            <i class="fa fa-clock-o text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
+            <i class="far fa-clock text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
             @if ($encargo->visto)
-                <i class="fa fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="visto"></i>
+                <i class="fas fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="visto"></i>
             @else
-                <i class="fa fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="sin ver"></i>
+                <i class="fas fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="sin ver"></i>
             @endif
             @if ($encargo->mute)
-                <i class="fa fa-bell-slash fa-fw text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="silenciado"></i>
+                <i class="fas fa-bell-slash fa-fw text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="silenciado"></i>
             @endif
         </span>
         <hr>
@@ -51,13 +53,13 @@
         <ul class="list-inline options">
             <li class="list-inline-item">
                 <a onclick="clickAndDisable(this);" href="{{route('ver_encargo', ['id' => $encargo->id])}}" class='btn text-primary text-center' aria-label='ver encargo'>
-                    <i class="fa fa-eye fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>ver</span>
+                    <i class="fas fa-eye fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>ver</span>
                 </a>
             </li>
             @if($encargo->visto && $encargo->fecha_conclusion == null)
             <li class="list-inline-item">
                 <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center' aria-label='concluir encargo'>
-                    <i class="fa fa-check fa-fw" aria-hidden="true"></i>
+                    <i class="fas fa-check fa-fw" aria-hidden="true"></i>
                     <span class='d-block d-sm-inline'>concluir</span>
                 </a>
             </li>

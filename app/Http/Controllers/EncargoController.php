@@ -23,9 +23,10 @@ use App\Notifications\EncargoRechazado;
 use App\Notifications\ComentarioNuevo;
 class EncargoController extends Controller {
 
-    public function nuevo ($id) {
-        $usuario = Usuario::find($id);        
-        return view('encargo.crear', ['usuario' => $usuario]);
+    public function nuevo () {
+        // $usuario = Usuario::find();        
+        // return view('encargo.crear', ['usuario' => $usuario]);
+        return view('encargo.crear');
     }
 
     public function crear (Request $request) {
@@ -55,8 +56,8 @@ class EncargoController extends Controller {
             if ( $encargo->id_responsable == Auth::user()->id) {
                 $message = 'Tu pendiente a sido registrado correctamente';
             } else {
-                $destinatario = $ecnargo->responsable->nombre.' '.$ecnargo->responsable->apellido;
-                $message = 'Tu encargo a sido enviado a '.$destinatario. 'correctamente';
+                $encargo->responsable->notify(new EncargoNuevo($encargo));
+                $message = 'Tu encargo a sido enviado a '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido. 'correctamente';
             }
             return response()->json(['message' => $message],200);
         } else {
@@ -68,9 +69,10 @@ class EncargoController extends Controller {
         $now = new DateTime();
         $encargo = Encargo::findOrFail($id); 
         if (!$encargo->fecha_conclusion) {
-            $encargo->update(['fecha_conclusion' => $now]);
+            $encargo->update(['fecha_conclusion' => $now->format('Y-m-d H:i:s')
+            ]);
             if ($encargo->id_asignador != Auth::user()->id) {
-                $encargo->asignador->notify(new EncargoConcluido($encargo));  
+                $encargo->asignador->notify(new EncargoConcluido($encargo));
             } else if ($encargo->id_responsable != Auth::user()->id) {
                 $encargo->responsable->notify(new EncargoConcluido($encargo));  
             }
