@@ -14,6 +14,10 @@
                 <a href='{{route("agregar_contacto")}}' class="text-light " role='button' aria-label='agregar contacto'>
                     <i class="fas fa-user-plus fa-fw " aria-hidden="true"></i>
                 </a>
+                @elseif ( Route::currentRouteName() == 'mis_pendientes' )
+                <a href='{{route('nuevo_encargo', ['id' => Auth::user()->id])}}' class="text-light " role='button' aria-label='registrar pendiente'>
+                    <i class="fas fa-calendar-plus fa-fw " aria-hidden="true"></i>
+                </a>
                 @else
                 <a href='{{route("nuevo_encargo")}}' class="text-light " role='button' aria-label='asignar encargo'>
                     <i class="fas fa-calendar-plus fa-fw " aria-hidden="true"></i>

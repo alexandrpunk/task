@@ -8,7 +8,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
         <p class="lead text-muted text-center">Puedes hacer uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
     @elseif (Route::currentRouteName() == 'mis_pendientes')
         <h1 class="text-muted text-center font-weight-light ">No tienes ningun pendiente.</h1>
-        <p class="lead text-muted text-center">Puedes asignarte uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
+        <p class="lead text-muted text-center">Puedes asignarte uno haciendo click <a href="{{route('nuevo_encargo', ['id' => Auth::user()->id])}}">aqui</a></p>
     @elseif (Route::currentRouteName() == 'encargos_contacto')
         <h1 class="text-muted text-center font-weight-light ">No le has encargado nada a {{$contacto}}.</h1>
         <p class="lead text-muted text-center">Puedes hacerle uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>

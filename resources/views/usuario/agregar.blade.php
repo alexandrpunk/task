@@ -1,20 +1,27 @@
 @php ($menu = 2)
 @section('title', 'Agregar contacto')
-@section('back', route('listar_contactos'))
+@section('back', URL::previous() )
 @extends('layouts.base')
+
+@section('css')
+@endsection
+
+@section('js')
+<script src="{{ URL::asset('js/agregarContacto.js')}}"></script>
+@endsection
 
 @section('content')
     <div class="card my-3">
         <div class="card-body">
-            <form method="POST" action="{{ route('agregar_contacto') }}" data-toggle="validator">
+            <form data-url='{{ route('agregar_contacto') }}' id='contactoForm' >
                 {!! csrf_field() !!}
                 <div class="form-group">
-                    <input type="email" class="form-control" name="email" value="{{old('email')}}" placeholder="Correo electronico del contacto a agregar" maxlength="100" required>
-                    <div class="help-block with-errors"></div>
+                    <input type="email" class="form-control" name="email" placeholder="Correo electronico del contacto a agregar" maxlength="100" required>
                 </div>
-                <p class="help-block">Si el usuario ya esta registrado se agregara a tu lista de contactos, si no esta registrado se le enviara una invitacion.</p>
-                <button type="reset" class="btn btn-danger">Limpiar</button>
-                <button type="submit" class="btn btn-primary">Agregar contacto</button>
+                <small class="text-secondary">Si el usuario ya esta registrado se agregara a tu lista de contactos, si no esta registrado se le enviara una invitacion.</small>
+                <hr>
+                <button type="submit" class="btn btn-sm btn-primary">Agregar contacto</button>
+                <button type="reset" class="btn btn-sm btn-link text-danger">Limpiar</button>
             </form>
         </div>
     </div>

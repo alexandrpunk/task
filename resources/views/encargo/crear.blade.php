@@ -40,7 +40,7 @@
                 </div>
                 <button class="btn btn-sm btn-link" id='cambioResponsable' aria-label="cambiar responsable">cambiar</button>
             </div>
-            <form data-url='{{Request::url()}}' id='encargoForm' aria-label='Formulario de creacion de encargos'>
+            <form data-url='{{Route('nuevo_encargo')}}' id='encargoForm' >
                 {!! csrf_field() !!}
                 <div class="form-group">
                     <label for="encargo" aria-hidden='true'>Encargo</label>
@@ -54,7 +54,7 @@
                 </div>        
                 <hr aria-hidden='true'>
                 <button type="submit" class="btn btn-sm btn-success">Enviar encargo</button>
-                <button type="reset" class="btn  btn-link text-danger">Limpiar</button>
+                <button type="reset" class="btn btn-sm btn-link text-danger">Limpiar</button>
             </form>
         </div>
     </div>

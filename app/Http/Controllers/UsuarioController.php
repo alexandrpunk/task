@@ -127,83 +127,75 @@ class UsuarioController extends Controller {
     }
 
     public function agregarContacto(Request $request) {
-        $this->validate($request, [
+
+        $req = [
+            'email' => $request->email
+        ];
+        $validator = Validator::make($req, [
             'email' => 'required|max:100|email',
         ]);
-
-        try {
-            $usuario = Usuario::where('email',$request->email)->firstOrFail();
-        } catch (ModelNotFoundException $ex) {
-            $usuario_dummy=[
-                'nombre' => null,
-                'apellido' => null,
-                'email' => $request->email,
-                'telefono' => null,
-                'password' => null,
-                'status' => 2
-            ];                
-            $usuario = Usuario::create($usuario_dummy);
-        }
-
-        if($usuario->status == 1) {
+        
+        if ($validator->passes()) {
             try {
-                Relacionusuario::create([
-                        'id_usuario1' => Auth::user()->id,
-                        'id_usuario2' => $usuario->id,
-                        'status' => 1
-                ]);
-
-                Relacionusuario::create([
-                        'id_usuario1' =>  $usuario->id,
-                        'id_usuario2' => Auth::user()->id,
-                        'status' => 1
-                ]);
-
-                return redirect()
-                    ->back()
-                    ->with([
-                        'success' => 'Se a agregado el usuario a tu lista de contactos',
-                        'link' => route('listar_contactos'),
-                        'desc_link' => 'Volver a la lista de contactos'
-                    ]);
-            } catch (QueryException $e) {
-                $error_code = $e->errorInfo[1];
-                if($error_code == 1062) {
-                    return redirect()->route('agregar_contacto')->withErrors('El contacto ya esta en tu lista');
-                }
+                $usuario = Usuario::where('email',$request->email)->firstOrFail();
+            } catch (ModelNotFoundException $ex) {
+                $usuario_dummy=[
+                    'nombre' => null,
+                    'apellido' => null,
+                    'email' => $request->email,
+                    'telefono' => null,
+                    'password' => null,
+                    'status' => 2
+                ];                
+                $usuario = Usuario::create($usuario_dummy);
             }
-        } else if ($usuario->status == 2 || $usuario->status == 3) {
-            try {
-                Relacionusuario::create([
-                        'id_usuario1' => Auth::user()->id,
-                        'id_usuario2' => $usuario->id,
-                        'status' => 2
-                ]);
 
-                Relacionusuario::create([
-                        'id_usuario1' =>  $usuario->id,
-                        'id_usuario2' => Auth::user()->id,
-                        'status' => 2
-                ]);
-                $usuario->notify(new Invitacion(Auth::user()));
-
-                return redirect()
-                    ->back()
-                    ->with([
-                        'info' => 'Se enviado una invitacion para usar '.config('app.name').' al correo que trataste de agregar',
-                        'link' => route('listar_contactos'),
-                        'desc_link' => 'Volver a la lista de contactos'
+            if($usuario->status == 1) {
+                try {
+                    Relacionusuario::create([
+                            'id_usuario1' => Auth::user()->id,
+                            'id_usuario2' => $usuario->id,
+                            'status' => 1
                     ]);
-            } catch (QueryException $e) {
-                $error_code = $e->errorInfo[1];
-                if($error_code == 1062) {
-                    return redirect()
-                        ->back()
-                        ->withErrors('Este contacto ya tiene una invitacion pendiente de tu parte, cuando se registre aparecera automaticamente en tus contactos');
+    
+                    Relacionusuario::create([
+                            'id_usuario1' =>  $usuario->id,
+                            'id_usuario2' => Auth::user()->id,
+                            'status' => 1
+                    ]);
+    
+                    return response()->json(['message' => 'Se a agregado el usuario a tu lista de contactos'],200);
+                } catch (QueryException $e) {
+                    $error_code = $e->errorInfo[1];
+                    if($error_code == 1062) {
+                        return response()->json(['message' => 'El contacto ya esta en tu lista'],500);
+                    }
                 }
-            }
+            } else if ($usuario->status == 2 || $usuario->status == 3) {
+                try {
+                    Relacionusuario::create([
+                            'id_usuario1' => Auth::user()->id,
+                            'id_usuario2' => $usuario->id,
+                            'status' => 2
+                    ]);
+    
+                    Relacionusuario::create([
+                            'id_usuario1' =>  $usuario->id,
+                            'id_usuario2' => Auth::user()->id,
+                            'status' => 2
+                    ]);
+                    $usuario->notify(new Invitacion(Auth::user()));    
+                    return response()->json(['message' => 'Se enviado una invitacion para usar '.config('app.name').' al correo que trataste de agregar'],200);
+                } catch (QueryException $e) {
+                    $error_code = $e->errorInfo[1];
+                    if($error_code == 1062) {
+                        return response()->json(['message' => 'Este contacto ya tiene una invitacion pendiente de tu parte, cuando se registre aparecera automaticamente en tus contactos'],500);
+                    }
+                }
+            }            
+        } else {
+            return response()->json(['message' => 'Ha ocurrido un error al agregar el contacto:','errors'=>$validator->errors()],500);
         }
-
     }
 
     public function contactos() {
