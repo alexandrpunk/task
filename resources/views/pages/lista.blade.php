@@ -13,7 +13,7 @@
 @endsection
 
 @section('js')
-<script src="/js/listar_encargos.js"></script>
+<script src="{{ URL::asset('js/listar_encargos.js')}}"></script>
 <script src="https://www.w3schools.com/lib/w3.js"></script>
 @endsection
 

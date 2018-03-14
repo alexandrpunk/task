@@ -206,7 +206,7 @@ class UsuarioController extends Controller {
             ->get()
             ->sortBy('contacto.nombre');
         
-        return view('lista', ['contactos' => $contactos, 'titulo' => 'Lista de contactos']);
+        return view('pages.lista', ['contactos' => $contactos, 'titulo' => 'Lista de contactos']);
     }
          
     public function login(Request $request) {

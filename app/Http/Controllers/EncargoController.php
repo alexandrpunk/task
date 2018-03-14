@@ -107,7 +107,7 @@ class EncargoController extends Controller {
         } else {
             $encargos = Encargo::filtrarEstado(0,$usuario,$vista); 
             $data['encargos'] = $encargos; 
-            return view('lista', $data);
+            return view('pages.lista', $data);
         }         
     }
 
