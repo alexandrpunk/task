@@ -39,15 +39,10 @@ body {
     border-bottom: solid 2px #fff;
 }
 
-.navbar-encargapp .section-tabs .nav-item:first-child {
-    border-radius: 0 0 0 3px;
-}
-.navbar-encargapp .section-tabs .nav-item:last-child {
-    border-radius: 0 0 3px 0;
-}
 .navbar-encargapp .section-tabs .nav-item a {
     font-size: 1rem;
     font-weight: 600;
+    border-bottom: solid 2px transparent;
     color: rgba(255, 255, 255, 0.5);
     transition: 0.3s ease;
 }

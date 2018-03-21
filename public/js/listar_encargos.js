@@ -2,8 +2,8 @@ $(document).ready(function() {
     $(".filter").click(function(event){
       event.preventDefault();
       $(".filter").removeClass('selected');
-      $(this).addClass('selected');
       $(".filter").attr('aria-checked',false);
+      $(this).addClass('selected');
       $(this).attr('aria-checked',true);      
       $.ajax({
           type: "GET",

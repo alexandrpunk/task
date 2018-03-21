@@ -82,33 +82,39 @@ class EncargoController extends Controller {
     }
 
     public function listarEncargos (Request $request) {
-        $data=[];
-        $usuario = null;
-        switch (Route::currentRouteName()) {
-            case 'mis_encargos':
-                $vista = 1; 
-                $data['titulo'] = 'Mis encargos';         
-                break;
-            case 'mis_pendientes':
-                $vista = 2; 
-                $data['titulo'] = 'Mis pendientes'; 
-                break;
-            case 'encargos_contacto':
-                $usuario = $request->id;
-                $contacto = Usuario::find($request->id);
-                $vista = 3;
-                $data['titulo'] = 'Encargos de '.$contacto->nombre.' '.$contacto->apellido;
-                $data['contacto'] = $contacto->nombre.' '.$contacto->apellido;
-                break;       
-        } 
         if($request->ajax()){
-            $data['encargos'] = Encargo::filtrarEstado($request->estado,$usuario,$vista);
+            $data['encargos'] = Encargo::filtrarEstado(0,NULL,1);
             return view('inc.list_view_encargos', $data);
         } else {
-            $encargos = Encargo::filtrarEstado(0,$usuario,$vista); 
-            $data['encargos'] = $encargos; 
-            return view('pages.lista', $data);
-        }         
+            return 'hola mundo';
+        }
+        // $data=[];
+        // $usuario = null;
+        // switch (Route::currentRouteName()) {
+        //     case 'mis_encargos':
+        //         $vista = 1; 
+        //         $data['titulo'] = 'Mis encargos';         
+        //         break;
+        //     case 'mis_pendientes':
+        //         $vista = 2; 
+        //         $data['titulo'] = 'Mis pendientes'; 
+        //         break;
+        //     case 'encargos_contacto':
+        //         $usuario = $request->id;
+        //         $contacto = Usuario::find($request->id);
+        //         $vista = 3;
+        //         $data['titulo'] = 'Encargos de '.$contacto->nombre.' '.$contacto->apellido;
+        //         $data['contacto'] = $contacto->nombre.' '.$contacto->apellido;
+        //         break;       
+        // } 
+        // if($request->ajax()){
+        //     $data['encargos'] = Encargo::filtrarEstado($request->estado,$usuario,$vista);
+        //     return view('inc.list_view_encargos', $data);
+        // } else {
+        //     $encargos = Encargo::filtrarEstado(0,$usuario,$vista); 
+        //     $data['encargos'] = $encargos; 
+        //     return view('pages.lista', $data);
+        // }         
     }
 
     public function ver($id) {

@@ -61,13 +61,13 @@
         <div class="w-100" role='navigation'>
             <ul class="nav section-tabs justify-content-center" role='tablist'>
                 <li class="nav-item" role="tab" aria-label="Ver Encargos">
-                    <a class="nav-link <?php if ( in_array(Route::currentRouteName(), ['inicio','mis_encargos'], true) ) {echo 'active';} ?>" href="{{route('mis_encargos')}}" target='_self'>Encargos</a>
+                    <a class="nav-link active" href data-url='{{route('mis_encargos')}}'>Encargos</a>
                 </li>
                 <li class="nav-item" role="tab"  aria-label="Ver Pendientes">
-                    <a class="nav-link <?php if (Route::currentRouteName() == 'mis_pendientes') {echo 'active';} ?>" href="{{route('mis_pendientes')}}" target='_self'>Pendientes</a>
+                    <a class="nav-link" href data-url='{{route('mis_pendientes')}}'>Pendientes</a>
                 </li>
                 <li class="nav-item" role="tab" aria-label="Ver contactos">
-                    <a class="nav-link <?php if (Route::currentRouteName() == 'listar_contactos') {echo 'active';} ?>" href="{{route('listar_contactos')}}" target='_self'>Contactos</a>
+                    <a class="nav-link" href data-url='{{route('listar_contactos')}}'>Contactos</a>
                 </li>
             </ul>
         </div>
