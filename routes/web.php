@@ -15,36 +15,34 @@ Route::middleware(['middleware' => 'auth'])->group(function() {
     Route::get('/', function () { return view('pages.lista'); })->name('inicio');
     
 
-    Route::get('/encargos/crear/{id?}', 'EncargoController@nuevo')->name('nuevo_encargo');
-    Route::post('/encargos/crear/{id}', 'EncargoController@crear');
+    Route::get('/encargo/crear/{id?}', 'EncargoController@nuevo')->name('nuevo_encargo');
+    Route::post('/encargo/crear/{id}', 'EncargoController@crear');
     
     Route::middleware(['encargo_existe', 'encargo_permitido'])->group(function () {
         #rutas apra ver y cambiar detalles de los encargos
-        Route::get('/encargos/concluir/{id}', 'EncargoController@concluir')->name('concluir_encargo');    
-        Route::get('/encargos/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
-        Route::post('/encargos/comentar/{id}', 'EncargoController@comentar')->name('comentar_encargo');
-        Route::get('/encargos/rechazar/{id}', 'EncargoController@rechazar')->name('rechazar_encargo');
-        Route::get('/encargos/silenciar/{id}', 'EncargoController@silenciar')->name('silenciar_encargo');
+        Route::get('/encargo/concluir/{id}', 'EncargoController@concluir')->name('concluir_encargo');    
+        Route::get('/encargo/ver/{id}', 'EncargoController@ver')->name('ver_encargo');
+        Route::post('/encargo/comentar/{id}', 'EncargoController@comentar')->name('comentar_encargo');
+        Route::get('/encargo/rechazar/{id}', 'EncargoController@rechazar')->name('rechazar_encargo');
+        Route::get('/encargo/silenciar/{id}', 'EncargoController@silenciar')->name('silenciar_encargo');
     });
     
     #lista los encargos por usuario
-    Route::get('/encargos/lista/{estado?}', 'EncargoController@listarEncargos')->name('mis_encargos');
-    Route::get('/encargos/pendientes/{estado?}', 'EncargoController@listarEncargos')->name('mis_pendientes');
+    Route::get('/encargos/{estado?}', 'EncargoController@listarEncargos')->name('mis_encargos');
+    Route::get('/pendientes/{estado?}', 'EncargoController@listarEncargos')->name('mis_pendientes');
     Route::get('/encargos/{id}/{estado?}', 'EncargoController@listarEncargos')->name('encargos_contacto');
     
 //    Route::get('/encargos/borrar/{id}', function () { return view('inicio'); });
 //    Route::get('/encargos/editar/{id}', function () { return view('inicio'); });
 
-    Route::get('/contactos/lista', 'UsuarioController@contactos')->name('listar_contactos');
+    Route::get('/contactos', 'UsuarioController@contactos')->name('listar_contactos');
     Route::get('/contactos/agregar', function () { return view('usuario.agregar'); })->name('agregar_contacto');
     Route::post('/contactos/agregar', 'UsuarioController@agregarContacto');
     // Route::get('/contactos/borrar/{id}', function () { return view('inicio'); });
     
     Route::get('/usuario/editar/', function () { return view('usuario.editar'); })->name('editar_usuario');
     Route::post('/usuario/editar/', 'UsuarioController@editar');
-    
-    Route::get('/test/{id?}', function () { return view('test'); });
-    
+   
     Route::get('/logout',
         function () {
             Auth::logout();
@@ -69,7 +67,6 @@ Route::group(['middleware' => 'guest'], function() {
         return view('auth.reset_pass', ['token' => $token]);
     })->name('reset_pass');
     Route::post('/recuperar_password/reset/{token}', 'ResetPasswordController@reset');
-    // Route::post('/recuperar_password/{token}', 'UsuarioController@reset_pasword')->name('pos.recuperar_pass');
 });
 
 Route::get('/contactar', function () { return view('contactar'); })->name('contactar');

@@ -2,7 +2,8 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    {{--  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">  --}}
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/png" href="{{url('/img/favicon.png')}}">
 
     <meta name="theme-color" content="#00869d">
@@ -24,8 +25,8 @@
     @yield('css')
 
 </head>
-<body role='aplication'>
-    <span class="sr-only" role='status'>estas en @yield('title')</span>
+<body>
+    <span class="sr-only" role='status' id='titulo-pagina'>estas en @yield('title')</span>
     <div class="alert alert-dismissible fade mt-4 mx-5 fixed-top shadow" style='z-index:-9999;' role="alert" id='alerta'>
         <div id="alert-field">
         </div>
@@ -35,7 +36,7 @@
     </div>
   
     @include('inc.navbar')
-    <div class="h-100 list-body " role='main'>
+    <div class="h-100 list-body">
         <div class="container">
         @yield('content')
         </div>

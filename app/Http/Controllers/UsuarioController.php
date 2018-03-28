@@ -198,15 +198,19 @@ class UsuarioController extends Controller {
         }
     }
 
-    public function contactos() {
-        $contactos = Relacionusuario::where('id_usuario1',Auth::user()->id)
+    public function contactos(Request $request) {
+        if($request->ajax()){
+            $data['contactos'] = Relacionusuario::where('id_usuario1',Auth::user()->id)
             ->where('id_usuario2','!=',Auth::user()->id)
             ->where('status',1)
             ->with('contacto')
             ->get()
             ->sortBy('contacto.nombre');
-        
-        return view('pages.lista', ['contactos' => $contactos, 'titulo' => 'Lista de contactos']);
+            return view('inc.list_view_contactos', $data);
+        } else {
+            return redirect()->route('inicio');
+        }
+
     }
          
     public function login(Request $request) {

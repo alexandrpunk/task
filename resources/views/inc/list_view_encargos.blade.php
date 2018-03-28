@@ -1,21 +1,18 @@
 @php \Carbon\Carbon::setLocale('es_MX.utf8');
 setlocale(LC_TIME, 'es_MX.utf8');
 @endphp
-<div class="list-group" role='list' id='encargos' aria-label='lista de encargos'>
-@if (count($encargos) == 0)
+<div class="list-group" role='listbox' id='lista' aria-label='lista de encargos'>
+ @if (count($encargos) == 0)
     @if (Route::currentRouteName() == 'mis_encargos')
-        <h1 class="text-muted text-center font-weight-light "> No has hecho ningun encargo aun.</h1>
-        <p class="lead text-muted text-center">Puedes hacer uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
+        <h1 class="text-muted text-center font-weight-light ">No hay ningun encargo.</h1>
     @elseif (Route::currentRouteName() == 'mis_pendientes')
         <h1 class="text-muted text-center font-weight-light ">No tienes ningun pendiente.</h1>
-        <p class="lead text-muted text-center">Puedes asignarte uno haciendo click <a href="{{route('nuevo_encargo', ['id' => Auth::user()->id])}}">aqui</a></p>
     @elseif (Route::currentRouteName() == 'encargos_contacto')
         <h1 class="text-muted text-center font-weight-light ">No le has encargado nada a {{$contacto}}.</h1>
-        <p class="lead text-muted text-center">Puedes hacerle uno haciendo click <a href="{{route("nuevo_encargo")}}">aqui</a></p>
     @endif
-@else
+@else 
     @foreach ($encargos as $encargo)
-    <div class='list-group-item task' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
+    <div class='list-group-item task' style='border-left-color:{{$encargo->estado->color}};' role='listitem' data-search='{{$encargo->asignador->nombre}} {{$encargo->asignador->apellido}} {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}} {{$encargo->created_at->formatLocalized('%A %d de %B %Y')}} {{strftime('%A %d de %B %Y',strtotime($encargo->fecha_plazo))}} {{$encargo->encargo}}'>
     <div role='option'>
     <div class='encargo-header'>
         <span class='user'>
@@ -35,15 +32,15 @@ setlocale(LC_TIME, 'es_MX.utf8');
         <span class="sr-only">@if ($encargo->visto) visto @else sin ver @endif</span>
         <span class="sr-only">@if ($encargo->mute) silenciado @endif</span>
         <span class='time' aria-hidden='true'>
-            <i class="far fa-clock text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
+            <i class="far fa-clock text-primary" aria-hidden="true" title="{{$encargo->estado->nombre}}"></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
             @if ($encargo->visto)
-                <i class="fas fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="visto"></i>
+                <i class="fas fa-envelope-open fa-fw text-info" aria-hidden="true" title="visto"></i>
             @else
-                <i class="fas fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="sin ver"></i>
+                <i class="fas fa-envelope fa-fw text-mutted" aria-hidden="true" title="sin ver"></i>
             @endif
             @if ($encargo->mute)
-                <i class="fas fa-bell-slash fa-fw text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="silenciado"></i>
+                <i class="fas fa-bell-slash fa-fw text-muted" aria-hidden="true" title="silenciado"></i>
             @endif
         </span>
         <hr>

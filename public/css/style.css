@@ -30,31 +30,31 @@ body {
 }
 .navbar-encargapp .section-tabs {
     background-color: #0b7080;
-    transition: 0.3s ease;
 }
 
-.navbar-encargapp .section-tabs .nav-item .active {
-    background-color: #00869d;
-    color: #fff;
-    border-bottom: solid 2px #fff;
-}
-
-.navbar-encargapp .section-tabs .nav-item a {
+.navbar-encargapp .section-tabs .nav-item {
+    color: rgba(255, 255, 255, 0.5);
+    display: block;
+    padding: 0.5rem 1rem;
     font-size: 1rem;
     font-weight: 600;
-    border-bottom: solid 2px transparent;
-    color: rgba(255, 255, 255, 0.5);
-    transition: 0.3s ease;
+    border-bottom: solid 2px transparent;    
+    transition: 0.2s ease;
+    cursor: pointer;
 }
-
-.navbar-encargapp .section-tabs .nav-item:hover a {
+.navbar-encargapp .section-tabs .nav-item:hover {
     color: #fff;
 }
+.navbar-encargapp .section-tabs .nav-item.active {
+    background-color: #00869d;
+    color: #fff;
+    border-bottom-color: #fff;
+}
+
 .navbar-encargapp .navbar-title {
     color: #fff;
     font-weight: 400;
     line-height:1.55;
-    /* font-size: 1.25rem; */
     font-family: 'Open Sans';
     max-width: 80%;
 }
@@ -66,6 +66,7 @@ body {
 }
 .navbar-encargapp .dropdown-menu .dropdown-item {
     transition: ease 0.3s;
+    cursor: pointer;
 }
 .navbar-encargapp .dropdown-menu .dropdown-item:hover,
 .navbar-encargapp .dropdown-menu .dropdown-item:focus {
@@ -84,7 +85,9 @@ body {
 .list-body{
     overflow-y: scroll;
 }
-
+.list-inline-item:not(:last-child) {
+    margin-right: 0;
+}
 img.logo-login{
     height: 120px;
     width: auto;
@@ -133,16 +136,16 @@ p.logo-login{
     white-space: nowrap;
     text-overflow: ellipsis;
  }
- .task .options{
+ .task .options {
     margin: 0;
  }
  .task .options .btn{
     padding: 3px 5px;
  }
- .task hr{
+ .task hr {
      margin: 8px 0;
  }
- .display{
+ .display {
     width: 150px;
     height: 150px;
     object-fit: cover;
@@ -150,25 +153,29 @@ p.logo-login{
     border-radius: 3px;
  }
 
-.contacto{
+.contacto {
     display: flex;
 }
+.contacto.list-group-item{ 
+    padding: 0.5rem;
+}
 .contacto .display{
-    width: 80px;
-    height: 80px;
+    width:65px;
+    height:65px;
 }
 .contacto h4{
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin: 0;
+    text-transform: capitalize;
 }
 .contacto .email{
     display: block;
     color:#868e96;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
 }
 .contacto .telefono{
     display: block;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color:#868e96;
 }
 

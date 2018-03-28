@@ -50,9 +50,9 @@ $( "#cancelar" ).click( function(event) {
                     <input type="tel" id='telefono' pattern="\d{10}" class="form-control form-control-sm" name="telefono" value="{{Auth::user()->telefono}}" placeholder="Numero Celular" maxlength="10" disabled>
                 </div>              
                 <hr>
-                <button type="reset" class="btn btn-primary d-none" id='cancelar'>Cancelar</button>
-                <button type="submit" class="btn btn-success d-none"  id='guardar'>Guardar</button>
-                <button type='button' class="btn btn-info"  onClick='habilitarEdicion()'  id='editar'>Editar</button>
+                <button type="submit" class="btn btn-sm btn-success d-none"  id='guardar'>Guardar</button>
+                <button type="reset" class="btn btn-sm btn-link text-danger d-none" id='cancelar'>Cancelar</button>
+                <button type='button' class="btn btn-sm btn-info"  onClick='habilitarEdicion()'  id='editar'>Editar</button>
             </div>
         </div>
     </form>

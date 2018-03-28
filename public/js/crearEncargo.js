@@ -20,7 +20,7 @@ function filtrarLista() {
             $(this).show();
         }
         else {
-            $(this).hide();
+            $(this).fadeOut(300);
         }
     });
 }

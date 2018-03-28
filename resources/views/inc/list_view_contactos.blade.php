@@ -1,11 +1,11 @@
-<div class="list-group" role='list' aria-label='lista de contactos'>
+<div class="list-group" id='lista' role='listbox' aria-label='lista de contactos'>
     @foreach ($contactos as $contacto)
         @if ( is_null($contacto->contacto->display) )
         @php($contacto->contacto->display = 'avatar.jpg')
         @endif
-    <div class="list-group-item contacto row mx-0">
+    <div class="list-group-item contacto row mx-0" role='listitem' data-search='{{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}} {{$contacto->contacto->email}} {{$contacto->contacto->telefono}}'>
         <div class="col-12 col-sm-auto px-0 align-self-center text-center" aria-hidden='true'>
-            <img class='display mb-2 mb-sm-0' src="{{ url('storage/profile') }}/{{ $contacto->contacto->display }}">
+            <img class='display' src="{{ url('storage/profile') }}/{{ $contacto->contacto->display }}">
         </div>
         <div class="col-12 col-sm align-self-center" role='option'>
             <h4 class='nombre'>{{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}</h4>
@@ -19,17 +19,9 @@
             </span>
         </div>
         <div class="col-12 col-sm-auto align-self-center px-0 text-center">
-            <div class="align-self-baseline">
-                <a href="{{route('encargos_contacto', ['id' => $contacto->contacto->id])}}" class="btn btn-sm btn-primary d-inline-block d-sm-block" aria-label='ver encargos de {{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}'>
-                    encargos
-                </a>
-                {{--  <a href="" class="btn btn-sm btn-default text-success d-inline-block  d-sm-block">
-                    <i class="fa fa-calendar-plus-o fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>encargar</span>
-                </a>  --}}
-                {{--  <a href="" class="btn btn-sm btn-default text-danger d-inline-block  d-sm-block">
-                    <i class="fa fa-ban fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>bloquear</span>
-                </a>  --}}
-            </div>
+            {{--<a href="{{route('encargos_contacto', ['id' => $contacto->contacto->id])}}" class="text-info" aria-label='ver encargos de {{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}'>ver encargos</a>
+            <br>
+            <a href="{{route('nuevo_encargo', ['id' => $contacto->contacto->id])}}" class="text-success">hacer encargo</a>--}}
         </div>
     </div>
     @endforeach

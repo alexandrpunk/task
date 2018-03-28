@@ -19,19 +19,6 @@ $( document ).ready(function() {
     })
 });
 
-$('#search').click(function (event) {
-    event.preventDefault();
-    $('#main-nav, #search-nav').toggleClass('d-none');
-    $( "#search-box" ).attr('disabled', false);
-    $( "#search-box" ).focus();
-});
-$('#cancel-search').click(function (event) {
-    event.preventDefault();
-    $('#main-nav, #search-nav').toggleClass('d-none');
-    $( "#search-box" ).val('');
-    $( "#search-box" ).attr('disabled', true);
-});
-
 function clickAndDisable(link) {
     $(link).addClass('disabled');
     $(link).find('span').html('procesando...');
