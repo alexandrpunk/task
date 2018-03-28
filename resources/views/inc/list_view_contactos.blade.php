@@ -1,4 +1,4 @@
-<div class="list-group" id='lista' role='listbox' aria-label='lista de contactos'>
+<div class="list-group" id='lista' role='list' aria-label='lista de contactos'>
     @foreach ($contactos as $contacto)
         @if ( is_null($contacto->contacto->display) )
         @php($contacto->contacto->display = 'avatar.jpg')

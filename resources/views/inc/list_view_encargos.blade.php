@@ -1,7 +1,7 @@
 @php \Carbon\Carbon::setLocale('es_MX.utf8');
 setlocale(LC_TIME, 'es_MX.utf8');
 @endphp
-<div class="list-group" role='listbox' id='lista' aria-label='lista de encargos'>
+<div class="list-group" role='list' id='lista' aria-label='lista de encargos'>
  @if (count($encargos) == 0)
     @if (Route::currentRouteName() == 'mis_encargos')
         <h1 class="text-muted text-center font-weight-light ">No hay ningun encargo.</h1>
@@ -56,7 +56,6 @@ setlocale(LC_TIME, 'es_MX.utf8');
             @if($encargo->visto && $encargo->fecha_conclusion == null)
             <li class="list-inline-item">
                 <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center' aria-label='concluir encargo'>
-                    <i class="fas fa-check fa-fw" aria-hidden="true"></i>
                     <span class='d-block d-sm-inline'>concluir</span>
                 </a>
             </li>
