@@ -33,10 +33,10 @@ function loadTab(tab) {
         success: function(result){            
             $("#canvas-panel").html(result);
         },
-        complete: function(result){
-            $("#canvas-panel").fadeIn(150);            
+        complete: function(){
+            $("#canvas-panel").fadeIn(200);            
             $("li[id^='add-']").hide();     
-            $("#add-"+tab).fadeIn(150);
+            $("#add-"+tab).fadeIn(200);
             iosLinks()
         }
     });
@@ -58,7 +58,7 @@ $(".filter").click(function(){
             $("#canvas-panel").html(result);
         },
         complete: function(result){
-            $("#canvas-panel").fadeIn(150);
+            $("#canvas-panel").fadeIn(200);
             iosLinks()  
         }
     });
@@ -66,7 +66,7 @@ $(".filter").click(function(){
 
 $('#search').click(function (event) {
     $('#main-nav').hide();
-    $('#search-nav').fadeIn(150);
+    $('#search-nav').fadeIn(200);
     if ( $('.nav-item.active').data('filter') ) {
         $('#filtro').show();
     } else {
@@ -87,8 +87,7 @@ $('.nav-item').click(function(e){
         $(".filter[data-value='0']").addClass("selected");
         sessionStorage.setItem('tab', this.id);
         sessionStorage.setItem('link', $(this).data('url') );
-        loadTab( sessionStorage.getItem('tab') );
-        console.log(sessionStorage.getItem('link'));    
+        loadTab( sessionStorage.getItem('tab') );  
     }
 });
 

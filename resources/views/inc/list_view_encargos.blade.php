@@ -56,7 +56,7 @@ setlocale(LC_TIME, 'es_MX.utf8');
             @if($encargo->visto && $encargo->fecha_conclusion == null)
             <li class="list-inline-item">
                 <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center' aria-label='concluir encargo'>
-                    <span class='d-block d-sm-inline'>concluir</span>
+                    <i class="fas fa-check fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>concluir</span>                    
                 </a>
             </li>
             @endif

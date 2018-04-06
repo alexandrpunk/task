@@ -20,13 +20,21 @@ use App\Notifications\EncargoVisto;
 use App\Notifications\EncargoRecordatorio;
 use App\Notifications\EncargoConcluido;
 use App\Notifications\EncargoRechazado;
+use App\Notifications\EncargoCancelado;
 use App\Notifications\ComentarioNuevo;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class EncargoController extends Controller {
 
     public function nuevo () {
         // $usuario = Usuario::find();        
         // return view('encargo.crear', ['usuario' => $usuario]);
-        return view('encargo.crear');
+        $contactos = Relacionusuario::where('id_usuario1',Auth::user()->id)
+        ->where('status',1)
+        ->with('contacto')
+        ->get()
+        ->sortBy('contacto.nombre');
+        return view('encargo.crear', ['contactos' => $contactos]);
     }
 
     public function crear (Request $request) {
@@ -41,23 +49,24 @@ class EncargoController extends Controller {
             'id' => 'required|numeric|exists:Usuarios,id|contacto',
         ]);
         
-        $fecha = new DateTime($request->fecha_limite);
-                        
-        $data=[
-            'encargo' => $request->encargo,
-            'fecha_plazo' => $fecha->add(new DateInterval('PT23H59M59S')),
-            'visto' => 0,
-            'id_asignador' => Auth::user()->id,
-            'id_responsable' => $request->id,
-            'ultima_notificacion' =>  new DateTime()
-        ];
         if ($validator->passes()) {
+            $fecha = new DateTime($request->fecha_limite);
+                        
+            $data=[
+                'encargo' => $request->encargo,
+                'fecha_plazo' => $fecha->add(new DateInterval('PT23H59M59S')),
+                'visto' => 0,
+                'id_asignador' => Auth::user()->id,
+                'id_responsable' => $request->id,
+                'ultima_notificacion' =>  new DateTime()
+            ];
+            
             $encargo = Encargo::create($data);
             if ( $encargo->id_responsable == Auth::user()->id) {
                 $message = 'Tu pendiente a sido registrado correctamente';
             } else {
                 $encargo->responsable->notify(new EncargoNuevo($encargo));
-                $message = 'Tu encargo a sido enviado a '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido. 'correctamente';
+                $message = 'Tu encargo a sido enviado a '.$encargo->responsable->nombre.' '.$encargo->responsable->apellido. ' correctamente';
             }
             return response()->json(['message' => $message],200);
         } else {
@@ -67,7 +76,11 @@ class EncargoController extends Controller {
     
     public function concluir ($id) {
         $now = new DateTime();
-        $encargo = Encargo::findOrFail($id); 
+        try {
+            $encargo = Encargo::findOrFail($id); 
+        } catch (ModelNotFoundException $ex) {
+            return response()->json(['message' => 'El encargo que intentas concluir no existe'],500);
+        }        
         if (!$encargo->fecha_conclusion) {
             $encargo->update(['fecha_conclusion' => $now->format('Y-m-d H:i:s')
             ]);
@@ -76,9 +89,9 @@ class EncargoController extends Controller {
             } else if ($encargo->id_responsable != Auth::user()->id) {
                 $encargo->responsable->notify(new EncargoConcluido($encargo));  
             }
-            return back()->with('success','Se a concluido el encargo con exito');
+            return response()->json(['message' => 'El encargo ha sido concluido con exito','estado'=>$encargo->estado],200);
         }
-        return back()->withErrors('El encargo ya esta concluido');
+        return response()->json(['message' => 'El encargo ya esta concluido'],500);
     }
 
     public function listarEncargos (Request $request) {
@@ -126,12 +139,15 @@ class EncargoController extends Controller {
         $encargo = Encargo::find($id);
         $encargo->fecha_conclusion = (new DateTime())->setTimestamp(0);
         $encargo->save();
-        if($encargo->id_asignador != Auth::user()->id) {
+        if( $encargo->id_asignador == Auth::user()->id && $encargo->id_responsable != Auth::user()->id ) {
+            $encargo->responsable->notify(new EncargoCancelado($encargo));
+            return response()->json(['message' => 'El encargo se ha cancelado','estado'=>$encargo->estado],200);
+        } else if ( $encargo->id_asignador != Auth::user()->id && $encargo->id_responsable == Auth::user()->id ){
             $encargo->asignador->notify(new EncargoRechazado($encargo));
-        } else if ($encargo->id_responsable != Auth::user()->id){
-            $encargo->responsable->notify(new EncargoRechazado($encargo));
+            return response()->json(['message' => 'El encargo se ha rechazado','estado'=>$encargo->estado],200);
+        } else if ( $encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id ){
+            return response()->json(['message' => 'Tu encargo se ha cancelado','estado'=>$encargo->estado],200);
         }
-        return back()->with('success','Haz rechazado el encargo');
     }
     
     public function notificar () {
@@ -170,9 +186,11 @@ class EncargoController extends Controller {
     }
 
     public function comentar (Request $request, $id) {
-        $this->validate($request, [
+
+        $validator = Validator::make($req, [
             'comentario' => 'required',
         ]);
+
         
         $data = [
             'comentario' => $request->comentario,

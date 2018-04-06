@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class EncargoRechazado extends Notification {
+class EncargoRechazado extends Notification implements ShouldQueue {
     use Queueable;
     protected $encargo;
 

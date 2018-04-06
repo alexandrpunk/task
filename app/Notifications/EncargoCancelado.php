@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class EncargoNuevo extends Notification implements ShouldQueue {
+class EncargoCancelado extends Notification implements ShouldQueue {
     use Queueable;
     protected $encargo;
 
@@ -25,8 +25,8 @@ class EncargoNuevo extends Notification implements ShouldQueue {
 
     public function toMail($notifiable) {
         return (new MailMessage)
-        ->subject('Te han hecho un nuevo encargo')
-        ->view('mail.encargo.nuevo', ['encargo' => $this->encargo]);
+        ->subject($this->encargo->asignador->nombre.' '.$this->encargo->asignador->apellido.' te ha cancelado un encargo')
+        ->view('mail.encargo.cancelado', ['encargo' => $this->encargo]);
     }
 
     public function toArray($notifiable) {

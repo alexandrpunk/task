@@ -1,8 +1,9 @@
-$( document ).ready(function() {
+(function() {
     var z = $('nav').height();
     $('body').css( "padding-top", z+'px');
     iosLinks();
-});
+})();
+
 function iosLinks() {
     if(("standalone" in window.navigator) && window.navigator.standalone) {
         $('a').click(function(event) {
@@ -30,3 +31,125 @@ function remove_accent(str) {
     }
     return res;
 }
+
+let notify = (function() {
+    let success = function(params) {
+        params.tipo = 'success';
+        return addNotify(params);
+    };
+    let info = function(params) {
+        params.tipo = 'info';
+        return addNotify(params);
+    };
+    let danger = function(params) {
+        params.tipo = 'danger';
+        return addNotify(params);
+    };
+    let warning = function(params) {
+        params.tipo = 'warning';
+        return addNotify(params);
+    };
+
+
+    let addNotify = function(params) {
+        let item = document.createElement('div');
+        item.className = 'notify';
+        item.classList.add(params.tipo);
+        item.setAttribute('role','alert');
+
+        let msj = document.createElement('p');
+        msj.innerText = params.msj;
+        item.appendChild(msj);
+
+        if ( params.list ) {
+            let ul = document.createElement('ul');
+            params.list.forEach(function (e) {
+                let li = document.createElement('li');
+                li.innerText = e;
+                ul.appendChild(li);
+            });
+            item.appendChild(ul);
+        }
+        
+        if ( params.button ) {
+            let btn = document.createElement('a');
+            btn.innerText = params.button;
+            btn.className = 'notify-link';
+            btn.setAttribute('href',params.link);
+            btn.setAttribute('role','button');
+            btn.setAttribute('aria-label','click aqui para '+params.button);
+            item.appendChild(btn);
+        }
+
+        let close = document.createElement('button');
+        close.innerHTML = '&times;';
+        close.className = 'close-notify';
+        close.setAttribute('title','cerrar');
+        close.setAttribute('aria-label','cerrar notificacion');
+        close.addEventListener("click", function(){
+            item.style.opacity = '0';
+            setTimeout(function(){ close.parentNode.parentNode.removeChild(close.parentNode); }, 100);
+        });
+        item.appendChild(close);
+        
+        closeAll();
+        document.getElementById('notify-container').appendChild(item);
+        setTimeout(function(){item.style.opacity = '1';}, 100);
+    }
+    let closeAll = function () {
+        let closing = document.getElementById('notify-container');
+        while (closing.firstChild) {
+            closing.removeChild(closing.firstChild);
+        }
+    }
+    return {
+    success: success,
+    info: info,
+    danger: danger,
+    warning: warning,
+    closeAll: closeAll
+    };
+    
+})();
+
+let audioAlert = (function () {
+    let init = function () {
+        soundFile = new Audio ();
+        soundFile.volume = 1;
+        soundFile.src = '/sound/null.mp3';
+        soundFile.play();
+    }
+    let error = function () {
+        let path = '/sound/error.mp3';
+        return playAlert(path);
+    }
+    let success = function () {
+        let path = '/sound/success.mp3';
+        return playAlert(path);
+    }
+    let info = function () {
+        let path = '/sound/info.mp3';
+        return playAlert(path);
+    }
+    let click = function () {
+        if (typeof soundFile === 'undefined') {
+            soundFile = new Audio ();
+            soundFile.volume = 1;
+        }
+        path = '/sound/click.mp3';
+        return playAlert(path);
+    }
+
+    let playAlert = function (path) {
+        soundFile.src = path;
+        soundFile.load();
+        soundFile.play();
+      }
+    return {
+        init:init,
+        error:error,
+        success:success,
+        info:info,
+        click:click
+    };    
+})();

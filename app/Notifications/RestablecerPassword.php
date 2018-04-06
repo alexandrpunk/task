@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RestablecerPassword extends Notification {
+class RestablecerPassword extends Notification implements ShouldQueue {
     use Queueable;
     protected $token;
 

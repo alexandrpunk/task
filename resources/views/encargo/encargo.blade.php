@@ -11,30 +11,59 @@
 
 @section('js')
 <script>
-$("#silenciar").click(function(){
-   $("#silenciar").prop('disabled', true);
+$("#silenciar").on('click', function(){
+    audioAlert.click();
     $.ajax({
         type: "GET",
         url: $(this).attr('data-url'),
+        beforeSend: function() {
+            $("#silenciar").prop('disabled', true);
+        },
         success: function(result){
+            $("#silenciar").toggleClass('text-muted text-dark');
+            $("#mute-icon").toggleClass('fa-bell fa-bell-slash');
+            $('#silenciar').data('muted', ( $('#silenciar').data('muted') ) ?  0: 1);
+        },
+        complete:function() {
             $("#silenciar").prop('disabled', false);
-            $("#silenciar").toggleClass('text-muted');
-
-            if ($('#silenciar').data('muted')) {
-                $("#silenciar").html('<i class="fa fa-bell fa-fw" aria-hidden="true"></i>');
-                $('#silenciar').data('muted',0);
-            } else {
-                $("#silenciar").html('<i class="fa fa-bell-slash fa-fw" aria-hidden="true"></i>');
-                $('#silenciar').data('muted',1);
-            }
         }
     });
 });
+
+$('.concluir-encargo').on('click', function() {
+    let btn = this;
+    audioAlert.init();
+    finEncargo(btn);
+});
+function finEncargo(btn) {
+    $.ajax({
+        type: "GET",
+        url: $(btn).data('url'),
+        beforeSend: function () {
+            $(btn).prop( "disabled", true );
+        },
+        success: function(data){
+            notify.success({msj:data.message});
+            audioAlert.success();
+            $('#encargo').css('border-left-color',data.estado.color);
+            document.getElementById('svg-inline--fa-title-1').innerHTML = data.estado.nombre;
+            $('#encargo-opciones').fadeOut(200, function() { $('#encargo-opciones').remove(); });
+            $('#silenciar').fadeOut(200, function () { $('#silenciar').remove(); });
+        },
+        error: function(error){
+            notify.danger({msj:error.responseJSON.message});
+            audioAlert.error();
+        },
+        complete:function () {
+            $(btn).removeAttr('disabled');
+        }
+    });
+}
 </script>
 @endsection
 
 @section('content')
-<div class='list-group-item rounded task mt-3' style='border-left-color:{{$encargo->estado->color}};' role='listitem'>
+<div class='list-group-item rounded task mt-3' id='encargo' style='border-left-color:{{$encargo->estado->color}};'>
     <div class='encargo-header'>
         <span class='user'>
             @if ($encargo->id_asignador == Auth::user()->id && $encargo->id_responsable == Auth::user()->id)
@@ -45,13 +74,9 @@ $("#silenciar").click(function(){
                Encargado a: {{$encargo->responsable->nombre}} {{$encargo->responsable->apellido}}
             @endif            
         </span>
-        @if ($encargo->id_responsable == Auth::user()->id)
-        <button class="btn btn-sm float-right text-dark @if($encargo->mute) text-muted @endif" id='silenciar' data-muted='{{$encargo->mute}}' data-url="{{route('silenciar_encargo', ['id' => $encargo->id])}}">
-            @if($encargo->mute)
-            <i class="fas fa-bell-slash fa-fw" aria-hidden="true"></i>
-            @else
-            <i class="fas fa-bell fa-fw" aria-hidden="true"></i>
-            @endif
+        @if ($encargo->id_responsable == Auth::user()->id && !$encargo->fecha_conclusion)
+        <button class="btn btn-sm btn-link float-right {{ $encargo->mute ? 'text-muted' : 'text-dark' }}" id='silenciar' data-muted='{{$encargo->mute}}' data-url="{{route('silenciar_encargo', ['id' => $encargo->id])}}">
+            <i class="fas {{ $encargo->mute ? 'fa-bell-slash' : 'fa-bell' }} fa-fw" aria-hidden="true" id='mute-icon'></i> <span class=" d-none d-sm-inline">silenciar</span>
         </button>
         @endif
     </div>
@@ -60,28 +85,24 @@ $("#silenciar").click(function(){
             {{$encargo->encargo}}
         </h4>
         <span class='time'>
-            <i class="far fa-clock text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="{{$encargo->estado->nombre}}"></i>
+            <i class="fas fa-clock text-primary" aria-hidden="true" id='estado-encargo' title='{{$encargo->estado->nombre}}'></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
-            @if ($encargo->visto)
-                <i class="fas fa-envelope-open fa-fw text-info" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo visto"></i>
-            @else
-                <i class="fas fa-envelope fa-fw text-mutted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="encargo sin ver"></i>
-            @endif
+            <i class="fas {{ $encargo->visto ? 'fa-envelope-open text-info' : 'fa-envelope text-mutted' }} fa-fw " aria-hidden="true" title="{{ $encargo->visto ? 'encargo visto' : 'encargo sin ver' }}"></i>
         </span>
         <hr>
     </div>
-    <div class='encargo-opciones'>
+    <div id='encargo-opciones'>
         <ul class="list-inline options">
             @if( ($encargo->visto && $encargo->fecha_conclusion == null && $encargo->id_responsable == Auth::user()->id)||($encargo->fecha_conclusion == null && $encargo->id_asignador == Auth::user()->id) )
             <li class="list-inline-item">
-                <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center'><i class="fa fa-check fa-fw" aria-hidden="true">
-                    </i> concluir
-                </a>
+                <button data-url='{{route('concluir_encargo', ['id' => $encargo->id])}}' class='btn btn-link text-success btn-sm concluir-encargo'>
+                    <i class="fa fa-check fa-fw" aria-hidden="true"></i> concluir
+                </button>
             </li>
             <li class="list-inline-item">
-                <a href="{{route('rechazar_encargo', ['id' => $encargo->id])}}" onclick="clickAndDisable(this);"  class='btn text-danger text-center'><i class="fa fa-minus-circle fa-fw" aria-hidden="true">
-                    </i> rechazar
-                </a>
+                <button data-url="{{route('rechazar_encargo', ['id' => $encargo->id])}}" class='btn btn-link btn-sm text-danger concluir-encargo'>
+                    <i class="fa fa-minus-circle fa-fw" aria-hidden="true"></i> rechazar
+                </button>
             </li>
             @endif
         </ul>
@@ -89,7 +110,7 @@ $("#silenciar").click(function(){
 </div>
 
 <div class="card my-3">
-    <h5 class="card-header">Comentarios</h5>
+    <h6 class="card-header font-weight-bold">Comentarios</h6>
     <div class="card-body">
         @if (count($encargo->comentarios) > 0)
             @foreach ($encargo->comentarios as $comentario)
@@ -100,15 +121,14 @@ $("#silenciar").click(function(){
             </div>
             @endforeach
         @else
-            <p class='lead text-muted text-center'>¡¡¡Ooooohhh!!!, parece que no hay comentarios.</p>
+            <p class='lead text-muted text-center'>Aun no hay comentarios.</p>
         @endif
     </div>
     <div class="card-footer">
-        <form method="POST" action="{{url('/encargos/comentar')}}/{{$encargo->id}}" data-toggle="validator">
+        <form data-url="{{route('comentar_encargo', ['id' => $encargo->id])}}" id='comentarios-form'>
             {!! csrf_field() !!}
             <div class="form-group">
-                <label for='comentario'>Comentario</label>
-                <textarea name='comentario' placeholder="escribe un comentario o duda..." class="form-control" rows="4" required></textarea>
+                <textarea name='comentario' id='comentario' placeholder="Escribe un comentario o duda..." class="form-control form-control-sm" rows="4" required></textarea>
                 <div class="help-block with-errors"></div>
             </div>
             <button class="btn btn-sm btn-info" type="submit">Comentar</button>

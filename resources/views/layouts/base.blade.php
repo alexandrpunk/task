@@ -26,15 +26,8 @@
 
 </head>
 <body>
-    <span class="sr-only" role='status' id='titulo-pagina'>estas en @yield('title')</span>
-    <div class="alert alert-dismissible fade mt-4 mx-5 fixed-top shadow" style='z-index:-9999;' role="alert" id='alerta'>
-        <div id="alert-field">
-        </div>
-        <button type="button" class="close d-none" id='closeAlert' aria-label="Cerrar notificacion">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-  
+    <span class="sr-only" role='status' id='titulo-pagina'>estas en @yield('title')</span> 
+    <div id="notify-container"></div>
     @include('inc.navbar')
     <div class="h-100 list-body">
         <div class="container">

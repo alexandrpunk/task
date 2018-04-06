@@ -13,7 +13,7 @@
 <div style='font-size:1.5rem;background-color:#E8E8E8;border-radius:4px;padding:10px;text-align:center;margin:0 10%;'>
     <p>"{{$comentario->comentario}}"</p>
     <p style='font-size:0.8rem;font-weight:bolder;color:#545454;'>
-        El comentario fue el hecho el: {{strftime('%A %d de %B %Y',strtotime($comentario->created_at))}}
+        El comentario fue el hecho el: {{strftime('%A %d de %B %Y', strtotime($comentario->created_at))}}
     </p>
 </div>
 <div style='text-align:center;'>

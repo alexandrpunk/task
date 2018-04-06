@@ -13,13 +13,14 @@
 
 @section('content')
     <div class="card my-3">
+        
         {{--  seleccion de encargado  --}}
-        <div class="card-body" id='pagina-contacto'>
+        <div class="card-body" style='display:none;' id='pagina-contacto'>
             <h3>Seleccionar responsable</h3>
             <div class="form-group">
-                <input type="text" class="form-control" id="filtrarContactos" placeholder="Buscar contacto..." onkeyup="filtrarLista()">
+                <input type="text" class="form-control" id="filtrarContactos" placeholder="Buscar contacto...">
                 <div class="contact-list">
-                @foreach (Auth::user()->contactos as $contacto)
+                @foreach ($contactos as $contacto)
                 @if ( is_null($contacto->contacto->display) ) @php($contacto->contacto->display = 'avatar.jpg')@endif
                 <div class="contact-item text-truncate" data-nombre='{{$contacto->contacto->nombre}} {{$contacto->contacto->apellido}}' data-email='{{$contacto->contacto->email}}' data-display='{{ url('storage/profile') }}/{{ $contacto->contacto->display }}' data-id='{{$contacto->contacto->id}}' role="option">
                     <img src="{{ url('storage/profile') }}/{{ $contacto->contacto->display }}" class="display-contact">
@@ -30,13 +31,14 @@
                 </div>
             </div>
         </div>
+
         {{-- formulario del encargo --}}
-        <div class="card-body d-none" id='pagina-encargo'>
+        <div class="card-body" style='display:none;' id='pagina-encargo'>
             <label aria-hidden="true">Responsable:</label>
-            <div class="responsable-view d-none" id="block-responsable">
+            <div class="responsable-view" id="block-responsable">
                 <div role='option' class="d-inline-block">
                 <div class="sr-only">Responsable: </div>
-                <span id='responsable'class="d-inline-block text-truncate"></span>
+                <span id='responsable' class="d-inline-block text-truncate"></span>
                 </div>
                 <button class="btn btn-sm btn-link" id='cambioResponsable' aria-label="cambiar responsable">cambiar</button>
             </div>
