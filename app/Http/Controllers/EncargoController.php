@@ -55,12 +55,12 @@ class EncargoController extends Controller {
             $data=[
                 'encargo' => $request->encargo,
                 'fecha_plazo' => $fecha->add(new DateInterval('PT23H59M59S')),
-                'visto' => 0,
+                'visto' => ($request->id !=  Auth::user()->id ? 0 : 1),
                 'id_asignador' => Auth::user()->id,
                 'id_responsable' => $request->id,
                 'ultima_notificacion' =>  new DateTime()
             ];
-            
+
             $encargo = Encargo::create($data);
             if ( $encargo->id_responsable == Auth::user()->id) {
                 $message = 'Tu pendiente a sido registrado correctamente';
@@ -185,39 +185,43 @@ class EncargoController extends Controller {
 
     }
 
-    public function comentar (Request $request, $id) {
+    public function comentar (Request $request) {
+        $req = [
+            'id' => $request->id,
+            'comentario' => $request->comentario,
+        ];
 
         $validator = Validator::make($req, [
             'comentario' => 'required',
         ]);
-
         
-        $data = [
-            'comentario' => $request->comentario,
-            'id_usuario' => Auth::user()->id,
-            'id_encargo' => $id
-        ];
-        $comentario = Comentario::create($data);
-        if ( !($comentario->encargo->id_responsable == Auth::user()->id && $comentario->encargo->id_asignador == Auth::user()->id) ){
-            switch (Auth::user()->id) {
-                case $comentario->encargo->id_responsable :
-                    $destinatario = Usuario::find($comentario->encargo->id_responsable);
-                    break;
-                case $comentario->encargo->id_asignador :
-                    $destinatario = Usuario::find($comentario->encargo->id_asignador);
-                    break;
+        if ($validator->passes()) {
+            $data = [
+                'comentario' => $request->comentario,
+                'id_usuario' => Auth::user()->id,
+                'id_encargo' => $request->id
+            ];
+            $comentario = Comentario::create($data);
+            if ( !( $comentario->encargo->id_responsable == Auth::user()->id && $comentario->encargo->id_asignador == Auth::user()->id ) ){
+                switch (Auth::user()->id) {
+                    case $comentario->encargo->id_responsable :
+                        $destinatario = Usuario::find($comentario->encargo->id_responsable);
+                        break;
+                    case $comentario->encargo->id_asignador :
+                        $destinatario = Usuario::find($comentario->encargo->id_asignador);
+                        break;
+                }
+                $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
             }
-            $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
+            $coment = [
+                'nombre' => $comentario->usuario->nombre.' '.$comentario->usuario->apellido,
+                'hora' => strftime( '%m/%d/%y', strtotime( $comentario->created_at ) ),
+                'comentario' =>  $comentario->comentario
+            ];
+            return response()->json(['message' => 'se ha enviado el comentario exitosamente','comentario'=>$coment],200);
+        } else {
+            return response()->json(['message' => 'Ha ocurrido un error al enviar el comentario:','errors'=>$validator->errors()],500);
         }
-        return back()->with('success','Se a comentado el encargo con exito');
     }  
 
-    public function test (Request $request) {
-        echo str_random(32);
-        // $encargos = Encargo::filtrarEstado(6,5,2);
-        // foreach ($encargos as $encargo){
-        //     echo $encargo;
-
-        // }
-    }
 }

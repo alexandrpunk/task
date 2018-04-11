@@ -6,25 +6,12 @@
 @endsection
 
 @section('js')
-<script>
-function habilitarEdicion(){
-    $( "#editar, #guardar, #cancelar" ).toggleClass( "d-none");
-    $("#display, #nombre, #apellido, #telefono").attr("disabled", false);
-}
-
-$( "#cancelar" ).click( function(event) {
-    event.preventDefault();
-    $('#perfil')[0].reset();
-    $( "#editar, #guardar, #cancelar" ).toggleClass( "d-none");
-    $("#display, #nombre, #apellido, #telefono").attr("disabled", true);
-});
-
-</script>
+<script src="{{ URL::asset('js/editarPerfil.js')}}"></script>
 @endsection
 
 @section('content')
 <div class="card p-3 my-3">
-    <form method="POST" action="{{ route('editar_usuario') }}" enctype="multipart/form-data" id='perfil'>
+    <form data-url="{{ route('editar_usuario') }}" enctype="multipart/form-data" id='perfil-form'>
         {!! csrf_field() !!}
         <div class="row">
             <div class="col-12 col-sm-3">
@@ -46,13 +33,13 @@ $( "#cancelar" ).click( function(event) {
                     <input type="text" id='apellido' class="form-control form-control-sm" name="apellido" value="{{Auth::user()->apellido}}" placeholder="Apellido" maxlength="100" required  disabled>
                 </div>
                 <div class="form-group">
-                    <label for="telefono">Celular</label> <small class='text-muted'>(No es obligatorio)</small>
+                    <label for="telefono">Celular</label> <small class='text-muted'>*No es obligatorio (deben ser 10 digitos)</small>
                     <input type="tel" id='telefono' pattern="\d{10}" class="form-control form-control-sm" name="telefono" value="{{Auth::user()->telefono}}" placeholder="Numero Celular" maxlength="10" disabled>
                 </div>              
                 <hr>
-                <button type="submit" class="btn btn-sm btn-success d-none"  id='guardar'>Guardar</button>
-                <button type="reset" class="btn btn-sm btn-link text-danger d-none" id='cancelar'>Cancelar</button>
-                <button type='button' class="btn btn-sm btn-info"  onClick='habilitarEdicion()'  id='editar'>Editar</button>
+                <button type="submit" class="btn btn-sm btn-success" style="display:none;" id='guardar'>Guardar</button>
+                <button type="reset" class="btn btn-sm btn-link text-danger" style="display:none;" id='cancelar'>Cancelar</button>
+                <button type='button' class="btn btn-sm btn-info" id='editar'>Editar</button>
             </div>
         </div>
     </form>

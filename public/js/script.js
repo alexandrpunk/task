@@ -141,6 +141,7 @@ let audioAlert = (function () {
     }
 
     let playAlert = function (path) {
+        soundFile.pause();
         soundFile.src = path;
         soundFile.load();
         soundFile.play();
@@ -152,4 +153,44 @@ let audioAlert = (function () {
         info:info,
         click:click
     };    
+})();
+
+let encargoAction = (function() {
+    let concluir = function(params) {
+        params.notificacion = notify.success;
+        params.alerta = audioAlert.success;
+        return ejecutar(params);
+    };
+    let rechazar = function(params) {
+        params.notificacion =  notify.info;
+        params.alerta = audioAlert.info;
+        return ejecutar(params);
+    };
+
+    let ejecutar = function(params) {
+        var bool = false;
+        $.ajax({
+            type: "GET",
+            url: $(params.btn).data('url'),
+            async: false,
+            beforeSend: function () {
+                $(params.btn).prop( "disabled", true );
+            },
+            success: function(data){
+                params.notificacion({msj:data.message});
+                params.alerta();
+                if (params.final) { params.final(data); }
+                bool= true;
+             },
+            error: function(error){
+                notify.danger({msj:error.responseJSON.message});
+                audioAlert.error();
+            }
+        });
+        return bool;
+    }
+    return {
+        concluir:concluir,
+        rechazar:rechazar
+    }
 })();

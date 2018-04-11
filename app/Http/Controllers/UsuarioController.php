@@ -79,27 +79,36 @@ class UsuarioController extends Controller {
             ->with('email', $request->email);
     }
     public function editar (Request $request) {
-        $this->validate($request, [
+         $req = [
+            'nombre' => $request->nombre,
+            'apellido' => $request->apellido,
+            'telefono' => $request->telefono,
+            'display' => $request->display
+        ];
+        $validator = Validator::make($req, [
             'nombre' => 'max:100',
             'apellido' => 'max:100',
             'telefono' => 'digits:10|nullable',
-            'display'=> 'image|mimes:jpeg,png,jpg,gif|max:2048|dimensions:min_width=300,min_height=300'
+            'display'=> 'image|mimes:jpeg,png,jpg,gif|max:2048|dimensions:min_width=300,min_height=300|nullable'
         ]);
         $data=[
             'nombre' => $request->nombre,
             'apellido' => $request->apellido,
             'telefono' => $request->telefono,
         ];
-        if ($request->hasFile('display')) {
-            $imageName = Auth::user()->id.'.'.$request->display->extension();
-            if ( !is_null(Auth::user()->display) ) {
-                Storage::delete('profile/'.Auth::user()->display);
+        if ( $validator->passes() ) {
+            if ($request->hasFile('display')) {
+                $imageName = Auth::user()->id.'.'.$request->display->extension();
+                if ( !is_null(Auth::user()->display) ) {
+                    Storage::delete('profile/'.Auth::user()->display);
+                }
+                $request->display->storeAs('profile', $imageName, 'public');
+                $data['display'] = $imageName;
             }
-            $request->display->storeAs('profile', $imageName, 'public');
-            $data['display'] = $imageName;
+            Auth::user()->update($data);
+            return response()->json(['message' => 'Tu informacion se ha actualizado','userData'=>Auth::user()],200);
         }
-        Usuario::find(Auth::user()->id)->update($data);
-        return back()->with('success','Haz actualiado tu informacion');
+        return response()->json(['message' => 'Ha ocurrido un error al actualizar la informacion:','errors'=>$validator->errors()],500);
     }
     public function validarEmail ($token) {
         try {

@@ -10,56 +10,7 @@
 @endsection
 
 @section('js')
-<script>
-$("#silenciar").on('click', function(){
-    audioAlert.click();
-    $.ajax({
-        type: "GET",
-        url: $(this).attr('data-url'),
-        beforeSend: function() {
-            $("#silenciar").prop('disabled', true);
-        },
-        success: function(result){
-            $("#silenciar").toggleClass('text-muted text-dark');
-            $("#mute-icon").toggleClass('fa-bell fa-bell-slash');
-            $('#silenciar').data('muted', ( $('#silenciar').data('muted') ) ?  0: 1);
-        },
-        complete:function() {
-            $("#silenciar").prop('disabled', false);
-        }
-    });
-});
-
-$('.concluir-encargo').on('click', function() {
-    let btn = this;
-    audioAlert.init();
-    finEncargo(btn);
-});
-function finEncargo(btn) {
-    $.ajax({
-        type: "GET",
-        url: $(btn).data('url'),
-        beforeSend: function () {
-            $(btn).prop( "disabled", true );
-        },
-        success: function(data){
-            notify.success({msj:data.message});
-            audioAlert.success();
-            $('#encargo').css('border-left-color',data.estado.color);
-            document.getElementById('svg-inline--fa-title-1').innerHTML = data.estado.nombre;
-            $('#encargo-opciones').fadeOut(200, function() { $('#encargo-opciones').remove(); });
-            $('#silenciar').fadeOut(200, function () { $('#silenciar').remove(); });
-        },
-        error: function(error){
-            notify.danger({msj:error.responseJSON.message});
-            audioAlert.error();
-        },
-        complete:function () {
-            $(btn).removeAttr('disabled');
-        }
-    });
-}
-</script>
+<script src="{{ URL::asset('js/verEncargo.js')}}"></script>
 @endsection
 
 @section('content')
@@ -92,36 +43,30 @@ function finEncargo(btn) {
         <hr>
     </div>
     <div id='encargo-opciones'>
-        <ul class="list-inline options">
-            @if( ($encargo->visto && $encargo->fecha_conclusion == null && $encargo->id_responsable == Auth::user()->id)||($encargo->fecha_conclusion == null && $encargo->id_asignador == Auth::user()->id) )
-            <li class="list-inline-item">
-                <button data-url='{{route('concluir_encargo', ['id' => $encargo->id])}}' class='btn btn-link text-success btn-sm concluir-encargo'>
-                    <i class="fa fa-check fa-fw" aria-hidden="true"></i> concluir
-                </button>
-            </li>
-            <li class="list-inline-item">
-                <button data-url="{{route('rechazar_encargo', ['id' => $encargo->id])}}" class='btn btn-link btn-sm text-danger concluir-encargo'>
-                    <i class="fa fa-minus-circle fa-fw" aria-hidden="true"></i> rechazar
-                </button>
-            </li>
-            @endif
-        </ul>
+        @if( $encargo->fecha_conclusion == null )
+            <button data-url='{{route('concluir_encargo', ['id' => $encargo->id])}}' class='btn btn-link text-success btn-sm finalizar-encargo concluir'>
+                <i class="fa fa-check fa-fw" aria-hidden="true"></i> concluir
+            </button>
+            <button data-url="{{route('rechazar_encargo', ['id' => $encargo->id])}}" class='btn btn-link btn-sm text-danger finalizar-encargo rechazar'>
+                <i class="fa fa-minus-circle fa-fw" aria-hidden="true"></i> rechazar
+            </button>
+        @endif
     </div>
 </div>
 
 <div class="card my-3">
     <h6 class="card-header font-weight-bold">Comentarios</h6>
-    <div class="card-body">
+    <div class="card-body" id='comentarios'>
         @if (count($encargo->comentarios) > 0)
             @foreach ($encargo->comentarios as $comentario)
             <div class="comentario">
                 <label class='text-info'>{{$comentario->usuario->nombre}} {{$comentario->usuario->apellido}} comento:</label>
-                <small class="pull-right text-muted">{{$comentario->created_at->formatLocalized('%d de %B %Y')}}</small>
+                <small class="pull-right text-muted">{{ strftime( '%m/%d/%y', strtotime( $comentario->created_at ) ) }}</small>
                 <p>{{$comentario->comentario}}</p>
             </div>
             @endforeach
         @else
-            <p class='lead text-muted text-center'>Aun no hay comentarios.</p>
+            <p class='lead text-muted text-center' id='no-coment-text'>Aun no hay comentarios.</p>
         @endif
     </div>
     <div class="card-footer">

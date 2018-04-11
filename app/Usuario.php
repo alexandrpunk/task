@@ -20,7 +20,7 @@ class Usuario extends Model implements AuthenticatableContract, CanResetPassword
         'nombre', 'apellido', 'email', 'display', 'email_token', 'telefono', 'password', 'status'
     ];
     protected $hidden = [
-        'password', 'remember_token',
+        'id','password', 'remember_token', 'email_token', 'status', 'deleted_at', 'created_at', 'updated_at'
     ];
     protected $dates = ['deleted_at'];
 

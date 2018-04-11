@@ -1,6 +1,5 @@
 $("#contactoForm").submit(function(e) {
     e.preventDefault(); // avoid to execute the actual submit of the form.
-    notify.closeAll();
     audioAlert.init();
     $('#contactoForm input').attr('readonly', 'readonly');
     $('#contactoForm button').attr('disabled', 'disabled');

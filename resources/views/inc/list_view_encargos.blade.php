@@ -32,35 +32,25 @@ setlocale(LC_TIME, 'es_MX.utf8');
         <span class="sr-only">@if ($encargo->visto) visto @else sin ver @endif</span>
         <span class="sr-only">@if ($encargo->mute) silenciado @endif</span>
         <span class='time' aria-hidden='true'>
-            <i class="far fa-clock text-primary" aria-hidden="true" title="{{$encargo->estado->nombre}}"></i>
+            <i class="fas fa-clock text-primary" aria-hidden="true" id='estado-encargo' title='{{$encargo->estado->nombre}}'></i>
             {{strftime('%d/%m/%y',strtotime($encargo->created_at))}} - {{strftime('%d/%m/%y',strtotime($encargo->fecha_plazo))}}
-            @if ($encargo->visto)
-                <i class="fas fa-envelope-open fa-fw text-info" aria-hidden="true" title="visto"></i>
-            @else
-                <i class="fas fa-envelope fa-fw text-mutted" aria-hidden="true" title="sin ver"></i>
-            @endif
-            @if ($encargo->mute)
-                <i class="fas fa-bell-slash fa-fw text-muted" aria-hidden="true" title="silenciado"></i>
-            @endif
+            <i class="fas {{ $encargo->visto ? 'fa-envelope-open text-info' : 'fa-envelope text-mutted' }} fa-fw " aria-hidden="true" title="{{ $encargo->visto ? 'encargo visto' : 'encargo sin ver' }}"></i>
         </span>
         <hr>
     </div>
     </div>
     <div class='encargo-opciones'>
-        <ul class="list-inline options">
-            <li class="list-inline-item">
-                <a onclick="clickAndDisable(this);" href="{{route('ver_encargo', ['id' => $encargo->id])}}" class='btn text-primary text-center' aria-label='ver encargo'>
-                    <i class="fas fa-eye fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>ver</span>
-                </a>
-            </li>
-            @if($encargo->visto && $encargo->fecha_conclusion == null)
-            <li class="list-inline-item">
-                <a href="{{route('concluir_encargo', ['id' => $encargo->id])}}" class='btn text-success text-center' aria-label='concluir encargo'>
-                    <i class="fas fa-check fa-fw" aria-hidden="true"></i> <span class='d-block d-sm-inline'>concluir</span>                    
-                </a>
-            </li>
-            @endif
-        </ul>
+        <a href="{{route('ver_encargo', ['id' => $encargo->id])}}" class='btn btn-sm text-primary' aria-label='ver encargo'>
+            <i class="fas fa-eye fa-fw" aria-hidden="true"></i> ver
+        </a>
+        @if( ( $encargo->visto && $encargo->fecha_conclusion == null ) || ( $encargo->id_asignador == Auth::user()->id && $encargo->fecha_conclusion == null ) )
+        <button data-url='{{route('concluir_encargo', ['id' => $encargo->id])}}' class='btn btn-link text-success btn-sm finalizar-encargo concluir' aria-label='concluir encargo'>
+            <i class="fa fa-check fa-fw" aria-hidden="true"></i> concluir
+        </button>
+        <button data-url="{{route('rechazar_encargo', ['id' => $encargo->id])}}" class='btn btn-link btn-sm text-danger finalizar-encargo rechazar' aria-label='{{ $encargo->id_asignador == Auth::user()->id  ? "cancelar" : "rechazar" }} encargo'>
+            <i class="fa fa-minus-circle fa-fw" aria-hidden="true"></i> {{ $encargo->id_asignador == Auth::user()->id  ? 'cancelar' : 'rechazar' }}
+        </button>
+        @endif
     </div>
     </div>
     @endforeach
