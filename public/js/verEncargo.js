@@ -46,13 +46,17 @@ $("#comentarios-form").submit(function(e) {
             appendComent(data.comentario);
         },
         error: function(error) {
-            let errors = [];
-            Object.values(error.responseJSON.errors).forEach(function (e) {           
-                Object.values(e).forEach(function(f) {
-                    errors.push(f);
+            if (error.responseJSON.errors) {
+                let errors = [];
+                Object.values(error.responseJSON.errors).forEach(function (e) {           
+                    Object.values(e).forEach(function(f) {
+                        errors.push(f);
+                    });
                 });
-            });
-            notify.danger({msj:error.responseJSON.message,list:errors});
+                notify.danger({msj:error.responseJSON.message,list:errors});
+            } else {
+                notify.danger({msj:error.responseJSON.message});                
+            }
             audioAlert.error();
         },
         complete: function(){

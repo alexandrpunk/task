@@ -16,8 +16,8 @@ class ComentarioNuevo extends Notification implements ShouldQueue {
     use Queueable;
     protected $destinatario, $comentario;
 
-    public function __construct(Usuario $user, Comentario $comentario) {
-        $this->user = $user;
+    public function __construct(Usuario $destinatario, Comentario $comentario) {
+        $this->destinatario = $destinatario;
         $this->comentario = $comentario;
     }
 
@@ -28,7 +28,7 @@ class ComentarioNuevo extends Notification implements ShouldQueue {
     public function toMail($notifiable) {
         return (new MailMessage)
         ->subject('Uno de tus encargos tiene un comentario nuevo')
-        ->view('mail.encargo.comentario', ['usuario' => $this->user, 'comentario' => $this->comentario]);
+        ->view('mail.encargo.comentario', ['usuario' => $this->destinatario, 'comentario' => $this->comentario]);
     }
 
     public function toArray($notifiable) {

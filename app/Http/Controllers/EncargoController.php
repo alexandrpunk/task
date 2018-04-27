@@ -202,25 +202,26 @@ class EncargoController extends Controller {
                 'id_encargo' => $request->id
             ];
             $comentario = Comentario::create($data);
-            if ( !( $comentario->encargo->id_responsable == Auth::user()->id && $comentario->encargo->id_asignador == Auth::user()->id ) ){
+            if ( !( $comentario->encargo->id_responsable == $comentario->encargo->id_asignador ) ){
                 switch (Auth::user()->id) {
                     case $comentario->encargo->id_responsable :
+                        $destinatario = Usuario::find($comentario->encargo->id_asignador);
+                    break;
+                    case $comentario->encargo->id_asignador :
                         $destinatario = Usuario::find($comentario->encargo->id_responsable);
                         break;
-                    case $comentario->encargo->id_asignador :
-                        $destinatario = Usuario::find($comentario->encargo->id_asignador);
-                        break;
-                }
+                    }
                 $destinatario->notify(new ComentarioNuevo($destinatario, $comentario));
             }
             $coment = [
                 'nombre' => $comentario->usuario->nombre.' '.$comentario->usuario->apellido,
                 'hora' => strftime( '%m/%d/%y', strtotime( $comentario->created_at ) ),
-                'comentario' =>  $comentario->comentario
+                'comentario' =>  $comentario->comentario,
+                'destinatario' =>  $destinatario
             ];
             return response()->json(['message' => 'se ha enviado el comentario exitosamente','comentario'=>$coment],200);
         } else {
-            return response()->json(['message' => 'Ha ocurrido un error al enviar el comentario:','errors'=>$validator->errors()],500);
+            return response()->json(['message' => 'Ha ocurrido un error al enviar el comentario:','errors'=>$validator->errors(),'destinatario'=>$destinatario],500);
         }
     }  
 

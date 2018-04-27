@@ -233,17 +233,26 @@ class UsuarioController extends Controller {
             switch ($usuario->status) {
                 case 1:
                     if (Auth::attempt(['email' => $email, 'password' => $password], $remember)) {
-                        return redirect()->route('mis_encargos');
+                        return response()->json(['message' => 'Incio de sesion exitoso'],200);
                     } else {
-                        return back()->withInput()->withErrors(['password' => 'la contraseña es incorrecta']);
+                        return response()->json([ 'message' => 'Ha ocurrido un error','errors' => 'la contraseña es incorrecta' ],500);
                     }
                     break;
                 case 3:
-                    return back()->withInput()->withErrors('Esta direccion de correo no ha sido validada aun, revisa tu bandeja de entrada');
+                    return response()->json([ 'message' => 'Ha ocurrido un error','errors' => 'Esta direccion de correo no ha sido validada aun, revisa tu bandeja de entrada' ],500);
                     break;
             }
         } catch (ModelNotFoundException $ex) {
-            return back()->withInput()->withErrors(['email' => 'el usuario no esta registrado o el email es incorrecto']);
+            return response()->json([ 'message' => 'Ha ocurrido un error','errors' => 'El usuario no esta registrado o el email es incorrecto' ],500);
         }      
+    }
+
+    public function enviarCorreoRecuperacion(Request $request) {
+
+        if($request->input('email')) {
+            $this->sendResetLinkEmail($request);
+        }
+        return response()->json(['message' => 'Se ha enviado un correo a la direccion '.$request->input('email').' para iniciar el proceso de recuperacion de contraseña.'],200);
+
     }
 }

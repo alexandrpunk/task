@@ -61,11 +61,9 @@ Route::group(['middleware' => 'guest'], function() {
     Route::post('/login', 'UsuarioController@login')->name('login');
 
     Route::get('/recuperar_password', function () { return view('auth.reset_pass'); })->name('recuperar_pass');
-    Route::post('/recuperar_password', 'UsuarioController@sendResetLinkEmail');
+    Route::post('/recuperar_password', 'UsuarioController@enviarCorreoRecuperacion');
 
-    Route::get('/recuperar_password/reset/{token}', function ($token) {
-        return view('auth.reset_pass', ['token' => $token]);
-    })->name('reset_pass');
+    Route::get('/recuperar_password/reset/{token}', function ($token) { return view('auth.reset_pass'); } )->name('reset_pass');
     Route::post('/recuperar_password/reset/{token}', 'ResetPasswordController@reset');
 });
 
