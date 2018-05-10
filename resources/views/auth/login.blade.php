@@ -21,7 +21,7 @@
                             <i class="fa fa-user-circle" aria-hidden="true"></i>
                         </span>
                     </div>
-                    <input type="email" class="form-control form-control-sm" name="email" required autofocus placeholder="correo electronico">
+                    <input type="email" class="form-control form-control-sm" name="email" id="email"  required autofocus placeholder="correo electronico">
                 </div>
             </div>
             <div class="form-group">
@@ -31,11 +31,11 @@
                             <i class="fas fa-key" aria-hidden="true"></i>
                         </span>
                     </div>
-                    <input type="password" class="form-control form-control-sm" name="password" required autocomplete="false" placeholder="contraseña">
+                    <input type="password" class="form-control form-control-sm" name="password" id="password" required autocomplete="false" placeholder="contraseña">
                 </div>                            
             </div>
             <div class="form-group text-center">
-                <label><input type="checkbox"> Recordarme </label>
+                <label><input type="checkbox"  name="remember" id="remember"> Recordarme </label>
             </div>
 
             <div class="form-group">

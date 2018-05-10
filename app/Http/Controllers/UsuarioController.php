@@ -248,7 +248,6 @@ class UsuarioController extends Controller {
     }
 
     public function enviarCorreoRecuperacion(Request $request) {
-
         if($request->input('email')) {
             $this->sendResetLinkEmail($request);
         }
